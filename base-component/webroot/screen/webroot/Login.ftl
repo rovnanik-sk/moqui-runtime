@@ -1,4 +1,8 @@
-
+<div class="tab-content">
+    <a href="https://www.rovnanik.sk" target="_blank">
+	    <img src="rsk.png" alt="Logo" class="center-block" style="box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);">
+	</a>
+</div>
 <div class="tab-content">
     <div id="login" class="tab-pane active">
         <form method="post" action="${sri.makeUrlByType("login", "transition", null, "false").getUrl()}" class="form-signin">
