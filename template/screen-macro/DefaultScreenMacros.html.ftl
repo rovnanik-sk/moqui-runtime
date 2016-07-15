@@ -1844,3 +1844,15 @@ a => A, d => D, y => Y
     </#if>
 </span>
 </#macro>
+
+<#macro "bootstrap-tagsinput">
+     <#assign fieldValue = sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", .node["@format"]!)>
+     <#assign id><@fieldId .node/></#assign>
+         <input id=${id}
+             type="text"
+             class="form-control"
+             data-role="tagsinput"
+             value="${fieldValue?html}"
+             name="<@fieldName .node/>"
+         />
+ </#macro>
