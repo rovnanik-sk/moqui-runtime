@@ -13,7 +13,7 @@ along with this software (see the LICENSE.md file). If not, see
 -->
 
 <#-- set here because used in drop-down, container-dialog and dynamic-dialog -->
-<#assign select2DefaultOptions = "minimumResultsForSearch:10, theme:'bootstrap'">
+<#assign select2DefaultOptions = "minimumResultsForSearch:5, theme:'bootstrap'">
 
 <#macro @element><p>=== Doing nothing for element ${.node?node_name}, not yet implemented. ===</p></#macro>
 
