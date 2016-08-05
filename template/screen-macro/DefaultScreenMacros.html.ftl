@@ -1198,11 +1198,10 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         <#assign needHeaderForm = formInstance.isHeaderForm()>
         <#assign isHeaderDialog = needHeaderForm && formNode["@header-dialog"]! == "true">
         <#if !skipHeader><@paginationHeaderModals formInstance formId isHeaderDialog/></#if>
+        <@paginationHeader formInstance formId isHeaderDialog/>
         <table class="table table-striped table-hover table-condensed" id="${formId}_table">
         <#if !skipHeader>
             <thead>
-                <@paginationHeader formInstance formId isHeaderDialog/>
-
                 <#if needHeaderForm>
                     <#assign curUrlInstance = sri.getCurrentScreenUrl()>
                     <#assign headerFormId = formId + "_header">
