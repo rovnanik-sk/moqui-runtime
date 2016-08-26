@@ -226,3 +226,89 @@
      </#if>
      <#if sri.doBoundaryComments()><!-- END   form-list[@name=${.node["@name"]}] --></#if>
  </#macro>
+
+ <#macro "drop-down-onchange">
+     <#assign id><@fieldId .node/></#assign>
+     <#assign allowMultiple = ec.getResource().expand(.node["@allow-multiple"]!, "") == "true"/>
+     <#assign isDynamicOptions = .node["dynamic-options"]?has_content>
+     <#assign name><@fieldName .node/></#assign>
+     <#assign options = {"":""}/><#assign options = sri.getFieldOptions(.node)/>
+     <#assign currentValue = sri.getFieldValueString(.node?parent?parent, "", null)/>
+     <#if !currentValue?has_content><#assign currentValue = ec.getResource().expand(.node["@no-current-selected-key"]!, "")/></#if>
+     <#if currentValue?starts_with("[")><#assign currentValue = currentValue?substring(1, currentValue?length - 1)?replace(" ", "")></#if>
+     <#assign currentValueList = (currentValue?split(","))!>
+     <#if (allowMultiple && currentValueList?exists && currentValueList?size > 1)><#assign currentValue=""></#if>
+     <#assign currentDescription = (options.get(currentValue))!>
+     <#assign optionsHasCurrent = currentDescription?has_content>
+     <#assign onChange = ec.getResource().expand(.node["@on-change-function"]!, "")>
+     <#if !optionsHasCurrent && .node["@current-description"]?has_content>
+         <#assign currentDescription = ec.getResource().expand(.node["@current-description"], "")/></#if>
+     <select name="${name}" class="<#if isDynamicOptions>dynamic-options</#if><#if .node["@style"]?has_content> ${ec.getResource().expand(.node["@style"], "")}</#if>" id="${id}"<#if allowMultiple> multiple="multiple"</#if><#if .node["@size"]?has_content> size="${.node["@size"]}"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if> onchange="${onChange}">
+     <#if !allowMultiple>
+         <#-- don't add first-in-list or empty option if allowMultiple (can deselect all to be empty, including empty option allows selection of empty which isn't the point) -->
+         <#if currentValue?has_content>
+             <#if .node["@current"]! == "first-in-list">
+                 <option selected="selected" value="${currentValue}"><#if currentDescription?has_content>${currentDescription}<#else>${currentValue}</#if></option><#rt/>
+                 <option value="${currentValue}">---</option><#rt/>
+             <#elseif !optionsHasCurrent>
+                 <option selected="selected" value="${currentValue}"><#if currentDescription?has_content>${currentDescription}<#else>${currentValue}</#if></option><#rt/>
+             </#if>
+         </#if>
+         <#assign allowEmpty = ec.getResource().expand(.node["@allow-empty"]!, "")/>
+         <#if (allowEmpty! == "true") || !(options?has_content)>
+             <option value="">&nbsp;</option>
+         </#if>
+     </#if>
+     <#if !isDynamicOptions>
+         <#list (options.keySet())! as key>
+             <#assign isSelected = currentValue?has_content && currentValue == key>
+             <#if allowMultiple && currentValueList?has_content><#assign isSelected = currentValueList?seq_contains(key)></#if>
+             <option<#if isSelected> selected="selected"</#if> value="${key}">${options.get(key)}</option>
+         </#list>
+     </#if>
+     </select>
+     <#-- <span>[${currentValue}]; <#list currentValueList as curValue>[${curValue!''}], </#list></span> -->
+     <#if allowMultiple><input type="hidden" id="${id}_op" name="${name}_op" value="in"></#if>
+     <#if .node["@combo-box"]! == "true">
+         <script>$("#${id}").select2({ tags: true, tokenSeparators:[',',' '], theme:'bootstrap' });</script>
+     <#elseif .node["@search"]! != "false">
+         <script>$("#${id}").select2({ ${select2DefaultOptions} }); $("#${id}").on("select2:select", function (e) { $("#${id}").select2("open").select2("close"); });</script>
+     </#if>
+     <#if isDynamicOptions>
+         <#assign doNode = .node["dynamic-options"][0]>
+         <#assign depNodeList = doNode["depends-on"]>
+         <#assign doUrlInfo = sri.makeUrlByType(doNode["@transition"], "transition", .node, "false")>
+         <#assign doUrlParameterMap = doUrlInfo.getParameterMap()>
+         <script>
+             function populate_${id}() {
+                 var hasAllParms = true;
+                 <#list depNodeList as depNode>if (!$('#<@fieldIdByName depNode["@field"]/>').val()) { hasAllParms = false; } </#list>
+                 if (!hasAllParms) { $("#${id}").select2("destroy"); $('#${id}').html(""); $("#${id}").select2({ ${select2DefaultOptions} }); <#-- alert("not has all parms"); --> return; }
+                 $.ajax({ type:'POST', url:'${doUrlInfo.url}', data:{ moquiSessionToken: "${(ec.getWeb().sessionToken)!}"<#list depNodeList as depNode>, '${depNode["@field"]}': $('#<@fieldIdByName depNode["@field"]/>').val()</#list><#list doUrlParameterMap?keys as parameterKey><#if doUrlParameterMap.get(parameterKey)?has_content>, "${parameterKey}":"${doUrlParameterMap.get(parameterKey)}"</#if></#list> }, dataType:'json' }).done(
+                     function(list) {
+                         if (list) {
+                             $("#${id}").select2("destroy");
+                             $('#${id}').html(""); /* clear out the drop-down */
+                             <#if allowEmpty! == "true">
+                             $('#${id}').append('<option value="">&nbsp;</option>');
+                             </#if>
+                             $.each(list, function(key, value) {
+                                 var optionValue = value["${doNode["@value-field"]!"value"}"];
+                                 if (optionValue == "${currentValue}") {
+                                     $('#${id}').append("<option selected='selected' value='" + optionValue + "'>" + value["${doNode["@label-field"]!"label"}"] + "</option>");
+                                 } else {
+                                     $('#${id}').append("<option value='" + optionValue + "'>" + value["${doNode["@label-field"]!"label"}"] + "</option>");
+                                 }
+                             });
+                             $("#${id}").select2({ ${select2DefaultOptions} });
+                         }
+                     }
+                 );
+             }
+             <#list depNodeList as depNode>
+             $("#<@fieldIdByName depNode["@field"]/>").on('change', function() { populate_${id}(); });
+             </#list>
+             populate_${id}();
+         </script>
+     </#if>
+ </#macro>
