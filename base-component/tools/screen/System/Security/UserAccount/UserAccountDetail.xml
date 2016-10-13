@@ -49,7 +49,6 @@ along with this software (see the LICENSE.md file). If not, see
     <actions>
         <entity-find-one entity-name="moqui.security.UserAccount" value-field="userAccount"/>
 
-        <!-- TODO: limit to locales for tenant -->
         <set field="localeStringList" from="[]"/>
         <iterate list="Locale.getAvailableLocales()" entry="lcl"><script>localeStringList.add([locale:lcl.toString(), name:lcl.getDisplayName(ec.user.locale)])</script></iterate>
         <order-map-list list="localeStringList"><order-by field-name="name"/></order-map-list>
@@ -96,10 +95,10 @@ along with this software (see the LICENSE.md file). If not, see
                         <field name="userId"><default-field><hidden/></default-field></field>
                         <field name="topic"><default-field><hidden/></default-field></field>
                         <field name="description"><default-field title="Topic"><display/></default-field></field>
-                        <field name="receiveNotifications" entry-name="notTopicUser?.receiveNotifications ?: receiveNotifications ?: 'Y'"><default-field title="Receive">
+                        <field name="receiveNotifications" from="notTopicUser?.receiveNotifications ?: receiveNotifications ?: 'Y'"><default-field title="Receive">
                             <radio><option key="Y"/><option key="N"/></radio>
                         </default-field></field>
-                        <field name="allNotifications" entry-name="notTopicUser?.allNotifications ?: allNotifications ?: 'N'"><default-field title="All">
+                        <field name="allNotifications" from="notTopicUser?.allNotifications ?: allNotifications ?: 'N'"><default-field title="All">
                             <radio><option key="Y"/><option key="N"/></radio>
                         </default-field></field>
                         <field name="submitButton"><default-field><submit text="Update"/></default-field></field>
@@ -123,7 +122,6 @@ along with this software (see the LICENSE.md file). If not, see
                         <drop-down allow-empty="true"><list-options list="localeStringList" key="${locale}" text="${locale} - ${name}"/></drop-down>
                     </default-field></field>
                     <field name="timeZone"><default-field>
-                        <!-- TODO: limit time zones to tenant zones -->
                         <drop-down allow-empty="true"><list-options list="new TreeSet(TimeZone.getAvailableIDs().collect())"/></drop-down>
                     </default-field></field>
 
@@ -145,7 +143,7 @@ along with this software (see the LICENSE.md file). If not, see
                                         </entity-options>
                                     </drop-down>
                                 </default-field></field>
-                                <field name="fromDate" entry-name="ec.user.nowTimestamp"><default-field><date-time/></default-field></field>
+                                <field name="fromDate" from="ec.user.nowTimestamp"><default-field><date-time/></default-field></field>
                                 <field name="submitButton"><default-field title="Add"><submit/></default-field></field>
                             </form-single>
                         </container-dialog>
