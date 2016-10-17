@@ -40,10 +40,9 @@ along with this software (see the LICENSE.md file). If not, see
         <container id="content"><container style="inner"><container style="container-fluid">
             <section-include name="MessagesSection" location="component://webroot/screen/webroot/apps.xml"/>
 
-<<<<<<< HEAD
             <!-- if there are no user accounts, other than the _NA_ UserAccount which is in seed data, show form to create admin account -->
             <section name="NeedsSetupSection" condition="ec.entity.find('moqui.security.UserAccount').disableAuthz().count() > 1"><widgets>
-                <render-mode><text type="html" template="true" location="component://webroot/screen/webroot/Login.ftl"/></render-mode>
+                <render-mode><text type="html" template="true" location="component://webroot/screen/webroot/Login_sk.ftl"/></render-mode>
             </widgets><fail-widgets>
                 <label text="Welcome to your new system" type="h3"/>
                 <label text="There are no user accounts, get started by creating an initial administrator account" type="h5"/>
@@ -56,11 +55,6 @@ along with this software (see the LICENSE.md file). If not, see
                     <field name="submitButton"><default-field title="Create Initial Admin Account"><submit/></default-field></field>
                 </form-single>
             </fail-widgets></section>
-=======
-            <render-mode>
-                <text type="html" template="true" location="component://webroot/screen/webroot/Login_sk.ftl"/>
-            </render-mode>
->>>>>>> refs/remotes/origin/cb_update_161013
 
             <!-- old XML widgets stuff:
             <container id="login-box">
