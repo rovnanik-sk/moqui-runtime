@@ -57,14 +57,76 @@
 <#macro "bootstrap-tagsinput">
      <#assign fieldValue = sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", .node["@format"]!)>
      <#assign id><@fieldId .node/></#assign>
-         <input id=${id}
-             type="text"
-             class="form-control"
-             data-role="tagsinput"
-             value="${fieldValue?html}"
-             name="<@fieldName .node/>"
-         />
+     <input id=${id}
+         type="text"
+         class="form-control"
+         data-role="tagsinput"
+         value="${fieldValue?html}"
+         name="<@fieldName .node/>"
+         size="${.node.@size!"1"}"
+     />
  </#macro>
+
+<#macro "bootstrap-tagsinput-typeahead">
+    <#assign fieldValue = sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", .node["@format"]!)>
+    <#assign id><@fieldId .node/></#assign>
+    <input id=${id}
+        type="text"
+        class="form-control"
+        data-role="tagsinput"
+        value="${fieldValue?html}"
+        name="<@fieldName .node/>"
+        size="${.node.@size!"1"}"
+    />
+    <script>
+        var engine = new Bloodhound({
+            datumTokenizer: function (datum) {
+                return Bloodhound.tokenizers.whitespace(datum.name);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: {
+                url: "${sri.buildUrl('${.node["@fetch-transition-name"]!"getTagsInUse"}').url}",
+                filter: function (data) {
+                    console.log("data", data.tags)
+                    return $.map(data.tags, function (tag) {
+                        return {
+                            name: tag.tag
+                        };
+                    });
+                }
+            }
+        });
+        engine.initialize();
+
+        $("input[id='${id}']").tagsinput({
+            typeaheadjs: {
+                name: 'engine',
+                displayKey: 'name',
+                valueKey: 'name',
+                source: engine.ttAdapter()
+            }
+        });
+
+        $('.bootstrap-tagsinput').focusin(function() {
+            $(this).addClass('focus');
+        });
+        $('.bootstrap-tagsinput').focusout(function() {
+            $(this).removeClass('focus');
+        });
+    </script>
+</#macro>
+
+<#macro "tags-display">
+    <#assign fieldValue = sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", .node["@format"]!)>
+    <#list fieldValue?split(",") as singleValue>
+        <#if singleValue?counter &lt; 6>
+            <span class="label label-info"><#if singleValue?length gte 12>${singleValue[0..*12]?trim}..<#else>${singleValue?trim}</#if></span>
+            <#if singleValue?counter == 5 && !singleValue?is_last>
+                <span class="label label-warning">...</span>
+            </#if>
+        </#if>
+    </#list>
+</#macro>
 
 <#macro display>
     <#assign fieldValue = ""/>
