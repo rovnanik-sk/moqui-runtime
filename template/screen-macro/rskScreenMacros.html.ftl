@@ -104,7 +104,7 @@
                 displayKey: 'name',
                 valueKey: 'name',
                 source: engine.ttAdapter(),
-                limit: 15
+                limit: 8
             }
         });
 
