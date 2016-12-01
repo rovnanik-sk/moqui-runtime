@@ -103,7 +103,8 @@
                 name: 'engine',
                 displayKey: 'name',
                 valueKey: 'name',
-                source: engine.ttAdapter()
+                source: engine.ttAdapter(),
+                limit: 15
             }
         });
 
