@@ -124,8 +124,8 @@ input[type="text"].ui-autocomplete-input { width: auto; }
 /* Bootstrap by default has a 20px height for this, for 30px height shift up 5px */
 .navbar-brand>img { height: 30px; margin-top: -5px; }
 /* Bootstrap has no margin for a.navbar-btn so add them; note margin-right in bootstrap is -15px because of other styles, so for a margin of 10px set to -5px */
-.navbar-right.btn { margin-right: -6px; margin-left: 10px; }
-.navbar-right.btn-group { margin-right: -6px; margin-left: 0px; }
+.navbar-right.btn { margin-right: 0px; margin-left: 10px; }
+.navbar-right.btn-group { margin-right: 0px; margin-left: 0px; }
 
 nav.form-list-nav .pagination { margin: 6px 0 0 0; }
 nav.form-list-nav>form.form-inline { display: inline-block; margin: 2px 6px 0 0; float: left; }

@@ -39,6 +39,6 @@
         <li><a class="text-muted" href="#login" data-toggle="tab">Prihlásenie</a></li>
         <li><a class="text-muted" href="#reset" data-toggle="tab">Zresetovanie hesla</a></li>
         <li><a class="text-muted" href="#change" data-toggle="tab">Zmena hesla</a></li>
-		<li><a class="text-muted" href="https://rovnanik.demo.xwiki.com/xwiki/wiki/rskmoquidoc/view/prihlasovanie/" target="_blank">Pomoc</a></li>
+		<li><a class="text-muted" href="https://rovnanik.cloud.xwiki.com/xwiki/wiki/rskmoquidoc/view/prihlasovanie/" target="_blank">Pomoc</a></li>
     </ul>
 </div>
