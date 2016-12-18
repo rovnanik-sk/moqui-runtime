@@ -129,6 +129,22 @@
     </#list>
 </#macro>
 
+<#macro "file-tags-display">
+    <#assign fieldValue = sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", .node["@format"]!)>
+    <#list fieldValue?split(",") as singleValue>
+        <#if singleValue?counter &lt; 4>
+        				<#if singleValue=='none'>
+        								<span class="label label-danger"><#if singleValue?length gt 4>${singleValue[0..*4]?trim}..<#else>${singleValue?trim}</#if></span>
+        				<#else>
+        									<span class="label label-info"><#if singleValue?length gt 4>${singleValue[0..*4]?trim}..<#else>${singleValue?trim}</#if></span>
+        				</#if>
+            <#if singleValue?counter == 3 && !singleValue?is_last>
+                <span class="label label-warning">...</span>
+            </#if>
+        </#if>
+    </#list>
+</#macro>
+
 <#macro display>
     <#assign fieldValue = ""/>
     <#if .node["@text"]?has_content>
