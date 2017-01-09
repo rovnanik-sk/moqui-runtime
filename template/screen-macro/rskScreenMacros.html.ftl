@@ -67,11 +67,15 @@
 
 <#macro "tags-display">
     <#assign fieldValue = sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", .node["@format"]!)>
+    <#assign limitLength = .node["@limit-length"]!"12">
+    <#assign maxTags = .node["@max-tags"]!"6">
+    <#assign defMoreSign = .node["@default-more-sign"]!"...">
+    <#assign defLongerSign = .node["@default-longer-sign"]!"..">
     <#list fieldValue?split(",") as singleValue>
-        <#if singleValue?counter &lt; 6>
-            <span class="label label-info"><#if singleValue?length gte 12>${singleValue[0..*12]?trim}..<#else>${singleValue?trim}</#if></span>
-            <#if singleValue?counter == 5 && !singleValue?is_last>
-                <span class="label label-warning">...</span>
+        <#if singleValue?counter &lt;= maxTags?number>
+            <span class="label label-info"><#if singleValue?length gte limitLength?number>${singleValue[0..*limitLength?number]?trim}${defLongerSign}<#else>${singleValue?trim}</#if></span>
+            <#if singleValue?counter == maxTags?number && !singleValue?is_last>
+                <span class="label label-warning">${defMoreSign}</span>
             </#if>
         </#if>
     </#list>
