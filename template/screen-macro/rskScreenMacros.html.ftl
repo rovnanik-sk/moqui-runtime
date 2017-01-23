@@ -71,14 +71,38 @@
     <#assign maxTags = .node["@max-tags"]!"6">
     <#assign defMoreSign = .node["@default-more-sign"]!"...">
     <#assign defLongerSign = .node["@default-longer-sign"]!"..">
+    <#assign defLabelType = .node["@label-type"]!"label-info">
     <#list fieldValue?split(",") as singleValue>
         <#if singleValue?counter &lt;= maxTags?number>
-            <span class="label label-info"><#if singleValue?length gte limitLength?number>${singleValue[0..*limitLength?number]?trim}${defLongerSign}<#else>${singleValue?trim}</#if></span>
+            <span class="label ${defLabelType}"><#if singleValue?length gte limitLength?number>${singleValue[0..*limitLength?number]?trim}${defLongerSign}<#else>${singleValue?trim}</#if></span>
             <#if singleValue?counter == maxTags?number && !singleValue?is_last>
                 <span class="label label-warning">${defMoreSign}</span>
             </#if>
         </#if>
     </#list>
+</#macro>
+
+<#macro "tags-display-for-arrays">
+    <#assign fieldValue = sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", .node["@format"]!)>
+    <#assign limitLength = .node["@limit-length"]!"12">
+    <#assign maxTags = .node["@max-tags"]!"6">
+    <#assign defMoreSign = .node["@default-more-sign"]!"...">
+    <#assign defLongerSign = .node["@default-longer-sign"]!"..">
+    <#assign defLabelType = .node["@label-type"]!"label-info">
+    <#assign listName = .node["@list-name"]!"">
+    <#if ec.getContext().containsKey(listName)>
+    				<#assign listObject = context[listName]>
+								<#if listObject?has_content>
+												<#list listObject as singleValue>
+																<#if singleValue?counter &lt;= maxTags?number>
+																				<span class="label ${defLabelType}" data-toggle="tooltip" title="${singleValue?html}"><#if singleValue?length gte limitLength?number>${singleValue[0..*limitLength?number]?trim}${defLongerSign}<#else>${singleValue?trim}</#if></span>
+																				<#if singleValue?counter == maxTags?number && !singleValue?is_last>
+																								<span class="label label-warning">${defMoreSign}</span>
+																				</#if>
+																</#if>
+												</#list>
+								</#if>
+    </#if>
 </#macro>
 
 <#macro "file-tags-display">
