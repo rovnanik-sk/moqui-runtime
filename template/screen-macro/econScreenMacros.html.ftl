@@ -48,7 +48,7 @@
 								<#assign mapObject = context[mapName]>
 								<#list mapObject.entrySet() as entry>
 												<#if entry?counter &lt;= maxTags?number>
-																<span class="label ${defLabelType}" data-toggle="tooltip" title="${entry.value?html}"><#if entry.value?length gte limitLength?number>${entry.key?html}: ${entry.value[0..*limitLength?number]?trim}${defLongerSign}<#else>${entry.key?html}: ${entry.value?trim}</#if></span>
+																<span class="label ${defLabelType}" data-toggle="tooltip" title="${entry.value?html}"><#if entry.value?length gt limitLength?number>${entry.key?html}: ${entry.value[0..*limitLength?number]?trim}${defLongerSign}<#else>${entry.key?html}: ${entry.value?trim}</#if></span>
 																<#if entry?counter == maxTags?number && !entry?is_last>
 																				<span class="label label-warning">${defMoreSign}</span>
 																</#if>
