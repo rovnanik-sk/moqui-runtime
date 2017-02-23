@@ -60,7 +60,7 @@ along with this software (see the LICENSE.md file). If not, see
 
             <!-- if there are no user accounts, other than the _NA_ UserAccount which is in seed data, show form to create admin account -->
             <section name="NeedsSetupSection" condition="ec.entity.find('moqui.security.UserAccount').disableAuthz().count() > 1"><widgets>
-                <render-mode><text type="html" template="true" location="component://webroot/screen/webroot/Login.ftl"/></render-mode>
+                <render-mode><text type="html" template="true" location="component://webroot/screen/webroot/Login_sk.ftl"/></render-mode>
             </widgets><fail-widgets>
                 <render-mode><text type="html"><![CDATA[
     <div class="text-center">
@@ -78,20 +78,6 @@ along with this software (see the LICENSE.md file). If not, see
     </div>
                 ]]></text></render-mode>
             </fail-widgets></section>
-
-            <!-- TODO: remove this link when moving away from more of a testing mode, very convenient for dev/testing -->
-            <section name="TestLoginSection">
-                <condition><expression>ec.entity.find('moqui.security.UserAccount').condition('userId', 'EX_JOHN_DOE')
-                    .condition('currentPassword', '16ac58bbfa332c1c55bd98b53e60720bfa90d394').disableAuthz().count()</expression></condition>
-                <widgets><render-mode><text type="html"><![CDATA[
-                <form method="post" action="${sri.buildUrl("login").url}" id="TestLoginLink">
-                    <input type="hidden" name="username" value="john.doe">
-                    <input type="hidden" name="password" value="moqui">
-                    <button class="btn btn-sm btn-primary" type="submit" id="TestLoginLink_button">Test Login (John Doe)</button>
-                </form>
-                <script>$("#TestLoginLink_button").focus();</script>
-                ]]></text></render-mode></widgets>
-            </section>
         </container></container></container>
     </widgets>
 </screen>

@@ -1,3 +1,8 @@
+<div class="tab-content">
+    <a href="https://www.rovnanik.sk" target="_blank">
+	    <img src="rsk.png" alt="Logo" class="center-block" style="box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);">
+	</a>
+</div>
 <div id="browser-warning" class="hidden text-center" style="margin-bottom: 80px;">
     <h4 class="text-danger">Your browser is not supported, please use a recent version of one of the following:</h4>
     <div class="row" style="font-size: 4em;">
@@ -16,7 +21,6 @@
     var isIE = UA && /msie|trident/.test(UA);
     if (isIE) $("#browser-warning").removeClass("hidden");
 </script>
-
 <div class="tab-content">
     <div id="login" class="tab-pane active">
         <form method="post" action="${sri.buildUrl("login").url}" class="form-signin" id="login_form">
