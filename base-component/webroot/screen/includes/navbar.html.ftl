@@ -1,4 +1,4 @@
-<nav class="navbar navbar-inverse navbar-fixed-top"><#-- navbar-static-top -->
+<nav class="navbar navbar-inverse"><#-- navbar-fixed-top navbar-static-top -->
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <header class="navbar-header">
@@ -9,7 +9,7 @@
             <span class="icon-bar"></span>
         </button>
         <#assign headerLogoList = sri.getThemeValues("STRT_HEADER_LOGO")>
-        <#if headerLogoList?has_content><a href="${sri.buildUrl("/").getUrl()}" class="navbar-brand"><img src="${sri.buildUrl(headerLogoList?first).getUrl()}" alt="Home"></a></#if>
+        <#if headerLogoList?has_content><a href="${sri.buildUrl("/apps").getUrl()}" class="navbar-brand"><img src="${sri.buildUrl(headerLogoList?first).getUrl()}" alt="Home"></a></#if>
         <#assign headerTitleList = sri.getThemeValues("STRT_HEADER_TITLE")>
         <#if headerTitleList?has_content><div class="navbar-brand">${ec.resource.expand(headerTitleList?first, "")}</div></#if>
     </header>
