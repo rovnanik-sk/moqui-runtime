@@ -82,10 +82,10 @@
 								<#assign placeholderText = .node["@placeholder"]!"">
 								<#assign curFieldName><@fieldName .node/></#assign>
 								<#if .node["@hide-options"]! == "true" || .node["@hide-options"]! == "operator">
-												<input type="hidden" name="${curFieldName}_op" value="${defaultOperator}">
+												<input type="hidden" name="${curFieldName}_op" value="${defaultOperator}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
 								<#else>
-												<span><input type="checkbox" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}_not" value="Y"<#if ec.getWeb().parameters.get(curFieldName + "_not")! == "Y"> checked="checked"</#if>>&nbsp;${ec.getL10n().localize("Not")}</span>
-												<select name="${curFieldName}_op" class="form-control">
+												<span><input type="checkbox" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}_not" value="Y"<#if ec.getWeb().parameters.get(curFieldName + "_not")! == "Y"> checked="checked"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>&nbsp;${ec.getL10n().localize("Not")}</span>
+												<select name="${curFieldName}_op" class="form-control"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
 																<option value="equals"<#if defaultOperator == "equals"> selected="selected"</#if>>${ec.getL10n().localize("Equals")}</option>
 																<option value="like"<#if defaultOperator == "like"> selected="selected"</#if>>${ec.getL10n().localize("Like")}</option>
 																<option value="contains"<#if defaultOperator == "contains"> selected="selected"</#if>>${ec.getL10n().localize("Contains")}</option>
@@ -93,12 +93,12 @@
 																<option value="empty"<#rt/><#if defaultOperator == "empty"> selected="selected"</#if>>${ec.getL10n().localize("Empty")}</option>
 												</select>
 								</#if>
-								<input type="text" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}" value="${sri.getFieldValueString(.node)?html}" size="${.node.@size!"30"}"<#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if> id="<@fieldId .node/>"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if>>
+								<input type="text" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}" value="${sri.getFieldValueString(.node)?html}" size="${.node.@size!"30"}"<#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if> id="<@fieldId .node/>"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
 								<#assign ignoreCase = (ec.getWeb().parameters.get(curFieldName + "_ic")! == "Y") || !(.node["@ignore-case"]?has_content) || (.node["ignore-case"] == "true")>
 								<#if .node["@hide-options"]! == "true" || .node["@hide-options"]! == "ignore-case">
-												<input type="hidden" name="${curFieldName}_ic" value="Y"<#if ignoreCase> checked="checked"</#if>>
+												<input type="hidden" name="${curFieldName}_ic" value="Y"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
 								<#else>
-												<span><input type="checkbox" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}_ic" value="Y"<#if ignoreCase> checked="checked"</#if>>&nbsp;${ec.getL10n().localize("Ignore Case")}</span>
+												<span><input type="checkbox" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}_ic" value="Y"<#if ignoreCase> checked="checked"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>&nbsp;${ec.getL10n().localize("Ignore Case")}</span>
 								</#if>
 				</span>
 </#macro>
