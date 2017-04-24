@@ -1,9 +1,9 @@
 
 # Moqui Runtime Release Notes
 
-## Release 2.0.1 - Not Yet Released
+## Release 2.1.0 - Not Yet Released
 
-Moqui Runtime 2.0.1 is a patch level new feature and bug fix release, in parallel with the release of Moqui Framework.
+Moqui Runtime 2.1.0 is a minor new feature and bug fix release, in parallel with the release of Moqui Framework.
 
 This release includes a beta (not yet final) version of a new vuet render mode for applications that uses a Vue JS based single-page 
 application shell and supports hybrid client/server HTML rendering. The Vue shell (router, etc) is accessible on /vapps while the 
@@ -17,7 +17,11 @@ XML Screens page loads are faster and there is less load on the server, along wi
 - Changed accordion in form-single to use Bootstrap instead of jQuery UI
 - Changed text-line autocomplete to use Twitter Typeahead instead of jQuery UI
 - Removed jQuery UI and theme, saves nearly 300KB in JS/CSS/etc files
-- JS/CSS/etc libraries in webroot/lib have been removed and are now downloaded on build into webroot/libs 
+- JS/CSS/etc libraries in webroot/lib have been removed and are now downloaded on build into webroot/libs
+- Added drop-down and modal to navbar to show ScreenDocument configured documentation
+- drop-down now supports dynamic-options plus other options for an initial list and async loaded dynamic list for slower responses
+- drop-down.dynamic-options now has server-search and related attributes for server-side filtering using the term in the drop down 
+  search box; supports pagination (infinite scroll) if server-side transition supports it
 
 ## Release 2.0.0 - 24 Nov 2016
 
