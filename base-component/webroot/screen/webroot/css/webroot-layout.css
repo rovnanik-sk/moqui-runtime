@@ -153,6 +153,8 @@ nav.form-list-nav>span.select2-container { float: left; margin: 6px 0 6px 0; min
 .table>tbody>tr>td { vertical-align: middle; }
 .table { margin-bottom: 8px; }
 
+@media (min-width: 768px) { .modal-xl { width: 90%; max-width:1200px; }}
+
 /* ================ Other, Fix Styles =============== */
 
 input[type=radio], input[type=checkbox] { height: auto; }
