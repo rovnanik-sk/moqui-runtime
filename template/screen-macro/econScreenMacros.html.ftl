@@ -5,13 +5,13 @@
 
     <#switch fieldValue?lower_case>
 								<#case "invoicesales">
-												<h5><span class="label label-default">fa</span></h6>
+												<span class="label label-default">fa</span>
     								<#break>
     				<#case "invoiceproforma">
-    								<h5><span class="label label-info">zál</span></h6>
+    								<span class="label label-info">zál</span>
     								<#break>
     				<#case "invoicereturn">
-												<h5><span class="label label-warning">dob</span></h6>
+												<span class="label label-warning">dob</span>
 												<#break>
     				<#default>
     								<#break>
@@ -23,13 +23,13 @@
 
     <#switch fieldValue?lower_case>
 								<#case "cashwithdrawal">
-												<h5><span class="label label-default">hotovosť</span></h6>
+												<span class="label label-default">hotovosť</span>
     								<#break>
     				<#case "prescription">
-    								<h5><span class="label label-info">predpis</span></h6>
+    								<span class="label label-info">predpis</span>
     								<#break>
     				<#case "cardpayment">
-												<h5><span class="label label-default">karta</span></h6>
+												<span class="label label-default">karta</span>
 												<#break>
     				<#default>
     								<#break>
