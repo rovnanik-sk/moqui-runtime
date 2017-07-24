@@ -1,6 +1,6 @@
 <div class="tab-content">
     <a href="https://www.rovnanik.sk" target="_blank">
-	    <img src="rsk.png" alt="Logo" class="center-block" style="box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);">
+	    <img src="rsk_red.png" alt="Logo" class="center-block" style="box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);">
 	</a>
 </div>
 <div id="browser-warning" class="hidden text-center" style="margin-bottom: 80px;">

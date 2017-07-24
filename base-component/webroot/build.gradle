@@ -29,6 +29,14 @@ def fileMap = [
     "twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff":"",
     "twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2":"",
 
+    "bootswatch/3.3.7/paper/bootstrap.css": "",
+    "bootswatch/3.3.7/paper/bootstrap.min.css": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.eot": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.svg": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.ttf": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.woff": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.woff2": "",
+
     "bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css":"",
     "bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js":"",
 
