@@ -1,0 +1,17 @@
+/*mods to David's mods*/
+.form-control { display: inline; min-width: 20px; width: 100%; }
+
+/*Bootswatch PAPER.CSS customization*/
+.label-default { margin: 4px 4px 4px 0;}
+.modal-footer .btn+ .btn { margin: 4px 4px 4px 0; }
+
+/*typeahead localization*/
+input.typeahead-suggestions.form-control.tt-hint { top: inherit !important; }
+
+/*company logo*/
+.navbar-brand>img { border-radius: 3px; box-shadow: 1px 1px 4px rgba(0,0,0,0.4); }
+
+
+/*field help texts*/
+[v-cloak] > * { display:none }
+[v-cloak]::before { content: "loading…" }

@@ -1,0 +1,14 @@
+input:focus:valid, textarea:focus:valid { background-color: transparent  }
+.navbar-inverse .navbar-nav > li > a { font-size: 1.1em; color: #b2dbfb; }
+
+.tt-suggestion:hover { cursor: pointer; color: #fff; background-color: #2196f3; }
+.tt-suggestion.tt-cursor { color: #fff; background-color: #2196f3; }
+
+hr.compact {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.help-block {
+    margin-bottom: 5px;
+}
