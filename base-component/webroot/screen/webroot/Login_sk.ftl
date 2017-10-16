@@ -1,6 +1,6 @@
 <div class="tab-content">
-    <a href="http://www.aston.sk" target="_blank">
-	    <img src="aston_logo.png" alt="Logo" class="center-block" style="box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);background-color:black;">
+    <a href="https://www.rovnanik.sk" target="_blank">
+	    <img src="rsk.png" alt="Logo" class="center-block" style="box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);background-color:black;">
 	</a>
 </div>
 <div class="tab-content">
