@@ -722,8 +722,8 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <div class="<#if inFieldRow>${colPrefix}-8<#else>${colPrefix}-10</#if><#if containerStyle?has_content> ${containerStyle}</#if>">
         <#elseif !(inFieldRow! && !curFieldTitle?has_content)>
         <div class="form-group">
-            <label class="control-label <#if inFieldRow>${colPrefix}-4<#else>${colPrefix}-2</#if>" for="${formId}_${fieldSubParent["@name"]}">${curFieldTitle}</label><#-- was form-title -->
-            <div class="<#if inFieldRow>${colPrefix}-8<#else>${colPrefix}-10</#if><#if containerStyle?has_content> ${containerStyle}</#if>">
+            <label class="control-label <#if inFieldRow>${colPrefix}-4<#else>${colPrefix}-3</#if>" for="${formId}_${fieldSubParent["@name"]}">${curFieldTitle}</label><#-- was form-title -->
+            <div class="<#if inFieldRow>${colPrefix}-8<#else>${colPrefix}-9</#if><#if containerStyle?has_content> ${containerStyle}</#if>">
         </#if>
     </#if>
     <#-- NOTE: this style is only good for 2 fields in a field-row! in field-row cols are double size because are inside a ${colPrefix}-6 element -->
@@ -1978,6 +1978,7 @@ a => A, d => D, y => Y
     <#else>
         <#assign tlAlign = tlFieldNode["@align"]!"left">
         <#t><input id="${id}" type="<#if validationClasses?contains("email")>email<#elseif validationClasses?contains("url")>url<#elseif validationClasses?contains("number") || forceNumberClass>number<#else>text</#if>"
+        <#t><#if validationClasses?contains("number") || forceNumberClass> pattern="[0-9]+([\,|\.][0-9]+)?" step="any"</#if>
         <#t> name="${name}" value="${fieldValue?html}" <#if .node.@size?has_content>size="${.node.@size}"<#else>style="width:100%;"</#if><#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if>
         <#t><#if ec.getResource().condition(.node.@disabled!"false", "")> disabled="disabled"</#if>
         <#t> class="form-control<#if validationClasses?has_content> ${validationClasses}</#if><#if tlAlign == "center"> text-center<#elseif tlAlign == "right"> text-right</#if>"
