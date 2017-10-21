@@ -71,6 +71,7 @@ div.container-panel-footer { width: 100%; }
 .big-row-item { display: inline-block; margin-left: 15px; margin-right: 15px; }
 .big-row-item input, .big-row-item select, .big-row-item span.select2-container { display: inline-block; }
 .big-row-item>.form-group { margin-bottom: 0; }
+.big-row-item>.form-group>label { display: block; text-align: left; }
 
 /* These are for form-list titles and order by links */
 .form-title { white-space: nowrap; font-weight: bold; }
@@ -110,7 +111,7 @@ span.shaded-area { display: inline-block; white-space: normal; }
 .progress { margin-bottom: 8px; }
 
 /* Styles to get around default Bootstrap input width:100%; note margin-right on .input-group is enough for a 14px icon but nothing more! */
-.form-control { display: inline; min-width: 20px; width: auto; }
+.form-control { display: inline; min-width: 20px; width: auto; max-width: 100%; }
 .input-group { display: inline-block; white-space: nowrap; margin-right: 39px; }
 .input-group .form-control { display: inline; min-width: 20px; width: auto; }
 .input-group .input-group-addon, .input-group .input-group-btn { display: inline; line-height: 34px; padding: 8px 12px; }

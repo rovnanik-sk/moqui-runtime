@@ -47,11 +47,12 @@ def fileMap = [
     "jquery/3.2.1/jquery.min.js":"",
 
     "jquery.form/4.2.1/jquery.form.min.js":"",
+    "jquery.inputmask/3.3.4/jquery.inputmask.bundle.min.js":"",
 
     // can get jquery-sortable-lists from cdnjs? http://camohub.github.io/jquery-sortable-lists/
 
-    "jquery-validate/1.16.0/jquery.validate.min.js":"",
-    "jquery-validate/1.16.0/additional-methods.min.js":"",
+    "jquery-validate/1.17.0/jquery.validate.min.js":"",
+    "jquery-validate/1.17.0/additional-methods.min.js":"",
 
     "jstree/3.3.3/jstree.min.js":"",
     "jstree/3.3.3/themes/default/style.min.css":"",
@@ -71,8 +72,8 @@ def fileMap = [
     "typeahead.js/0.11.1/typeahead.jquery.min.js":"",
 
     // NOTE: for production change to min in vapps.xml; currently using dev version for errors/warnings/etc
-    "vue/2.3.3/vue.js":"",
-    "vue/2.3.3/vue.min.js":""
+    "vue/2.4.4/vue.js":"",
+    "vue/2.4.4/vue.min.js":""
 ]
 
 String getTargetPath(String sourcePath, String targetPath) {
@@ -85,7 +86,7 @@ String getTargetPath(String sourcePath, String targetPath) {
 task downloadFiles { doLast {
     for (Map.Entry fileEntry in fileMap.entrySet()) {
         String sourcePath = fileEntry.key
-        String targetPath = getTargetPath(sourcePath, fileEntry.value)
+        String targetPath = getTargetPath(sourcePath, (String) fileEntry.value)
 
         File targetFile = file(libsPath + '/' + targetPath)
         if (targetFile.exists()) continue
@@ -104,6 +105,8 @@ baseJs.add(libsPath + '/jquery/jquery.min.js')
 baseJs.add(libsPath + '/twitter-bootstrap/js/bootstrap.min.js')
 // Autocomplete (Twitter TypeAhead)
 baseJs.add(libsPath + '/typeahead.js/typeahead.jquery.min.js')
+// Input Masking
+baseJs.add(libsPath + '/jquery.inputmask/jquery.inputmask.bundle.min.js')
 // Form Validation and AJAX (jquery-validation, jquery-form)
 baseJs.add(libsPath + '/jquery-validate/jquery.validate.min.js')
 baseJs.add(libsPath + '/jquery-validate/additional-methods.min.js')
@@ -111,7 +114,7 @@ baseJs.add(libsPath + '/jquery-validate/additional-methods.min.js')
 baseJs.add(libsPath + '/moment.js/moment-with-locales.min.js')
 baseJs.add(libsPath + '/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js')
 // Drop-down (Select2, Selectivity)
-baseJs.add(webrootPath + '/js/select2/select2.min.js')
+baseJs.add(webrootPath + '/js/select2.min.js')
 baseJs.add(libsPath + '/Selectivity.js/selectivity-full.min.js')
 // Notify/Growl (Bootstrap Notify)
 baseJs.add(libsPath + '/mouse0270-bootstrap-notify/bootstrap-notify.min.js')
@@ -135,6 +138,11 @@ vuetJs.add(libsPath + '/vue/vue.min.js')
 vuetJs.add(webrootPath + '/js/WebrootVue.min.js')
 
 
+task minifySelect2(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
+    source = file("${webrootPath}/js/select2/select2.js")
+    dest = file("${webrootPath}/js/select2.min.js")
+    closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }
+}
 task minifyMoquiLib(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     source = file("${webrootPath}/js/MoquiLib.js")
     dest = file("${webrootPath}/js/MoquiLib.min.js")
@@ -142,6 +150,7 @@ task minifyMoquiLib(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 }
 task combineBaseJs(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
     dependsOn downloadFiles
+    dependsOn minifySelect2
     dependsOn minifyMoquiLib
     encoding = "UTF-8"
     source = baseJs
