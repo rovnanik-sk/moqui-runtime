@@ -27,7 +27,10 @@ var moqui = {
         var tableArr = $('#' + outerId + ' table');
         var widthMaxArr = [];
         for (var i = 0; i < tableArr.length; i++) {
-            var row = tableArr[i].rows[0];
+            var curTable = tableArr[i];
+            if (!curTable.rows || curTable.rows.length === 0) continue;
+            var row = curTable.rows[0];
+            if (!row.cells || row.cells.length === 0) continue;
             for (var j = 0; j < row.cells.length; j++) {
                 var curWidth = $(row.cells[j]).width();
                 if (!widthMaxArr[j] || widthMaxArr[j] < curWidth) widthMaxArr[j] = curWidth;
@@ -38,8 +41,24 @@ var moqui = {
         var widthPercents = []; for (i = 0; i < numCols; i++) widthPercents[i] = (widthMaxArr[i] * 100) / totalWidth;
         // console.log("Columns " + numCols + ", percents: " + widthPercents);
         for (i = 0; i < tableArr.length; i++) {
-            row = tableArr[i].rows[0];
+            curTable = tableArr[i];
+            if (!curTable.rows || curTable.rows.length === 0) continue;
+            row = curTable.rows[0];
             for (j = 0; j < row.cells.length; j++) { row.cells[j].style.width = widthPercents[j]+'%'; }
+        }
+    },
+
+    downloadData: function download(data, filename, type) {
+        var file = new Blob([data], {type: type});
+        if (window.navigator.msSaveOrOpenBlob) { // IE10+
+            window.navigator.msSaveOrOpenBlob(file, filename);
+        } else { // Others
+            var a = document.createElement("a"), url = URL.createObjectURL(file);
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function() { document.body.removeChild(a); window.URL.revokeObjectURL(url); }, 0);
         }
     },
 
@@ -48,15 +67,15 @@ var moqui = {
         this.message = message; if (url) this.url = url;
         if (icon) { this.icon = icon; }
         else {
-            if (type == 'success') this.icon = 'glyphicon glyphicon-ok-sign';
-            else if (type == 'warning') this.icon = 'glyphicon glyphicon-warning-sign';
-            else if (type == 'danger') this.icon = 'glyphicon glyphicon-exclamation-sign';
+            if (type === 'success') this.icon = 'glyphicon glyphicon-ok-sign';
+            else if (type === 'warning') this.icon = 'glyphicon glyphicon-warning-sign';
+            else if (type === 'danger') this.icon = 'glyphicon glyphicon-exclamation-sign';
             else this.icon = 'glyphicon glyphicon-info-sign';
         }
     },
     NotifySettings: function(type) {
-        this.delay = 6000; this.offset = { x:20, y:70 };
-        this.animate = { enter:'animated fadeInDown', exit:'animated fadeOutUp' };
+        this.delay = 4000; this.offset = { x:20, y:60 }; this.placement = {from:'top',align:'right'};
+        this.animate = { enter:'animated fadeInDown', exit:'' }; // no animate on exit: animated fadeOutUp
         if (type) { this.type = type; } else { this.type = 'info'; }
         this.template =
             '<div data-notify="container" class="notify-container col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
@@ -90,8 +109,10 @@ var moqui = {
         };
         this.displayNotify = function(jsonObj, webSocket) {
             if (!webSocket.clientObj.displayEnable) return; // console.log(jsonObj);
-            if (jsonObj.title && jsonObj.showAlert == true) {
-                $.notify(new moqui.NotifyOptions(jsonObj.title, jsonObj.link, jsonObj.type, jsonObj.icon), new moqui.NotifySettings(jsonObj.type)); }
+            if (jsonObj.title && jsonObj.showAlert === true) {
+                $.notify(new moqui.NotifyOptions(jsonObj.title, jsonObj.link, jsonObj.type, jsonObj.icon), new moqui.NotifySettings(jsonObj.type));
+                if (moqui.webrootVue) { moqui.webrootVue.addNotify(jsonObj.title, jsonObj.type); }
+            }
         };
         this.registerListener = function(topic, callback) {
             if (!this.webSocket) this.initWebSocket();
@@ -100,7 +121,7 @@ var moqui = {
             var listenerArray = this.topicListeners[topic];
             if (!listenerArray) {
                 listenerArray = []; this.topicListeners[topic] = listenerArray;
-                if (this.webSocket.readyState == WebSocket.OPEN) this.webSocket.send("subscribe:" + topic);
+                if (this.webSocket.readyState === WebSocket.OPEN) this.webSocket.send("subscribe:" + topic);
             }
             if (listenerArray.indexOf(callback) < 0) { listenerArray.push(callback); }
         };
@@ -131,7 +152,7 @@ var moqui = {
         this._keyUsed = function(key) {
             var lruList = this.lruList;
             var lruIdx = -1;
-            for (var i=0; i<lruList.length; i++) { if (lruList[i] == key) { lruIdx = i; break; }}
+            for (var i=0; i<lruList.length; i++) { if (lruList[i] === key) { lruIdx = i; break; }}
             if (lruIdx >= 0) { lruList.splice(lruIdx,1); }
             lruList.unshift(key);
         };
@@ -141,6 +162,13 @@ var moqui = {
 // set defaults for select2
 $.fn.select2.defaults.set("theme", "bootstrap");
 $.fn.select2.defaults.set("minimumResultsForSearch", "10");
+$.fn.select2.defaults.set("dropdownAutoWidth", true);
+// for select2 with multiple delete item on backspace instead of changing it to text
+$.fn.select2.amd.require(['select2/selection/search'], function (Search) {
+    var oldRemoveChoice = Search.prototype.searchRemoveChoice;
+    Search.prototype.searchRemoveChoice = function () { oldRemoveChoice.apply(this, arguments); this.$search.val(''); };
+});
+$.fn.select2.defaults.set("selectOnClose", true);
 // this is a fix for Select2 search input within Bootstrap Modal
 $.fn.modal.Constructor.prototype.enforceFocus = function() {};
 // set validator defaults that work with select2
@@ -155,9 +183,29 @@ $.validator.setDefaults({ errorPlacement: function (error, element) {
 $.validator.prototype.errorsFor = function(element) {
     var name = this.escapeCssMeta(this.idOrName(element)), selector = "label[for='" + name + "'], label[for='" + name + "'] *";
     // 'aria-describedby' should directly reference the error element
-    if ( this.settings.errorElement != 'label' ) { selector = selector + ", #" + name + '-error'; }
+    if (this.settings.errorElement !== 'label') { selector = selector + ", #" + name + '-error'; }
     return this.errors().filter( selector );
 };
 
 // custom event handler: programmatically trigger validation
-$(function() { $('.select2-hidden-accessible').on('select2:select', function(evt) { $(evt.params.data.element).valid(); }); });
+$(function() { $('.select2-hidden-accessible').on('select2:select', function(evt) { $(this).valid(); }); });
+
+// a date/time alias for inputmask
+Inputmask.extendAliases({
+    'yyyy-mm-dd hh:mm': {
+        mask:"y-1-2 h:s", placeholder:"yyyy-mm-dd hh:mm", alias:"datetime", separator:"-", leapday:"-02-29",
+        regex: {
+            val2pre: function (separator) {
+                var escapedSeparator = Inputmask.escapeRegex.call(this, separator);
+                return new RegExp("((0[13-9]|1[012])" + escapedSeparator + "[0-3])|(02" + escapedSeparator + "[0-2])");
+            }, //daypre
+            val2: function (separator) {
+                var escapedSeparator = Inputmask.escapeRegex.call(this, separator);
+                return new RegExp("((0[1-9]|1[012])" + escapedSeparator + "(0[1-9]|[12][0-9]))|((0[13-9]|1[012])" + escapedSeparator + "30)|((0[13578]|1[02])" + escapedSeparator + "31)");
+            }, //day
+            val1pre: new RegExp("[01]"), //monthpre
+            val1: new RegExp("0[1-9]|1[012]") //month
+        },
+        onKeyDown: function (e, buffer, caretPos, opts) { }
+    }
+});

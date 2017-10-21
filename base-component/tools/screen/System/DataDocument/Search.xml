@@ -20,10 +20,12 @@ along with this software (see the LICENSE.md file). If not, see
 
     <actions>
         <if condition="queryString">
-            <service-call name="org.moqui.search.SearchServices.search#DataDocuments" out-map="context" in-map="context"/>
+            <service-call name="org.moqui.search.SearchServices.search#DataDocuments" out-map="context" in-map="context + [flattenDocument:false]"/>
         </if>
     </actions>
     <widgets>
+        <link url="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax"
+                url-type="plain" link-type="anchor" target-window="_blank" text="Search String Reference"/>
         <form-single name="SearchOptions" transition=".">
             <field name="indexName"><default-field title="">
                 <drop-down>
@@ -41,7 +43,9 @@ along with this software (see the LICENSE.md file). If not, see
                     <text-line ac-transition="searchSuggest" ac-min-length="3" size="40"/> -->
             </default-field></field>
             <field name="submitButton"><default-field title="Search"><submit/></default-field></field>
-            <field-layout><field-row-big><field-ref name="indexName"/><field-ref name="queryString"/><field-ref name="submitButton"/></field-row-big></field-layout>
+
+            <field-layout><field-row-big><field-ref name="indexName"/><field-ref name="queryString"/>
+                <field-ref name="submitButton"/></field-row-big></field-layout>
         </form-single>
 
         <form-list name="SearchResults" list="documentList" paginate="true" paginate-always-show="true">
@@ -49,18 +53,22 @@ along with this software (see the LICENSE.md file). If not, see
                 <entity-find-one entity-name="DataDocument" value-field="dataDocument" cache="true">
                     <field-map field-name="dataDocumentId" from="_type"/>
                 </entity-find-one>
-                <!-- this is a type=many relationship, but we just want one here: -->
-                <entity-find-related-one value-field="dataDocument" cache="true"
-                        relationship-name="moqui.entity.document.DataDocumentLink" to-value-field="dataDocumentLink"/>
-                <set field="linkUrl" from="ec.resource.expand(dataDocumentLink?.linkUrl, '')"/>
                 <set field="documentTitle" from="ec.resource.expand(dataDocument?.documentTitle, '')"/>
+
+                <entity-find entity-name="moqui.entity.document.DataDocumentLink" list="ddLinkList" cache="true">
+                    <econdition field-name="dataDocumentId" from="_type"/></entity-find>
+                <set field="linksList" from="[]"/>
+                <iterate list="ddLinkList" entry="ddLink"><if condition="!ddLink.linkCondition || ec.resource.condition(ddLink.linkCondition, '')">
+                    <script>linksList.add(ddLink)</script></if></iterate>
             </row-actions>
             <field name="type"><default-field><display text="${dataDocument.documentName} [${_type}]"/></default-field></field>
             <field name="id"><default-field><display text="${_id}"/></default-field></field>
             <field name="documentTitle"><default-field title="Title"><display/></default-field></field>
             <field name="link"><default-field>
-                <link url="${linkUrl}" text="${dataDocumentLink.label}" link-type="anchor" url-type="plain"
-                        condition="dataDocumentLink"/>
+                <section-iterate name="LinksListSection" list="linksList" entry="ddLink"><widgets>
+                    <link url="${ec.resource.expand(ddLink.linkUrl, null)}" text="${ec.resource.expand(ddLink.label, null)}"
+                            link-type="anchor" url-type="${ddLink.urlType?:'plain'}"/>
+                </widgets></section-iterate>
             </default-field></field>
             <field name="viewDocument"><default-field>
                 <dynamic-dialog id="ViewDocument" button-text="View Document" transition="viewDocument" width="800">
