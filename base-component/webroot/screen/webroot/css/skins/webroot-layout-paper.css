@@ -10,7 +10,7 @@
 input.typeahead-suggestions.form-control.tt-hint { top: inherit !important; }
 
 /*company logo*/
-/*.navbar-brand>img { border-radius: 3px; box-shadow: 1px 1px 4px rgba(0,0,0,0.4); }*/
+.navbar-brand>img { border-radius: 3px; box-shadow: 1px 1px 4px rgba(0,0,0,0.4); }
 
 textarea, textarea.form-control, input.form-control, input[type=text], input[type=password], input[type=email], input[type=number], [type=text].form-control, [type=password].form-control, [type=email].form-control, [type=tel].form-control, [contenteditable].form-control {font-size: inherit;}
 
