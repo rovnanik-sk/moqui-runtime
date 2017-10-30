@@ -81,7 +81,10 @@ def fileMap = [
 
     // NOTE: for production change to min in vapps.xml; currently using dev version for errors/warnings/etc
     "vue/2.4.4/vue.js":"",
-    "vue/2.4.4/vue.min.js":""
+    "vue/2.4.4/vue.min.js":"",
+
+    //vue-localization
+    "vue-i18n/7.3.2/vue-i18n.min.js":""
 ]
 
 String getTargetPath(String sourcePath, String targetPath) {

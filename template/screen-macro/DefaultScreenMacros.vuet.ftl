@@ -470,7 +470,52 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         </#list>
     </div>
 </#macro>
-
+<#macro "paginated-table">
+    <#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
+    <#assign transition = .node["@transition-used"]!"forgot-to-set-transition">
+    <#assign tableType = .node["@table-type"]!"vuetable">
+    <#assign perPage = .node["@per-page"]!"20">
+    <#assign dataLoaded = .node["@data-path"]!"dataLoaded">
+    <#assign fieldsSet = sri.getFieldOptions(.node)>
+    <#assign paginationPath = .node["@pagination-path"]!"pagination">
+    <#assign onEachSide = .node["@on-each-side"]!"3">
+    <div id="app">
+        <div id="${fieldsSet.keySet()}">
+            <${tableType}
+                api-url="${targetUrl}/${transition}"
+                :fields="${fieldsSet.keySet()}"
+                :per-page="${perPage}"
+                data-path="${dataLoaded}"
+                pagination-path="${paginationPath}"
+                :query-params="{sort: 'sort', page: 'pageIndex', perPage: 'pageSize'}"
+                :css="{
+                        table: {
+                            tableClass : 'table table-striped table-hover table-condensed',
+                            loadingClass: 'loading',
+                            ascendingIcon: 'glyphicon glyphicon-chevron-up',
+                            descendingIcon: 'glyphicon glyphicon-chevron-down',
+                            handleIcon: 'glyphicon glyphicon-menu-hamburger'
+                        },
+                        pagination: {
+                            infoClass: 'pull-left',
+                            wrapperClass: 'vuetable-pagination pull-right form-list-nav',
+                            activeClass: 'btn-primary',
+                            disabledClass: 'disabled',
+                            pageClass: 'btn btn-border',
+                            linkClass: 'btn btn-border',
+                            icons: {
+                                first: '',
+                                prev: '',
+                                next: '',
+                                last: ''
+                            }
+                        }
+                    }"
+                :on-each-side="${onEachSide}">
+            </${tableType}>
+        </div>
+    </div>
+</#macro>
 <#macro formSingleSubField fieldNode formId>
     <#list fieldNode["conditional-field"] as fieldSubNode>
         <#if ec.getResource().condition(fieldSubNode["@condition"], "")>
