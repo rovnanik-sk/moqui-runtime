@@ -69,6 +69,9 @@
             refer to a file to override the default macros. -->
         <screen-text-output type="html" mime-type="text/html"
                             macro-template-location="template/screen-macro/rskScreenMacros.html.ftl"/>
+
+        <screen-text-output type="vuet" mime-type="text/html"
+                            macro-template-location="template/screen-macro/rskScreenMacros.vuet.ftl"/>
     </screen-facade>
 
     <entity-facade query-stats="true">

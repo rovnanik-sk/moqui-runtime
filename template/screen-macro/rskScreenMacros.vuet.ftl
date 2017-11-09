@@ -1,4 +1,4 @@
-<#include "DefaultScreenMacros.html.ftl"/>
+<#include "DefaultScreenMacros.vuet.ftl"/>
 
 <#macro file><input type="file" class="form-control" name="<@fieldName .node/>"<#if .node["@allowMultiple"]! == "true"> multiple="multiple"</#if> value="${sri.getFieldValueString(.node?parent?parent, .node["@default-value"]!"", null)?html}" size="${.node.@size!"30"}"<#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if>></#macro>
 
