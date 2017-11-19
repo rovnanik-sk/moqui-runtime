@@ -29,6 +29,11 @@ along with this software (see the LICENSE.md file). If not, see
     </transition>
     <transition name="menuData" read-only="true" begin-transaction="false">
         <actions><script><![CDATA[
+            ec.logger.info("[1] sri.screenUrlInfo: ${sri.screenUrlInfo}")
+            ec.logger.info("[2] sri.screenUrlInfo.rootSd: ${sri.screenUrlInfo.rootSd}")
+            ec.logger.info("[3] ec.web.request: ${ec.web.request}")
+            ec.logger.info("[4 ]ec.web.getWebappRootUrl: ${ec.web.getWebappRootUrl(true, true)}")
+
             List menuDataList = sri.getMenuData(sri.screenUrlInfo.extraPathNameList)
             if (menuDataList != null) ec.web.sendJsonResponse(menuDataList)
         ]]></script></actions>
