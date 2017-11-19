@@ -20,3 +20,6 @@ textarea, textarea.form-control, input.form-control, input[type=text], input[typ
 
 /*fixes*/
 .select2-container { margin-top: 1px; }
+
+/*table*/
+table > tbody > tr > td.text-right { padding-right: 30px}

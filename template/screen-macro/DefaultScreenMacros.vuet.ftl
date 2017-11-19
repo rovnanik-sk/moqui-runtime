@@ -473,20 +473,23 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 <#macro "paginated-table">
     <#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
     <#assign transition = .node["@transition-used"]!"forgot-to-set-transition">
+    <#assign searchPartiesTransition = .node["@search-parties"]!"findParty">
     <#assign tableType = .node["@table-type"]!"vuetable">
     <#assign perPage = .node["@per-page"]!"20">
     <#assign dataLoaded = .node["@data-path"]!"dataLoaded">
     <#assign fieldsSet = sri.getFieldOptions(.node)>
     <#assign paginationPath = .node["@pagination-path"]!"pagination">
     <#assign onEachSide = .node["@on-each-side"]!"3">
+    <#assign myFieldsPassed = .node["@columns-setup"]!"[{'name':'lastUpdatedStamp'}]">
     <div id="app">
-        <div id="${fieldsSet.keySet()}">
+        <div id="vi-paginated-table-1">
             <${tableType}
                 api-url="${targetUrl}/${transition}"
-                :fields="${fieldsSet.keySet()}"
+                :fields="${myFieldsPassed}"
                 :per-page="${perPage}"
                 data-path="${dataLoaded}"
                 pagination-path="${paginationPath}"
+                search-parties-api-url="${targetUrl}/${searchPartiesTransition}"
                 :query-params="{sort: 'sort', page: 'pageIndex', perPage: 'pageSize'}"
                 :css="{
                         table: {
