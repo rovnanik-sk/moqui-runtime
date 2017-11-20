@@ -29,9 +29,6 @@ along with this software (see the LICENSE.md file). If not, see
     </transition>
     <transition name="menuData" read-only="true" begin-transaction="false">
         <actions><script><![CDATA[
-            ec.logger.info("getRequest(): ${ec.web.getRequest()}")
-            ec.logger.info("getRequest().getServletPath(): ${ec.web.getRequest().getServletPath()}")
-
             List menuDataList = sri.getMenuData(sri.screenUrlInfo.extraPathNameList)
             if (menuDataList != null) ec.web.sendJsonResponse(menuDataList)
         ]]></script></actions>
