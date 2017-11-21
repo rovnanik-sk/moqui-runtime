@@ -84,7 +84,8 @@ def fileMap = [
     "vue/2.4.4/vue.min.js":"",
 
     //vue-localization
-    "vue-i18n/7.3.2/vue-i18n.min.js":""
+    "vue-i18n/7.3.2/vue-i18n.min.js":"",
+    "corejs-typeahead/1.2.1/bloodhound.js":""
 ]
 
 String getTargetPath(String sourcePath, String targetPath) {
@@ -135,6 +136,8 @@ baseJs.add(libsPath + '/jeditable.js/jeditable.min.js')
 baseJs.add(webrootPath + '/js/jquery-sortable-lists/jquery-sortable-lists.min.js')
 // Moqui Library (3rd party lib workarounds, NotificationClient, etc)
 baseJs.add(webrootPath + '/js/MoquiLib.min.js')
+//bloodhound
+baseJs.add(libsPath + '/corejs-typeahead/bloodhound.js')
 
 def htmlJs = []
 // Form AJAX (jquery-form)
