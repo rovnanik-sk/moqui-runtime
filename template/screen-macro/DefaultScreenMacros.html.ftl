@@ -1807,7 +1807,7 @@ a => A, d => D, y => Y
 
     <#if .node["@type"]! == "time"><#assign size=9><#assign maxlength=13><#assign extraFormatsVal = "['LT', 'LTS', 'HH:mm']">
         <#elseif .node["@type"]! == "date"><#assign size=10><#assign maxlength=10><#assign extraFormatsVal = "['l', 'L', 'YYYY-MM-DD']">
-        <#else><#assign size=16><#assign maxlength=23><#assign extraFormatsVal = "['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm']"></#if>
+        <#else><#assign size=16><#assign maxlength=23><#assign extraFormatsVal = "['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm', 'DD.MM.YYYY']"></#if>
     <#assign size = .node["@size"]!size>
     <#assign maxlength = .node["@max-length"]!maxlength>
 
@@ -2113,6 +2113,7 @@ a => A, d => D, y => Y
     <#assign validationClasses = formInstance.getFieldValidationClasses(tlFieldNode["@name"])>
     <#assign regexpInfo = formInstance.getFieldValidationRegexpInfo(tlFieldNode["@name"])!>
     <#assign forceNumberClass = .node["@force-number-class"]! == "true">
+    <#if validationClasses?contains("number") || forceNumberClass><#assign fieldValue = fieldValue?replace(",", "")></#if>
     <#if .node["@ac-transition"]?has_content>
         <#assign acUrlInfo = sri.makeUrlByType(.node["@ac-transition"], "transition", .node, "false")>
         <#assign acUrlParameterMap = acUrlInfo.getParameterMap()>

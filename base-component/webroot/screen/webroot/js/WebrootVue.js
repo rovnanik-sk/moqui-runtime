@@ -802,7 +802,7 @@ Vue.component('date-time', {
     template:
     '<input v-if="type==\'time\'" type="text" class="form-control" :pattern="timePattern" :name="name" :value="value" :size="sizeVal" :data-toggle="{tooltip:(tooltip&&tooltip.length>0)}" :title="tooltip" :form="form">' +
     '<div v-else class="input-group date" :id="id">' +
-        '<input ref="dateInput" @focus="focusDate" @blur="blurDate" type="text" class="form-control" :name="name" :value="value" :size="sizeVal" :data-toggle="{tooltip:(tooltip&&tooltip.length>0)}" :title="tooltip" :form="form" :required="required == \'required\' ? true : false">' +
+        '<input ref="dateInput" @focus="focusDate,$event.target.select()" @change="valueChanged" @blur="blurDate" type="text" class="form-control" :name="name" :value="value" :size="sizeVal" :data-toggle="{tooltip:(tooltip&&tooltip.length>0)}" :title="tooltip" :form="form" :required="required == \'required\' ? true : false">' +
         '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>' +
     '</div>',
     methods: {
@@ -821,13 +821,35 @@ Vue.component('date-time', {
             // default time to noon, or minutes to 00
             if (curVal.indexOf('hh:mm') > 0) { inputEl.val(curVal.replace('hh:mm', '12:00')); inputEl.trigger("change"); return; }
             if (curVal.indexOf(':mm') > 0) { inputEl.val(curVal.replace(':mm', ':00')); inputEl.trigger("change"); return; }
+        },
+        valueChanged: function() {
+            var inputEl = $(this.$refs.dateInput); var curVal = inputEl.val();
+            var myRe = /(0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])((19|20)\d{2})/g
+            var myArrayExec = myRe.exec(curVal);
+
+            //leave if regex not matched
+            if (myArrayExec === null) return;
+
+            var testDate = moment(myArrayExec[3] + '-' + myArrayExec[2] + '-' + myArrayExec[1]);
+            var reYear = Number(myArrayExec[3]);
+            var reMonth = Number(myArrayExec[2]);
+            var reDay = Number(myArrayExec[1]);
+            var tdYear = Number(testDate.format('YYYY'));
+            var tdMonth = Number(testDate.format('MM'));
+            var tdDay = Number(testDate.format('DD'));
+
+            if (reYear === tdYear && reMonth === tdMonth && reDay === tdDay) {
+                //console.log("MATCH");
+
+                inputEl.val(testDate.format('DD.MM.YYYY'));
+            }
         }
     },
     computed: {
         formatVal: function() { var format = this.format; if (format && format.length > 0) { return format; }
             return this.type === 'time' ? 'HH:mm' : (this.type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'); },
         extraFormatsVal: function() { return this.type === 'time' ? ['LT', 'LTS', 'HH:mm'] :
-            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm']); },
+            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm', 'DD.MM.YYYY']); },
         sizeVal: function() { var size = this.size; if (size && size.length > 0) { return size; }
             return this.type === 'time' ? '9' : (this.type === 'date' ? '10' : '16'); },
         timePattern: function() { return '^(?:(?:([01]?\\d|2[0-3]):)?([0-5]?\\d):)?([0-5]?\\d)$'; }
