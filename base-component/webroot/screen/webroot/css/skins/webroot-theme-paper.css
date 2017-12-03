@@ -45,3 +45,7 @@ hr.compact {
     max-height: calc(100vh - 212px);
     overflow-y: auto;
 }
+
+.label-success {
+    background-color: #41b883;
+}
