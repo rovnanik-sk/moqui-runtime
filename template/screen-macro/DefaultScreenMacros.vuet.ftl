@@ -474,23 +474,31 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
     <#assign transition = .node["@transition-used"]!"forgot-to-set-transition">
     <#assign searchPartiesTransition = .node["@search-parties"]!"findParty">
+    <#assign updateManualCategoryTransition = .node["@manual-category-transition"]!"updateCategory">
+    <#assign loadTagsTransition = .node["@load-tags-transition"]!"loadTags">
     <#assign tableType = .node["@table-type"]!"vuetable">
     <#assign perPage = .node["@per-page"]!"20">
     <#assign dataLoaded = .node["@data-path"]!"dataLoaded">
     <#assign fieldsSet = sri.getFieldOptions(.node)>
     <#assign paginationPath = .node["@pagination-path"]!"pagination">
     <#assign onEachSide = .node["@on-each-side"]!"3">
-    <#assign myFieldsPassed = .node["@columns-setup"]!"[{'name':'lastUpdatedStamp'}]">
+    <#assign trackBy = .node["@track-by"]!"id">
+    <#assign internalCompanies = .node["@internal-companies"]!"[]">
+    <#assign multiSort = .node["@multi-sort"]!"true">
+    <#assign vueCols = sri.getVueColumns(.node)>
     <div id="app">
         <div id="vi-paginated-table-1">
             <${tableType}
                 api-url="${targetUrl}/${transition}"
-                :fields="${myFieldsPassed}"
+                :fields="${vueCols}"
                 :per-page="${perPage}"
                 data-path="${dataLoaded}"
                 pagination-path="${paginationPath}"
                 search-parties-api-url="${targetUrl}/${searchPartiesTransition}"
-                :query-params="{sort: 'sort', page: 'pageIndex', perPage: 'pageSize'}"
+                update-manual-category-url="${targetUrl}/${updateManualCategoryTransition}"
+                load-tags-url="${targetUrl}/${loadTagsTransition}"
+                :query-params="{sort: 'orderByField', page: 'pageIndex', perPage: 'pageSize'}"
+                track-by="${trackBy}"
                 :css="{
                         table: {
                             tableClass : 'table table-striped table-hover table-condensed',
@@ -514,7 +522,9 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                             }
                         }
                     }"
-                :on-each-side="${onEachSide}">
+                :on-each-side="${onEachSide}"
+                :internal-companies="${internalCompanies}"
+                :multi-sort="${multiSort}">
             </${tableType}>
         </div>
     </div>
