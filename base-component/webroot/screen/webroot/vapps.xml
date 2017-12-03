@@ -28,7 +28,10 @@ along with this software (see the LICENSE.md file). If not, see
         String instancePurpose = System.getProperty("instance_purpose")
         if (!instancePurpose || instancePurpose == 'production') {
             /* ========== Production Mode ========== */
-            footer_scripts.add('/js/CombinedVuet.min.js')
+            // Vue JS
+            html_scripts.add('/libs/vue/vue.min.js')
+            /*footer_scripts.add('/js/CombinedVuet.min.js') THIS HAS NOT WORKED FOR ME*/
+            footer_scripts.add('/js/WebrootVue.min.js')
         } else {
             /* ========== Dev Mode ========== */
             // Vue JS
