@@ -108,7 +108,34 @@ moqui.format = function(value, format, type) {
     }
 };
 Vue.filter('format', moqui.format);
-
+/* ========== Event Bus for Handling events ========== */
+moqui.EventBus = new Vue();
+/* ========== */
+var hidden, visibilityChange;
+if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+    hidden = "hidden";
+    visibilityChange = "visibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+    hidden = "msHidden";
+    visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+    hidden = "webkitHidden";
+    visibilityChange = "webkitvisibilitychange";
+}
+function handleVisibilityChange() {
+    if (document[hidden]) {
+        moqui.EventBus.$emit('tab-hidden', event);
+    } else {
+        moqui.EventBus.$emit('tab-shown', event);
+    }
+}
+// Warn if the browser doesn't support addEventListener or the Page Visibility API
+if (typeof document.addEventListener === "undefined" || typeof document.hidden === "undefined") {
+    console.log("Current browser does not support the Page Visibility API, automatic refresh shall not work.");
+} else {
+    // Handle page visibility change
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
+}
 /* ========== script and stylesheet handling methods ========== */
 moqui.loadScript = function(src) {
     // make sure the script isn't loaded
@@ -465,7 +492,7 @@ Vue.component('m-editable', {
 Vue.component('m-form', {
     props: { action:{type:String,required:true}, method:{type:String,'default':'POST'},
         submitMessage:String, submitReloadId:String, submitHideId:String, focusField:String, noValidate:Boolean },
-    data: function() { return { fields:{}, fieldsChanged:{} }},
+    data: function() { return { fields:{}, fieldsChanged:{}}},
     template: '<form @submit.prevent="submitForm"><slot></slot></form>',
     methods: {
         submitForm: function submitForm() {
@@ -535,6 +562,10 @@ Vue.component('m-form', {
                 $.notify({ message:"Form data saved" }, moqui.notifyOpts);
             }
         },
+        fireButtonEvent: function(evt){
+            var buttonClicked = evt.delegateTarget;
+            moqui.EventBus.$emit('button-clicked', evt)
+        },
         fieldChange: function (evt) {
             var targetDom = evt.delegateTarget; var targetEl = $(targetDom);
             if (targetEl.hasClass("input-group") && targetEl.children("input").length) {
@@ -586,6 +617,8 @@ Vue.component('m-form', {
         jqEl.find(':input').on('change', this.fieldChange);
         // special case for date-time using bootstrap-datetimepicker
         jqEl.find('div.input-group.date').on('change', this.fieldChange);
+        //fire button event
+        jqEl.find('.btn').on('click', this.fireButtonEvent)
     }
 });
 Vue.component('form-link', {
@@ -1324,7 +1357,11 @@ moqui.webrootVue = new Vue({
             set: function(newSearch) { this.currentParameters = moqui.searchToObj(newSearch); }
         },
         currentLinkUrl: function() { var srch = this.currentSearch; return this.currentLinkPath + (srch.length > 0 ? '?' + srch : ''); },
-        ScreenTitle: function() { return this.navMenuList.length > 0 ? this.navMenuList[this.navMenuList.length - 1].title : ""; }
+        ScreenTitle: function() { return this.navMenuList.length > 0 ? this.navMenuList[this.navMenuList.length - 1].title : ""; },
+        currentParentUrl: function() {
+            var curPath = this.currentPathList.slice(0,-1);
+            return this.linkBasePath + (curPath && curPath.length > 0 ? '/' + curPath.join('/') : '')
+        }
     },
     created: function() {
         this.moquiSessionToken = $("#confMoquiSessionToken").val();
