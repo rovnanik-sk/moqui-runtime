@@ -554,7 +554,6 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#assign multiSort = .node["@multi-sort"]!"true">
     <#assign vueCols = sri.getVueColumns(.node)>
     <div id="app">
-        <pre>${internalCompanies}</pre>
         <div id="vi-paginated-table-1">
             <${tableType}
                 api-url="${targetUrl}/${transition}"
