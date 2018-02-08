@@ -1816,10 +1816,9 @@ a => A, d => D, y => Y
     <#assign tlFieldNode = tlSubFieldNode?parent>
     <#assign tlId><@fieldId .node/></#assign>
     <#assign name><@fieldName .node/></#assign>
-    <#--<#assign fieldValue = sri.getFieldValueString(.node)>-->
     <#assign fieldValue = sri.getFieldValueStringUS(.node)>
-    <#assign validationClasses = formInstance.getFieldValidationClasses(tlFieldNode["@name"])>
-    <#assign regexpInfo = formInstance.getFieldValidationRegexpInfo(tlFieldNode["@name"])!>
+    <#assign validationClasses = formInstance.getFieldValidationClasses(tlSubFieldNode)>
+    <#assign regexpInfo = formInstance.getFieldValidationRegexpInfo(tlSubFieldNode)!>
     <#assign forceNumberClass = .node["@force-number-class"]! == "true">
     <#if validationClasses?contains("number") || forceNumberClass><#assign fieldValue = fieldValue?replace(",", "")></#if>
     <#-- NOTE: removed number type (<#elseif validationClasses?contains("number")>number) because on Safari, maybe others, ignores size and behaves funny for decimal values -->
@@ -1829,7 +1828,7 @@ a => A, d => D, y => Y
         <#assign acShowValue = .node["@ac-show-value"]! == "true">
         <#assign acUseActual = .node["@ac-use-actual"]! == "true">
         <#if .node["@ac-initial-text"]?has_content><#assign valueText = ec.getResource().expand(.node["@ac-initial-text"]!, "")>
-            <#else><#assign valueText = fieldValue></#if>
+        <#else><#assign valueText = fieldValue></#if>
         <#assign depNodeList = .node["depends-on"]>
         <text-autocomplete id="${tlId}" name="${name}" url="${acUrlInfo.url}" value="${fieldValue?html}" value-text="${valueText?html}"<#rt>
                 <#t> type="<#if validationClasses?contains("email")>email<#elseif validationClasses?contains("url")>url<#else>text</#if>" size="${.node.@size!"30"}"
@@ -1863,11 +1862,11 @@ a => A, d => D, y => Y
             <#assign depNodeList = .node["depends-on"]>
             <m-script>
                 function populate_${tlId}() {
-                    // if ($('#${tlId}').val()) return;
-                    var hasAllParms = true;
+                // if ($('#${tlId}').val()) return;
+                var hasAllParms = true;
                     <#list depNodeList as depNode>if (!$('#<@fieldIdByName depNode["@field"]/>').val()) { hasAllParms = false; } </#list>
-                    if (!hasAllParms) { <#-- alert("not has all parms"); --> return; }
-                    $.ajax({ type:"POST", url:"${defUrlInfo.url}", data:{ moquiSessionToken: "${(ec.getWeb().sessionToken)!}"<#rt>
+                if (!hasAllParms) { <#-- alert("not has all parms"); --> return; }
+                $.ajax({ type:"POST", url:"${defUrlInfo.url}", data:{ moquiSessionToken: "${(ec.getWeb().sessionToken)!}"<#rt>
                             <#t><#list depNodeList as depNode><#local depNodeField = depNode["@field"]><#local _void = defUrlParameterMap.remove(depNodeField)!>, "${depNode["@parameter"]!depNodeField}": $("#<@fieldIdByName depNodeField/>").val()</#list>
                             <#t><#list defUrlParameterMap.keySet() as parameterKey><#if defUrlParameterMap.get(parameterKey)?has_content>, "${parameterKey}":"${defUrlParameterMap.get(parameterKey)}"</#if></#list>
                             <#t>}, dataType:"text", success:function(defaultText) {   $('#${tlId}').val(defaultText);  } });
