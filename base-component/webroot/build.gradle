@@ -29,6 +29,14 @@ def fileMap = [
     "twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff":"",
     "twitter-bootstrap/3.3.7/fonts/glyphicons-halflings-regular.woff2":"",
 
+    "bootswatch/3.3.7/paper/bootstrap.css": "",
+    "bootswatch/3.3.7/paper/bootstrap.min.css": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.eot": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.svg": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.ttf": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.woff": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.woff2": "",
+
     "bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css":"",
     "bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js":"",
 
@@ -73,7 +81,11 @@ def fileMap = [
 
     // NOTE: for production change to min in vapps.xml; currently using dev version for errors/warnings/etc
     "vue/2.4.4/vue.js":"",
-    "vue/2.4.4/vue.min.js":""
+    "vue/2.4.4/vue.min.js":"",
+
+    //vue-localization
+    "vue-i18n/7.3.2/vue-i18n.min.js":"",
+    "corejs-typeahead/1.2.1/bloodhound.js":""
 ]
 
 String getTargetPath(String sourcePath, String targetPath) {
@@ -124,6 +136,8 @@ baseJs.add(libsPath + '/jeditable.js/jeditable.min.js')
 baseJs.add(webrootPath + '/js/jquery-sortable-lists/jquery-sortable-lists.min.js')
 // Moqui Library (3rd party lib workarounds, NotificationClient, etc)
 baseJs.add(webrootPath + '/js/MoquiLib.min.js')
+//bloodhound
+baseJs.add(libsPath + '/corejs-typeahead/bloodhound.js')
 
 def htmlJs = []
 // Form AJAX (jquery-form)

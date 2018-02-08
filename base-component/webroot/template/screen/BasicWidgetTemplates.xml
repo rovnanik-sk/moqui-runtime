@@ -17,8 +17,8 @@ along with this software (see the LICENSE.md file). If not, see
 
     <widget-template name="enumDropDown">
         <drop-down allow-empty="${allowEmpty ?: 'false'}" no-current-selected-key="${noCurrentSelectedKey?:''}"
-                   style="${style?:''}" allow-multiple="${allowMultiple ?: 'false'}" show-not="${showNot ?: 'false'}">
-            <entity-options key="${enumId}" text="EnumerationNameTemplate">
+                   style="${style?:''}" allow-multiple="${allowMultiple ?: 'false'}" show-not="${showNot ?: 'false'}>
+            <entity-options key="${enumId}" text="${description}">
                 <entity-find entity-name="moqui.basic.Enumeration">
                     <econdition field-name="enumTypeId"/>
                     <econdition field-name="parentEnumId" operator="in" ignore-if-empty="true"/>
@@ -59,7 +59,7 @@ along with this software (see the LICENSE.md file). If not, see
     <widget-template name="statusDropDown">
         <drop-down allow-empty="${allowEmpty ?: 'false'}" no-current-selected-key="${noCurrentSelectedKey?:''}"
                 style="${style?:''}" allow-multiple="${allowMultiple ?: 'false'}" show-not="${showNot ?: 'false'}">
-            <entity-options key="${statusId}" text="StatusItemNameTemplate">
+            <entity-options key="${statusId}" text="${description}">
                 <entity-find entity-name="moqui.basic.StatusItem">
                     <econdition field-name="statusTypeId"/>
                     <order-by field-name="sequenceNum"/>

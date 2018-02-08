@@ -108,7 +108,34 @@ moqui.format = function(value, format, type) {
     }
 };
 Vue.filter('format', moqui.format);
-
+/* ========== Event Bus for Handling events ========== */
+moqui.EventBus = new Vue();
+/* ========== */
+var hidden, visibilityChange;
+if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
+    hidden = "hidden";
+    visibilityChange = "visibilitychange";
+} else if (typeof document.msHidden !== "undefined") {
+    hidden = "msHidden";
+    visibilityChange = "msvisibilitychange";
+} else if (typeof document.webkitHidden !== "undefined") {
+    hidden = "webkitHidden";
+    visibilityChange = "webkitvisibilitychange";
+}
+function handleVisibilityChange() {
+    if (document[hidden]) {
+        moqui.EventBus.$emit('tab-hidden', event);
+    } else {
+        moqui.EventBus.$emit('tab-shown', event);
+    }
+}
+// Warn if the browser doesn't support addEventListener or the Page Visibility API
+if (typeof document.addEventListener === "undefined" || typeof document.hidden === "undefined") {
+    console.log("Current browser does not support the Page Visibility API, automatic refresh shall not work.");
+} else {
+    // Handle page visibility change
+    document.addEventListener(visibilityChange, handleVisibilityChange, false);
+}
 /* ========== script and stylesheet handling methods ========== */
 moqui.loadScript = function(src) {
     // make sure the script isn't loaded
@@ -479,7 +506,7 @@ Vue.component('m-editable', {
 Vue.component('m-form', {
     props: { action:{type:String,required:true}, method:{type:String,'default':'POST'},
         submitMessage:String, submitReloadId:String, submitHideId:String, focusField:String, noValidate:Boolean },
-    data: function() { return { fields:{}, fieldsChanged:{} }},
+    data: function() { return { fields:{}, fieldsChanged:{}}},
     template: '<form @submit.prevent="submitForm"><slot></slot></form>',
     methods: {
         submitForm: function submitForm() {
@@ -549,6 +576,10 @@ Vue.component('m-form', {
                 $.notify({ message:"Form data saved" }, moqui.notifyOpts);
             }
         },
+        fireButtonEvent: function(evt){
+            var buttonClicked = evt.delegateTarget;
+            moqui.EventBus.$emit('button-clicked', evt)
+        },
         fieldChange: function (evt) {
             var targetDom = evt.delegateTarget; var targetEl = $(targetDom);
             if (targetEl.hasClass("input-group") && targetEl.children("input").length) {
@@ -600,6 +631,8 @@ Vue.component('m-form', {
         jqEl.find(':input').on('change', this.fieldChange);
         // special case for date-time using bootstrap-datetimepicker
         jqEl.find('div.input-group.date').on('change', this.fieldChange);
+        //fire button event
+        jqEl.find('.btn').on('click', this.fireButtonEvent)
     }
 });
 Vue.component('form-link', {
@@ -816,7 +849,7 @@ Vue.component('date-time', {
     template:
     '<input v-if="type==\'time\'" type="text" class="form-control" :pattern="timePattern" :name="name" :value="value" :size="sizeVal" :data-toggle="{tooltip:(tooltip&&tooltip.length>0)}" :title="tooltip" :form="form">' +
     '<div v-else class="input-group date" :id="id">' +
-        '<input ref="dateInput" @focus="focusDate" @blur="blurDate" type="text" class="form-control" :name="name" :value="value" :size="sizeVal" :data-toggle="{tooltip:(tooltip&&tooltip.length>0)}" :title="tooltip" :form="form" :required="required == \'required\' ? true : false">' +
+        '<input ref="dateInput" @focus="focusDate,$event.target.select()" @change="valueChanged" @blur="blurDate" type="text" class="form-control" :name="name" :value="value" :size="sizeVal" :data-toggle="{tooltip:(tooltip&&tooltip.length>0)}" :title="tooltip" :form="form" :required="required == \'required\' ? true : false">' +
         '<span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>' +
     '</div>',
     methods: {
@@ -835,13 +868,35 @@ Vue.component('date-time', {
             // default time to noon, or minutes to 00
             if (curVal.indexOf('hh:mm') > 0) { inputEl.val(curVal.replace('hh:mm', '12:00')); inputEl.trigger("change"); return; }
             if (curVal.indexOf(':mm') > 0) { inputEl.val(curVal.replace(':mm', ':00')); inputEl.trigger("change"); return; }
+        },
+        valueChanged: function() {
+            var inputEl = $(this.$refs.dateInput); var curVal = inputEl.val();
+            var myRe = /(0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])((19|20)\d{2})/g
+            var myArrayExec = myRe.exec(curVal);
+
+            //leave if regex not matched
+            if (myArrayExec === null) return;
+
+            var testDate = moment(myArrayExec[3] + '-' + myArrayExec[2] + '-' + myArrayExec[1]);
+            var reYear = Number(myArrayExec[3]);
+            var reMonth = Number(myArrayExec[2]);
+            var reDay = Number(myArrayExec[1]);
+            var tdYear = Number(testDate.format('YYYY'));
+            var tdMonth = Number(testDate.format('MM'));
+            var tdDay = Number(testDate.format('DD'));
+
+            if (reYear === tdYear && reMonth === tdMonth && reDay === tdDay) {
+                //console.log("MATCH");
+
+                inputEl.val(testDate.format('DD.MM.YYYY'));
+            }
         }
     },
     computed: {
         formatVal: function() { var format = this.format; if (format && format.length > 0) { return format; }
             return this.type === 'time' ? 'HH:mm' : (this.type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'); },
         extraFormatsVal: function() { return this.type === 'time' ? ['LT', 'LTS', 'HH:mm'] :
-            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm']); },
+            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm', 'DD.MM.YYYY']); },
         sizeVal: function() { var size = this.size; if (size && size.length > 0) { return size; }
             return this.type === 'time' ? '9' : (this.type === 'date' ? '10' : '16'); },
         timePattern: function() { return '^(?:(?:([01]?\\d|2[0-3]):)?([0-5]?\\d):)?([0-5]?\\d)$'; }
@@ -1332,7 +1387,11 @@ moqui.webrootVue = new Vue({
             set: function(newSearch) { this.currentParameters = moqui.searchToObj(newSearch); }
         },
         currentLinkUrl: function() { var srch = this.currentSearch; return this.currentLinkPath + (srch.length > 0 ? '?' + srch : ''); },
-        ScreenTitle: function() { return this.navMenuList.length > 0 ? this.navMenuList[this.navMenuList.length - 1].title : ""; }
+        ScreenTitle: function() { return this.navMenuList.length > 0 ? this.navMenuList[this.navMenuList.length - 1].title : ""; },
+        currentParentUrl: function() {
+            var curPath = this.currentPathList.slice(0,-1);
+            return this.linkBasePath + (curPath && curPath.length > 0 ? '/' + curPath.join('/') : '')
+        }
     },
     created: function() {
         this.moquiSessionToken = $("#confMoquiSessionToken").val();

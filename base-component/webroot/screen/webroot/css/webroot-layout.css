@@ -116,7 +116,9 @@ span.shaded-area { display: inline-block; white-space: normal; }
 .form-control { display: inline; min-width: 20px; width: auto; max-width: 100%; }
 .input-group { display: inline-block; white-space: nowrap; margin-right: 0; margin-top: -2px; }
 .input-group .form-control { display: inline; min-width: 20px; width: auto; }
-.input-group .input-group-addon, .input-group .input-group-btn { display: inline; line-height: 34px; padding: 8px 12px; }
+/*changed because of bootflag.css misalignment*/
+/*.input-group .input-group-addon, .input-group .input-group-btn { display: inline; line-height: 34px; padding: 8px 12px; }*/
+.input-group .input-group-addon, .input-group .input-group-btn { display: inline; line-height: 34px; padding: 6px 12px 7px; }
 
 /* Similar styles to Bootstrap .form-control-static, applied more specifically and without explicit class */
 .form-group > div > p, .form-group > div > span.text-inline, .form-group > div > a:not(.btn) {
@@ -134,7 +136,7 @@ span.shaded-area { display: inline-block; white-space: normal; }
 .navbar-right.btn-group { margin-right: 0; margin-left: 0; }
 .nav>li>a { padding-left: 6px; padding-right: 6px; }
 
-nav.form-list-nav .pagination { margin: 6px 6px 0 6px; }
+nav.form-list-nav .pagination { margin: 6px 0 0 0; }
 nav.form-list-nav>form.form-inline { display: inline-block; margin: 2px 6px 0 0; float: left; }
 nav.form-list-nav>.btn { display: inline-block; margin: 6px 6px 0 6px; float: left; }
 nav.form-list-nav>span.select2-container { float: left; margin: 6px 0 6px 0; min-width: 100px; max-width: 160px; }
@@ -145,7 +147,7 @@ nav.form-list-nav>span.select2-container { float: left; margin: 6px 0 6px 0; min
 .panel .panel-toolbar .label { display: inline-block; margin: 4px 4px 4px 0; }
 .panel .panel-heading>h5, .panel .panel-heading>span { display: inline-block; margin-top: 0; margin-bottom: 0; font-size: 16px; }
 .panel, .panel .panel-body { background: transparent; }
-.panel-body>table.table { margin: -15px; width: calc(100% + 30px); max-width: none; }
+/*.panel-body>table.table { margin: -15px; width: calc(100% + 30px); max-width: none; }*/
 
 .btn { margin: 4px 4px 4px 0; }
 .btn-group .btn { margin-right: 0; }
@@ -163,6 +165,7 @@ nav.form-list-nav>span.select2-container { float: left; margin: 6px 0 6px 0; min
 .table { margin-bottom: 8px; }
 
 .well>.list-inline { margin-bottom: 0; }
+@media (min-width: 768px) { .modal-xl { width: 90%; max-width:1200px; }}
 
 /* ================ Other, Fix Styles =============== */
 

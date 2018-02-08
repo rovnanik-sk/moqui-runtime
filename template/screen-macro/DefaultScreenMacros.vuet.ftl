@@ -488,7 +488,132 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         </#list>
     </div>
 </#macro>
-
+<#macro "dashboard">
+				<dashboard/>
+</#macro>
+<#macro "edit-invoice">
+				<#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
+    <#assign invoiceId = sri.getScreenUrlInstance().getParameterMap().get('invoiceId')!?html>
+    <#assign transition = .node["@invoice-reload-url"]!"getInvoiceData">
+    <#assign updateDescriptionTransition = .node["@invoice-update-description-url"]!"updateDescription">
+    <#assign updateExternalReferenceTransition = .node["@invoice-update-external-reference-url"]!"updateExternalReference">
+    <#assign updateStatusTransition = .node["@invoice-update-status-url"]!"updateStatus">
+    <#assign updateInvoiceItemTransition = .node["@invoice-item-update-url"]!"updateInvoiceItem">
+    <#assign deleteInvoiceItemTransition = .node["@invoice-item-delete-url"]!"deleteInvoiceItem">
+    <#assign getInvoiceHistoryTransition = .node["@invoice-load-history-url"]!"getInvoiceHistory">
+    <#assign getInvoiceAttachmentsTransition = .node["@invoice-load-attachments-url"]!"getInvoiceAttachments">
+    <#assign attachmentOpenContentUrl = .node["@invoice-open-content-url"]!"openContent">
+    <#assign attachmentDownloadContentUrl = .node["@invoice-download-content-url"]!"downloadContent">
+    <#assign attachmentDeleteContentUrl = .node["@invoice-download-content-url"]!"deleteContent">
+    <#assign attachmentUploadContentUrl = .node["@invoice-upload-content-url"]!"createContent">
+    <#assign itemsColumns = sri.getVueColumns(.node)>
+				<#assign itemsLoadTransition = .node["@items-load"]!"getInvoiceItems">
+    <#assign paginationPath = .node["@pagination-path"]!"pagination">
+				<div>
+        <editinvoice
+            data-reload-url="${targetUrl}/${transition}"
+            :query-params="{sort: 'orderByField', page: 'pageIndex', perPage: 'pageSize'}"
+            update-description-url="${targetUrl}/${updateDescriptionTransition}"
+            update-external-reference-url="${targetUrl}/${updateExternalReferenceTransition}"
+            update-status-url="${targetUrl}/${updateStatusTransition}"
+            update-invoice-item-url="${targetUrl}/${updateInvoiceItemTransition}"
+            delete-invoice-item-url="${targetUrl}/${deleteInvoiceItemTransition}"
+            data-load-attachments-url="${targetUrl}/${getInvoiceAttachmentsTransition}"
+            data-load-history-url="${targetUrl}/${getInvoiceHistoryTransition}"
+            attachment-open-content-url="${targetUrl}/${attachmentOpenContentUrl}"
+            attachment-download-content-url="${targetUrl}/${attachmentDownloadContentUrl}"
+            attachment-delete-content-url="${targetUrl}/${attachmentDeleteContentUrl}"
+            attachment-upload-content-url="${targetUrl}/${attachmentUploadContentUrl}"
+            invoice-id="${invoiceId}"
+            items-api-url="${targetUrl}/${itemsLoadTransition}"
+            :items-fields="${itemsColumns}"
+												items-data-path="dataLoaded"
+            pagination-path="${paginationPath}"
+            :css="{
+                table: {
+                    tableClass : 'table table-striped table-hover table-condensed',
+                    loadingClass: 'loading',
+                    ascendingIcon: 'glyphicon glyphicon-chevron-up',
+                    descendingIcon: 'glyphicon glyphicon-chevron-down',
+                    handleIcon: 'glyphicon glyphicon-menu-hamburger'
+                },
+                pagination: {
+                    infoClass: 'pull-left',
+                    wrapperClass: 'vuetable-pagination pull-right form-list-nav',
+                    activeClass: 'btn-primary',
+                    disabledClass: 'disabled',
+                    pageClass: 'btn btn-border',
+                    linkClass: 'btn btn-border',
+                    icons: {
+                        first: '',
+                        prev: '',
+                        next: '',
+                        last: ''
+                    }
+                }
+            }"
+            >
+        </editinvoice>
+    </div>
+</#macro>
+<#macro "paginated-table">
+    <#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
+    <#assign transition = .node["@transition-used"]!"forgot-to-set-transition">
+    <#assign searchPartiesTransition = .node["@search-parties"]!"findParty">
+    <#assign updateManualCategoryTransition = .node["@manual-category-transition"]!"updateCategory">
+    <#assign loadTagsTransition = .node["@load-tags-transition"]!"loadTags">
+    <#assign tableType = .node["@table-type"]!"vuetable">
+    <#assign perPage = .node["@per-page"]!"20">
+    <#assign dataLoaded = .node["@data-path"]!"dataLoaded">
+    <#assign paginationPath = .node["@pagination-path"]!"pagination">
+    <#assign onEachSide = .node["@on-each-side"]!"3">
+    <#assign trackBy = .node["@track-by"]!"id">
+    <#assign internalCompanies = sri.listToJson(context['orgList']!"[]")>
+    <#assign multiSort = .node["@multi-sort"]!"true">
+    <#assign vueCols = sri.getVueColumns(.node)>
+    <div id="app">
+        <div id="vi-paginated-table-1">
+            <${tableType}
+                api-url="${targetUrl}/${transition}"
+                :fields="${vueCols}"
+                :per-page="${perPage}"
+                data-path="${dataLoaded}"
+                pagination-path="${paginationPath}"
+                search-parties-api-url="${targetUrl}/${searchPartiesTransition}"
+                update-manual-category-url="${targetUrl}/${updateManualCategoryTransition}"
+                load-tags-url="${targetUrl}/${loadTagsTransition}"
+                :query-params="{sort: 'orderByField', page: 'pageIndex', perPage: 'pageSize'}"
+                track-by="${trackBy}"
+                :css="{
+                        table: {
+                            tableClass : 'table table-striped table-hover table-condensed',
+                            loadingClass: 'loading',
+                            ascendingIcon: 'glyphicon glyphicon-chevron-up',
+                            descendingIcon: 'glyphicon glyphicon-chevron-down',
+                            handleIcon: 'glyphicon glyphicon-menu-hamburger'
+                        },
+                        pagination: {
+                            infoClass: 'pull-left',
+                            wrapperClass: 'vuetable-pagination pull-right form-list-nav',
+                            activeClass: 'btn-primary',
+                            disabledClass: 'disabled',
+                            pageClass: 'btn btn-border',
+                            linkClass: 'btn btn-border',
+                            icons: {
+                                first: '',
+                                prev: '',
+                                next: '',
+                                last: ''
+                            }
+                        }
+                    }"
+                :on-each-side="${onEachSide}"
+                :internal-companies="${internalCompanies}"
+                :multi-sort="${multiSort}">
+            </${tableType}>
+        </div>
+    </div>
+</#macro>
 <#macro formSingleSubField fieldNode formId>
     <#list fieldNode["conditional-field"] as fieldSubNode>
         <#if ec.getResource().condition(fieldSubNode["@condition"], "")>
@@ -1691,9 +1816,12 @@ a => A, d => D, y => Y
     <#assign tlFieldNode = tlSubFieldNode?parent>
     <#assign tlId><@fieldId .node/></#assign>
     <#assign name><@fieldName .node/></#assign>
-    <#assign fieldValue = sri.getFieldValueString(.node)>
-    <#assign validationClasses = formInstance.getFieldValidationClasses(tlSubFieldNode)>
-    <#assign regexpInfo = formInstance.getFieldValidationRegexpInfo(tlSubFieldNode)!>
+    <#--<#assign fieldValue = sri.getFieldValueString(.node)>-->
+    <#assign fieldValue = sri.getFieldValueStringUS(.node)>
+    <#assign validationClasses = formInstance.getFieldValidationClasses(tlFieldNode["@name"])>
+    <#assign regexpInfo = formInstance.getFieldValidationRegexpInfo(tlFieldNode["@name"])!>
+    <#assign forceNumberClass = .node["@force-number-class"]! == "true">
+    <#if validationClasses?contains("number") || forceNumberClass><#assign fieldValue = fieldValue?replace(",", "")></#if>
     <#-- NOTE: removed number type (<#elseif validationClasses?contains("number")>number) because on Safari, maybe others, ignores size and behaves funny for decimal values -->
     <#if .node["@ac-transition"]?has_content>
         <#assign acUrlInfo = sri.makeUrlByType(.node["@ac-transition"], "transition", .node, "false")>
@@ -1719,7 +1847,7 @@ a => A, d => D, y => Y
                 <#t><#if .node["@ac-initial-text"]?has_content> :skip-initial="true"</#if>/>
     <#else>
         <#assign tlAlign = tlFieldNode["@align"]!"left">
-        <#t><input id="${tlId}" <#--v-model="fields.${name}"--> type="<#if validationClasses?contains("email")>email<#elseif validationClasses?contains("url")>url<#else>text</#if>"
+        <#t><input id="${tlId}" <#--v-model="fields.${name}"--> type="<#if validationClasses?contains("email")>email<#elseif validationClasses?contains("url")>url<#elseif validationClasses?contains("number") || forceNumberClass>number<#else>text</#if>"
             <#t> name="${name}" <#if fieldValue?html == fieldValue>value="${fieldValue}"<#else>:value="'${fieldValue?html}'|decodeHtml"</#if>
             <#t> <#if .node.@size?has_content>size="${.node.@size}"<#else>style="width:100%;"</#if><#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if>
             <#t><#if ec.getResource().condition(.node.@disabled!"false", "")> disabled="disabled"</#if>
