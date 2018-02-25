@@ -1415,6 +1415,16 @@ moqui.webrootVue = new Vue({
 
         $("#screen-document-dialog").on("hidden.bs.modal", function () { var jqEl = $("#screen-document-dialog-body");
                 jqEl.empty(); jqEl.append('<div class="spinner"><div>Loading…</div></div>'); });
+
+        $.sessionTimeout({
+            keepAlive: false,
+            redirUrl: '/Login/logout',
+            warnAfter: 600000,
+            redirAfter: 900000,
+            onWarn: function () {
+                /*console.log('warning comes, redirect shall come: /Login/logout');*/
+            }
+        });
     }
 });
 window.addEventListener('popstate', function() { moqui.webrootVue.setUrl(window.location.pathname + window.location.search); });
