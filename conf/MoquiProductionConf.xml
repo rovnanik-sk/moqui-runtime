@@ -19,7 +19,7 @@
 
     <screen-facade boundary-comments="true">
         <screen-text-output type="html" mime-type="text/html"
-                            macro-template-location="template/screen-macro/rskScreenMacros.html.ftl"/>
+                            macro-template-location="template/screen-macro/ExtendedScreenMacros.html.ftl"/>
     </screen-facade>
 
     <entity-facade default-group-name="transactional" entity-eca-enabled="true" sequenced-id-prefix=""

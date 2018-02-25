@@ -68,14 +68,20 @@
         <!-- The default conf file has a macro location defined for html already, but this is an example of how to
             refer to a file to override the default macros. -->
         <screen-text-output type="html" mime-type="text/html"
-                            macro-template-location="template/screen-macro/rskScreenMacros.html.ftl"/>
+                            macro-template-location="template/screen-macro/ExtendedScreenMacros.html.ftl"/>
 
         <screen-text-output type="vuet" mime-type="text/html"
-                            macro-template-location="template/screen-macro/rskScreenMacros.vuet.ftl"/>
+                            macro-template-location="template/screen-macro/ExtendedScreenMacros.vuet.ftl"/>
     </screen-facade>
 
     <entity-facade query-stats="true">
         <!-- add datasource elements here to configure databases -->
+        <datasource group-name="transactional" database-conf-name="postgres" schema-name="public" startup-add-missing="true" runtime-add-missing="false">
+            <inline-jdbc pool-minsize="5" pool-maxsize="50">
+                <xa-properties user="postgres" password="QzzVqbGp2L97G8Q2" serverName="localhost" portNumber="5432"
+                               databaseName="superciselnik_new"/>
+            </inline-jdbc>
+        </datasource>
     </entity-facade>
 
     <repository-list>

@@ -59,11 +59,11 @@ along with this software (see the LICENSE.md file). If not, see
                 </#list>
             </ul>
         </li>
-        <#-- move the menu to the header-menus container -->
+    <#-- move the menu to the header-menus container -->
         <script>$("#${.node["@header-menus-id"]!"header-menus"}").append($("#${menuId}"));</script>
     <#elseif .node["@type"]! == "popup-tree">
     <#else>
-        <#-- default to type=tab -->
+    <#-- default to type=tab -->
         <#if displayMenu!>
             <ul<#if .node["@id"]?has_content> id="${.node["@id"]}"</#if> class="nav nav-tabs" role="tablist">
                 <#list sri.getActiveScreenDef().getMenuSubscreensItems() as subscreensItem>
@@ -74,7 +74,7 @@ along with this software (see the LICENSE.md file). If not, see
                 </#list>
             </ul>
         </#if>
-        <#-- add to navbar bread crumbs too -->
+    <#-- add to navbar bread crumbs too -->
         <a id="${menuId}-crumb" class="navbar-text" href="${sri.buildUrl(".")}">${ec.getResource().expand(menuTitle, "")} <i class="glyphicon glyphicon-chevron-right"></i></a>
         <script>$("#navbar-menu-crumbs").append($("#${menuId}-crumb"));</script>
     </#if>
@@ -126,7 +126,7 @@ along with this software (see the LICENSE.md file). If not, see
     <#elseif .node["@type"]! == "wizard">
         <h1>LATER wizard type subscreens-panel not yet supported.</h1>
     <#else>
-        <#-- default to type=tab -->
+    <#-- default to type=tab -->
         <div<#if .node["@id"]?has_content> id="${.node["@id"]}-tabpanel"</#if>>
             <#assign menuSubscreensItems=sri.getActiveScreenDef().getMenuSubscreensItems()>
             <#if menuSubscreensItems?has_content && (menuSubscreensItems?size > 1)>
@@ -149,13 +149,13 @@ along with this software (see the LICENSE.md file). If not, see
                 </#if>
             </#if>
             <#if hideNav! != "true">
-                <#-- add to navbar bread crumbs too -->
+            <#-- add to navbar bread crumbs too -->
                 <a id="${menuId}-crumb" class="navbar-text" href="${sri.buildUrl(".")}">${ec.getResource().expand(menuTitle, "")} <i class="glyphicon glyphicon-chevron-right"></i></a>
                 <script>$("#navbar-menu-crumbs").append($("#${menuId}-crumb"));</script>
             </#if>
             <#if !dynamic || !displayMenu>
             <#-- these make it more similar to the HTML produced when dynamic, but not needed: <div<#if .node["@id"]?has_content> id="${.node["@id"]}-active"</#if> class="ui-tabs-panel"> -->
-            ${sri.renderSubscreen()}
+                ${sri.renderSubscreen()}
             <#-- </div> -->
             </#if>
         </div>
@@ -185,7 +185,7 @@ along with this software (see the LICENSE.md file). If not, see
 </#macro>
 <#macro "section-include">
     <#if sri.doBoundaryComments()><!-- BEGIN section-include[@name=${.node["@name"]}] --></#if>
-${sri.renderSection(.node["@name"])}
+    ${sri.renderSection(.node["@name"])}
     <#if sri.doBoundaryComments()><!-- END   section-include[@name=${.node["@name"]}] --></#if>
 </#macro>
 
@@ -248,7 +248,7 @@ ${sri.renderSection(.node["@name"])}
             </#if>
             <#assign centerClass><#if .node["panel-left"]?has_content><#if .node["panel-right"]?has_content>container-panel-center-both<#else>container-panel-center-left</#if><#else><#if .node["panel-right"]?has_content>container-panel-center-right<#else>container-panel-center-only</#if></#if></#assign>
             <div<#if panelId?has_content> id="${panelId}-center"</#if> class="${centerClass}"><#recurse .node["panel-center"][0]>
-        </div>
+            </div>
         <#if .node["panel-right"]?has_content>
             <div<#if panelId?has_content> id="${panelId}-right"</#if> class="container-panel-right" style="width: ${.node["panel-right"][0]["@size"]!"180"}px;"><#recurse .node["panel-right"][0]>
             </div>
@@ -280,7 +280,7 @@ ${sri.renderSection(.node["@name"])}
                     <div class="modal-body">
                         <#recurse>
                     </div>
-                    <#-- <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div> -->
+                <#-- <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div> -->
                 </div>
             </div>
         </div>
@@ -323,7 +323,7 @@ ${sri.renderSection(.node["@name"])}
                     <div class="modal-body" id="${ddDivId}-body">
                         <img src="/images/wait_anim_16x16.gif" alt="Loading...">
                     </div>
-                    <#-- <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div> -->
+                <#-- <div class="modal-footer"><button type="button" class="btn btn-primary" data-dismiss="modal">Close</button></div> -->
                 </div>
             </div>
         </div>
@@ -345,9 +345,9 @@ ${sri.renderSection(.node["@name"])}
 
 <#-- ==================== Includes ==================== -->
 <#macro "include-screen">
-<#if sri.doBoundaryComments()><!-- BEGIN include-screen[@location=${.node["@location"]}][@share-scope=${.node["@share-scope"]!}] --></#if>
-${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
-<#if sri.doBoundaryComments()><!-- END   include-screen[@location=${.node["@location"]}][@share-scope=${.node["@share-scope"]!}] --></#if>
+    <#if sri.doBoundaryComments()><!-- BEGIN include-screen[@location=${.node["@location"]}][@share-scope=${.node["@share-scope"]!}] --></#if>
+    ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
+    <#if sri.doBoundaryComments()><!-- END   include-screen[@location=${.node["@location"]}][@share-scope=${.node["@share-scope"]!}] --></#if>
 </#macro>
 
 <#-- ============== Tree ============== -->
@@ -363,19 +363,19 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 
     <div id="${.node["@name"]}"></div>
     <script>
-    $("#${.node["@name"]}").bind('select_node.jstree', function(e,data) {window.location.href = data.node.a_attr.href;}).jstree({
-        "core" : { "themes" : { "url" : false, "dots" : true, "icons" : false }, "multiple" : false,
-            'data' : {
-                dataType: 'json', type: 'POST',
-                url: function (node) { return '${itemsUrl}'; },
-                data: function (node) { return { treeNodeId: node.id,
-                    treeNodeName: (node.li_attr && node.li_attr.treeNodeName ? node.li_attr.treeNodeName : ''),
-                    moquiSessionToken: "${(ec.getWeb().sessionToken)!}"
+        $("#${.node["@name"]}").bind('select_node.jstree', function(e,data) {window.location.href = data.node.a_attr.href;}).jstree({
+            "core" : { "themes" : { "url" : false, "dots" : true, "icons" : false }, "multiple" : false,
+                'data' : {
+                    dataType: 'json', type: 'POST',
+                    url: function (node) { return '${itemsUrl}'; },
+                    data: function (node) { return { treeNodeId: node.id,
+                        treeNodeName: (node.li_attr && node.li_attr.treeNodeName ? node.li_attr.treeNodeName : ''),
+                        moquiSessionToken: "${(ec.getWeb().sessionToken)!}"
                     <#if .node["@open-path"]??>, treeOpenPath: "${ec.getResource().expandNoL10n(.node["@open-path"], "")}"</#if>
                     <#list ajaxParms.keySet() as pKey>, "${pKey}": "${ajaxParms.get(pKey)!""}"</#list> }; }
+                }
             }
-        }
-    });
+        });
     </script>
 </#macro>
 <#macro "tree-node"><#-- shouldn't be called directly, but just in case --></#macro>
@@ -383,30 +383,30 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 
 <#-- ============== Render Mode Elements ============== -->
 <#macro "render-mode">
-<#if .node["text"]?has_content>
-    <#list .node["text"] as textNode><#if !textNode["@type"]?has_content || textNode["@type"] == "any"><#local textToUse = textNode/><#-- text node type: ${textNode["@type"]!'any'} --></#if></#list>
-    <#list .node["text"] as textNode><#if textNode["@type"]?has_content && textNode["@type"]?split(",")?seq_contains(sri.getRenderMode())><#local textToUse = textNode></#if></#list>
-    <#if textToUse??>
-        <#if textToUse["@location"]?has_content>
-          <#assign textLocation = ec.getResource().expandNoL10n(textToUse["@location"], "")>
-          <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- BEGIN render-mode.text[@location=${textLocation}][@template=${textToUse["@template"]!"true"}] --></#if>
-          <#-- NOTE: this still won't encode templates that are rendered to the writer -->
-          <#if .node["@encode"]! == "true">${sri.renderText(textLocation, textToUse["@template"]!)?html}<#else>${sri.renderText(textLocation, textToUse["@template"]!)}</#if>
-          <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- END   render-mode.text[@location=${textLocation}][@template=${textToUse["@template"]!"true"}] --></#if>
-        </#if>
-        <#assign inlineTemplateSource = textToUse.@@text!>
-        <#if inlineTemplateSource?has_content>
-          <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- BEGIN render-mode.text[inline][@template=${textToUse["@template"]!"true"}] --></#if>
-          <#if !textToUse["@template"]?has_content || textToUse["@template"] == "true">
-            <#assign inlineTemplate = [inlineTemplateSource, sri.getActiveScreenDef().location + ".render_mode.text"]?interpret>
-            <@inlineTemplate/>
-          <#else>
-            <#if .node["@encode"]! == "true">${inlineTemplateSource?html}<#else>${inlineTemplateSource}</#if>
-          </#if>
-          <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- END   render-mode.text[inline][@template=${textToUse["@template"]!"true"}] --></#if>
+    <#if .node["text"]?has_content>
+        <#list .node["text"] as textNode><#if !textNode["@type"]?has_content || textNode["@type"] == "any"><#local textToUse = textNode/><#-- text node type: ${textNode["@type"]!'any'} --></#if></#list>
+        <#list .node["text"] as textNode><#if textNode["@type"]?has_content && textNode["@type"]?split(",")?seq_contains(sri.getRenderMode())><#local textToUse = textNode></#if></#list>
+        <#if textToUse??>
+            <#if textToUse["@location"]?has_content>
+                <#assign textLocation = ec.getResource().expandNoL10n(textToUse["@location"], "")>
+                <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- BEGIN render-mode.text[@location=${textLocation}][@template=${textToUse["@template"]!"true"}] --></#if>
+            <#-- NOTE: this still won't encode templates that are rendered to the writer -->
+                <#if .node["@encode"]! == "true">${sri.renderText(textLocation, textToUse["@template"]!)?html}<#else>${sri.renderText(textLocation, textToUse["@template"]!)}</#if>
+                <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- END   render-mode.text[@location=${textLocation}][@template=${textToUse["@template"]!"true"}] --></#if>
+            </#if>
+            <#assign inlineTemplateSource = textToUse.@@text!>
+            <#if inlineTemplateSource?has_content>
+                <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- BEGIN render-mode.text[inline][@template=${textToUse["@template"]!"true"}] --></#if>
+                <#if !textToUse["@template"]?has_content || textToUse["@template"] == "true">
+                    <#assign inlineTemplate = [inlineTemplateSource, sri.getActiveScreenDef().location + ".render_mode.text"]?interpret>
+                    <@inlineTemplate/>
+                <#else>
+                    <#if .node["@encode"]! == "true">${inlineTemplateSource?html}<#else>${inlineTemplateSource}</#if>
+                </#if>
+                <#if sri.doBoundaryComments() && textToUse["@no-boundary-comment"]! != "true"><!-- END   render-mode.text[inline][@template=${textToUse["@template"]!"true"}] --></#if>
+            </#if>
         </#if>
     </#if>
-</#if>
 </#macro>
 
 <#macro text><#-- do nothing, is used only through "render-mode" --></#macro>
@@ -422,7 +422,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <#assign textMap = "">
             <#if linkNode["@text-map"]?has_content><#assign textMap = ec.getResource().expression(linkNode["@text-map"], "")!></#if>
             <#if textMap?has_content><#assign linkText = ec.getResource().expand(linkNode["@text"], "", textMap)>
-                <#else><#assign linkText = ec.getResource().expand(linkNode["@text"]!"", "")></#if>
+            <#else><#assign linkText = ec.getResource().expand(linkNode["@text"]!"", "")></#if>
         </#if>
         <#if linkText == "null"><#assign linkText = ""></#if>
         <#if linkText?has_content || linkNode["image"]?has_content || linkNode["@icon"]?has_content>
@@ -444,14 +444,14 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#else>
         <#assign confirmationMessage = ec.getResource().expand(linkNode["@confirmation"]!, "")/>
         <#if (linkNode["@link-type"]! == "anchor" || linkNode["@link-type"]! == "anchor-button") ||
-            ((!linkNode["@link-type"]?has_content || linkNode["@link-type"] == "auto") &&
-             ((linkNode["@url-type"]?has_content && linkNode["@url-type"] != "transition") || (!urlInstance.hasActions)))>
+        ((!linkNode["@link-type"]?has_content || linkNode["@link-type"] == "auto") &&
+        ((linkNode["@url-type"]?has_content && linkNode["@url-type"] != "transition") || (!urlInstance.hasActions)))>
             <#if linkNode["@dynamic-load-id"]?has_content>
-                <#-- NOTE: the void(0) is needed for Firefox and other browsers that render the result of the JS expression -->
+            <#-- NOTE: the void(0) is needed for Firefox and other browsers that render the result of the JS expression -->
                 <#assign urlText>javascript:{$('#${linkNode["@dynamic-load-id"]}').load('${urlInstance.urlWithParams}'); void(0);}</#assign>
             <#else>
                 <#if linkNode["@url-noparam"]! == "true"><#assign urlText = urlInstance.url/>
-                    <#else><#assign urlText = urlInstance.urlWithParams/></#if>
+                <#else><#assign urlText = urlInstance.urlWithParams/></#if>
             </#if>
             <#rt><a href="${urlText}"<#if linkFormId?has_content> id="${linkFormId}"</#if><#if linkNode["@target-window"]?has_content> target="${linkNode["@target-window"]}"</#if><#if confirmationMessage?has_content> onclick="return confirm('${confirmationMessage?js_string}')"</#if> class="<#if linkNode["@link-type"]! != "anchor">btn btn-${linkNode["@btn-type"]!"primary"} btn-sm</#if><#if linkNode["@style"]?has_content> ${ec.getResource().expandNoL10n(linkNode["@style"], "")}</#if>"<#if linkNode["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(linkNode["@tooltip"], "")}"</#if>><#if iconClass?has_content><i class="${iconClass}"></i> </#if>
             <#t><#if linkNode["image"]?has_content><#visit linkNode["image"][0]><#else>${linkText}</#if>
@@ -459,7 +459,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <#t></a>
         <#else>
             <#if linkFormId?has_content>
-            <#rt><button type="submit" form="${linkFormId}" id="${linkFormId}_button" class="btn btn-${linkNode["@btn-type"]!"primary"} btn-sm<#if linkNode["@style"]?has_content> ${ec.getResource().expandNoL10n(linkNode["@style"], "")}</#if>"
+                <#rt><button type="submit" form="${linkFormId}" id="${linkFormId}_button" class="btn btn-${linkNode["@btn-type"]!"primary"} btn-sm<#if linkNode["@style"]?has_content> ${ec.getResource().expandNoL10n(linkNode["@style"], "")}</#if>"
                     <#t><#if confirmationMessage?has_content> onclick="return confirm('${confirmationMessage?js_string}')"</#if>
                     <#t><#if linkNode["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(linkNode["@tooltip"], "")}"</#if>>
                 <#t><#if iconClass?has_content><i class="${iconClass}"></i> </#if>
@@ -476,17 +476,17 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 </#macro>
 <#macro linkFormForm linkNode linkFormId linkText urlInstance>
     <#if urlInstance.disableLink>
-        <#-- do nothing -->
+    <#-- do nothing -->
     <#else>
         <#if (linkNode["@link-type"]! == "anchor" || linkNode["@link-type"]! == "anchor-button") ||
-            ((!linkNode["@link-type"]?has_content || linkNode["@link-type"] == "auto") &&
-             ((linkNode["@url-type"]?has_content && linkNode["@url-type"] != "transition") || (!urlInstance.hasActions)))>
-            <#-- do nothing -->
+        ((!linkNode["@link-type"]?has_content || linkNode["@link-type"] == "auto") &&
+        ((linkNode["@url-type"]?has_content && linkNode["@url-type"] != "transition") || (!urlInstance.hasActions)))>
+        <#-- do nothing -->
         <#else>
             <form method="post" action="${urlInstance.url}" name="${linkFormId!""}"<#if linkFormId?has_content> id="${linkFormId}"</#if><#if linkNode["@target-window"]?has_content> target="${linkNode["@target-window"]}"</#if>>
                 <input type="hidden" name="moquiSessionToken" value="${(ec.getWeb().sessionToken)!}">
                 <#assign targetParameters = urlInstance.getParameterMap()>
-                <#-- NOTE: using .keySet() here instead of ?keys because ?keys returns all method names with the other keys, not sure why -->
+            <#-- NOTE: using .keySet() here instead of ?keys because ?keys returns all method names with the other keys, not sure why -->
                 <#if targetParameters?has_content><#list targetParameters.keySet() as pKey>
                     <input type="hidden" name="${pKey?html}" value="${targetParameters.get(pKey)?default("")?html}"/>
                 </#list></#if>
@@ -511,7 +511,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 
 <#macro image>
     <#if .node["@condition"]?has_content><#assign conditionResult = ec.getResource().condition(.node["@condition"], "")>
-        <#else><#assign conditionResult = true></#if>
+    <#else><#assign conditionResult = true></#if>
     <#if conditionResult>
         <#if .node["@hover"]! == "true"><span class="hover-image-container"></#if>
         <img src="${sri.makeUrlByType(.node["@url"], .node["@url-type"]!"content", .node, "true").getUrlWithParams()}" alt="${ec.resource.expand(.node["@alt"]!"image", "")}"<#if .node["@id"]?has_content> id="${.node["@id"]}"</#if><#if .node["@width"]?has_content> width="${.node["@width"]}"</#if><#if .node["@height"]?has_content>height="${.node["@height"]}"</#if><#if .node["@style"]?has_content> class="${ec.getResource().expandNoL10n(.node["@style"], "")}"</#if>/>
@@ -535,7 +535,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     </#if>
 </#macro>
 <#macro editable>
-    <#-- for docs on JS usage see: http://www.appelsiini.net/projects/jeditable -->
+<#-- for docs on JS usage see: http://www.appelsiini.net/projects/jeditable -->
     <#assign urlInstance = sri.makeUrlByType(.node["@transition"], "transition", .node, "true")>
     <#assign urlParms = urlInstance.getParameterMap()>
     <#assign editableDivId><@nodeId .node/></#assign>
@@ -545,11 +545,11 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#if labelValue?trim?has_content>
         <${labelType} id="${editableDivId}" class="editable-label"><#if .node["@encode"]! == "true">${labelValue?html?replace("\n", "<br>")}<#else>${labelValue}</#if></${labelType}>
         <script>
-        $("#${editableDivId}").editable("${urlInstance.url}", { indicator:"${ec.getL10n().localize("Saving")}",
-            tooltip:"${ec.getL10n().localize("Click to edit")}", cancel:"${ec.getL10n().localize("Cancel")}",
-            submit:"${ec.getL10n().localize("Save")}", name:"${parameterName}",
-            type:"${.node["@widget-type"]!"textarea"}", cssclass:"editable-form",
-            submitdata:{<#list urlParms.keySet() as parameterKey>${parameterKey}:"${urlParms[parameterKey]}", </#list>parameterName:"${parameterName}", moquiSessionToken:"${(ec.getWeb().sessionToken)!}"}
+            $("#${editableDivId}").editable("${urlInstance.url}", { indicator:"${ec.getL10n().localize("Saving")}",
+                tooltip:"${ec.getL10n().localize("Click to edit")}", cancel:"${ec.getL10n().localize("Cancel")}",
+                submit:"${ec.getL10n().localize("Save")}", name:"${parameterName}",
+                type:"${.node["@widget-type"]!"textarea"}", cssclass:"editable-form",
+                submitdata:{<#list urlParms.keySet() as parameterKey>${parameterKey}:"${urlParms[parameterKey]}", </#list>parameterName:"${parameterName}", moquiSessionToken:"${(ec.getWeb().sessionToken)!}"}
             <#if .node["editable-load"]?has_content>
                 <#assign loadNode = .node["editable-load"][0]>
                 <#assign loadUrlInfo = sri.makeUrlByType(loadNode["@transition"], "transition", loadNode, "true")>
@@ -567,7 +567,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 
 <#macro "form-single">
     <#if sri.doBoundaryComments()><!-- BEGIN form-single[@name=${.node["@name"]}] --></#if>
-    <#-- Use the formNode assembled based on other settings instead of the straight one from the file: -->
+<#-- Use the formNode assembled based on other settings instead of the straight one from the file: -->
     <#assign formInstance = sri.getFormInstance(.node["@name"])>
     <#assign formNode = formInstance.getFormNode()>
     <#t>${sri.pushSingleFormMapContext(formNode["@map"]!"fieldValues")}
@@ -650,7 +650,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#assign fsFieldRow = false>
 </#macro>
 <#macro "field-row-big">
-    <#-- funny assign here to not render row if there is no content -->
+<#-- funny assign here to not render row if there is no content -->
     <#assign fsFieldRow = true><#assign fsBigRow = true>
     <#assign rowContent>
         <#recurse .node/>
@@ -659,13 +659,13 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#assign fsFieldRow = false><#assign fsBigRow = false>
     <#if rowContent?has_content>
     <div class="form-group">
-    <#if .node["@title"]?has_content>
+        <#if .node["@title"]?has_content>
         <label class="control-label col-sm-2">${ec.getResource().expand(.node["@title"], "")}</label>
         <div class="col-sm-10">
-    <#else>
+        <#else>
         <div class="col-sm-12">
-    </#if>
-            ${rowContent}
+        </#if>
+        ${rowContent}
         </div><#-- /col-sm-12 bigRow -->
     </div><#-- /row -->
     </#if>
@@ -745,9 +745,9 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#if bigRow>
         <div class="big-row-item">
             <div class="form-group">
-                <#if curFieldTitle?has_content && !fieldSubNode["submit"]?has_content>
+        <#if curFieldTitle?has_content && !fieldSubNode["submit"]?has_content>
                     <label class="control-label" for="${formId}_${fieldSubParent["@name"]}">${curFieldTitle}</label><#-- was form-title -->
-                </#if>
+        </#if>
     <#else>
         <#if labelCols?has_content>
             <#assign labelClass = colPrefix + "-" + labelCols>
@@ -766,7 +766,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <div class="${widgetClass}<#if containerStyle?has_content> ${containerStyle}</#if>">
         </#if>
     </#if>
-    <#-- NOTE: this style is only good for 2 fields in a field-row! in field-row cols are double size because are inside a ${colPrefix}-6 element -->
+<#-- NOTE: this style is only good for 2 fields in a field-row! in field-row cols are double size because are inside a ${colPrefix}-6 element -->
     <#t>${sri.pushContext()}
     <#assign fieldFormId = formId><#-- set this globally so fieldId macro picks up the proper formId, clear after -->
     <#list fieldSubNode?children as widgetNode><#if widgetNode?node_name == "set">${sri.setInContext(widgetNode)}</#if></#list>
@@ -781,7 +781,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                     <#assign textMap = "">
                     <#if linkNode["@text-map"]?has_content><#assign textMap = ec.getResource().expression(linkNode["@text-map"], "")!></#if>
                     <#if textMap?has_content><#assign linkText = ec.getResource().expand(linkNode["@text"], "", textMap)>
-                        <#else><#assign linkText = ec.getResource().expand(linkNode["@text"]!"", "")></#if>
+                    <#else><#assign linkText = ec.getResource().expand(linkNode["@text"]!"", "")></#if>
                 </#if>
                 <#if linkText == "null"><#assign linkText = ""></#if>
                 <#if linkText?has_content || linkNode["image"]?has_content || linkNode["@icon"]?has_content>
@@ -800,7 +800,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#assign fieldFormId = ""><#-- clear after field so nothing else picks it up -->
     <#t>${sri.popContext()}
     <#if bigRow>
-        <#-- <#if curFieldTitle?has_content></#if> -->
+    <#-- <#if curFieldTitle?has_content></#if> -->
             </div><!-- /form-group -->
         </div><!-- /field-row-item -->
     <#else>
@@ -902,7 +902,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                 </#if>
                 <#if isSavedFinds && isHeaderDialog><h4>${ec.getL10n().localize("Find Parameters")}</h4></#if>
                 <#if isHeaderDialog>
-                    <#-- Find Parameters Form -->
+                <#-- Find Parameters Form -->
                     <#assign curUrlInstance = sri.getCurrentScreenUrl()>
                     <form name="${headerFormId}" id="${headerFormId}" method="post" action="${curUrlInstance.url}">
                         <input type="hidden" name="moquiSessionToken" value="${(ec.getWeb().sessionToken)!}">
@@ -912,7 +912,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                             <div class="form-group"><div class="col-sm-2">&nbsp;</div><div class="col-sm-10">
                                 <button type="button" class="btn btn-primary btn-sm" onclick="${headerFormId}_clearForm()">${ec.getL10n().localize("Clear Parameters")}</button></div></div>
 
-                            <#-- Always add an orderByField to select one or more columns to order by -->
+                        <#-- Always add an orderByField to select one or more columns to order by -->
                             <div class="form-group">
                                 <label class="control-label col-sm-2" for="${headerFormId}_orderByField">${ec.getL10n().localize("Order By")}</label>
                                 <div class="col-sm-10">
@@ -958,8 +958,8 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                                 </#list>
 
                                 <#if !(ec.getResource().condition(fieldNode["@hide"]!, "") || allHidden ||
-                                        ((!fieldNode["@hide"]?has_content) && fieldNode?children?size == 1 &&
-                                        ((fieldNode["header-field"][0]["hidden"])?has_content || (fieldNode["header-field"][0]["ignored"])?has_content)))>
+                                ((!fieldNode["@hide"]?has_content) && fieldNode?children?size == 1 &&
+                                ((fieldNode["header-field"][0]["hidden"])?has_content || (fieldNode["header-field"][0]["ignored"])?has_content)))>
                                     <@formSingleWidget headerFieldNode headerFormId "col-sm" false false/>
                                 <#elseif (headerFieldNode["hidden"])?has_content>
                                     <#recurse headerFieldNode/>
@@ -1026,7 +1026,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         <script>$('#${selectColumnsDialogId}').on('shown.bs.modal', function() {
             $("#${selectColumnsSortableId}").sortableLists({
                 isAllowed: function(currEl, hint, target) {
-                    <#-- don't allow hidden and column items to be moved; only allow others to be under hidden or column items -->
+                <#-- don't allow hidden and column items to be moved; only allow others to be under hidden or column items -->
                     if (currEl.attr('id') === 'hidden' || currEl.attr('id').startsWith('column_')) {
                         if (!target.attr('id') || (target.attr('id') != 'hidden' && !currEl.attr('id').startsWith('column_'))) { hint.css('background-color', '#99ff99'); return true; }
                         else { hint.css('background-color', '#ff9999'); return false; }
@@ -1035,7 +1035,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                     else { hint.css('background-color', '#ff9999'); return false; }
                 },
                 placeholderCss: {'background-color':'#999999'}, insertZone: 50,
-                <#-- jquery-sortable-lists currently logs an error if opener.as is not set to html or class -->
+            <#-- jquery-sortable-lists currently logs an error if opener.as is not set to html or class -->
                 opener: { active:false, as:'html', close:'', open:'' },
                 onChange: function(cEl) {
                     var sortableHierarchy = $('#${selectColumnsSortableId}').sortableListsToHierarchy();
@@ -1151,10 +1151,10 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#assign isSavedFinds = formNode["@saved-finds"]! == "true">
     <#assign isSelectColumns = formNode["@select-columns"]! == "true">
     <#assign isPaginated = !(formNode["@paginate"]! == "false") && context[listName + "Count"]?? && (context[listName + "Count"]! > 0) &&
-            (!formNode["@paginate-always-show"]?has_content || formNode["@paginate-always-show"]! == "true" || (context[listName + "PageMaxIndex"] > 0))>
+    (!formNode["@paginate-always-show"]?has_content || formNode["@paginate-always-show"]! == "true" || (context[listName + "PageMaxIndex"] > 0))>
     <#if (isHeaderDialog || isSavedFinds || isSelectColumns || isPaginated) && hideNav! != "true">
         <tr class="form-list-nav-row"><th colspan="${numColumns}">
-        <nav class="form-list-nav">
+            <nav class="form-list-nav">
             <#if isSavedFinds>
                 <#assign userFindInfoList = formListInfo.getUserFormListFinds(ec)>
                 <#if userFindInfoList?has_content>
@@ -1203,7 +1203,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                     <li><a href="${pageLinkUrlInfo.getUrlWithParams()}">${pageLinkIndex + 1}</a></li>
                 </#list></#if>
                 <#assign paginationTemplate = ec.getL10n().localize("PaginationTemplate")?interpret>
-                <li><a href="${sri.getScreenUrlInstance().getUrlWithParams()}"><@paginationTemplate /></a></li>
+                    <li><a href="${sri.getScreenUrlInstance().getUrlWithParams()}"><@paginationTemplate /></a></li>
 
                 <#if (nextPageIndexMin <= curPageMaxIndex)><#list nextPageIndexMin..nextPageIndexMax as pageLinkIndex>
                     <#assign pageLinkUrlInfo = sri.getScreenUrlInstance().cloneUrlInstance().addParameter("pageIndex", pageLinkIndex)>
@@ -1237,7 +1237,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                             rules: { pageIndex: { required:true, min:1, max:${(curPageMaxIndex + 1)?c} } },
                             highlight: function(element, errorClass, validClass) { $(element).parents('.form-group').removeClass('has-success').addClass('has-error'); },
                             unhighlight: function(element, errorClass, validClass) { $(element).parents('.form-group').removeClass('has-error').addClass('has-success'); },
-                            <#-- show 1-based index to user but server expects 0-based index -->
+                        <#-- show 1-based index to user but server expects 0-based index -->
                             submitHandler: function(form) { $("#${formId}_GoPage_pageIndex").val($("#${formId}_GoPage_pageIndex").val() - 1); form.submit(); }
                         });
                     </script>
@@ -1255,7 +1255,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 
             <#if formNode["@show-csv-button"]! == "true">
                 <#assign csvLinkUrl = sri.getScreenUrlInstance().cloneUrlInstance().addParameter("renderMode", "csv")
-                        .addParameter("pageNoLimit", "true").addParameter("lastStandalone", "true").addParameter("saveFilename", formNode["@name"] + ".csv")>
+                .addParameter("pageNoLimit", "true").addParameter("lastStandalone", "true").addParameter("saveFilename", formNode["@name"] + ".csv")>
                 <a href="${csvLinkUrl.getUrlWithParams()}" class="btn btn-default">${ec.getL10n().localize("CSV")}</a>
             </#if>
             <#if formNode["@show-text-button"]! == "true">
@@ -1266,7 +1266,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                 <#assign showPdfDialogId = formId + "_PdfDialog">
                 <button id="${showPdfDialogId}_button" type="button" data-toggle="modal" data-target="#${showPdfDialogId}" data-original-title="${ec.getL10n().localize("PDF")}" data-placement="bottom" class="btn btn-default"><i class="glyphicon glyphicon-share"></i> ${ec.getL10n().localize("PDF")}</button>
             </#if>
-        </nav>
+            </nav>
         </th></tr>
 
         <#if isHeaderDialog>
@@ -1278,8 +1278,8 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                         <#if !(fieldSubNode["hidden"]?has_content || fieldSubNode["ignored"]?has_content)><#assign allHidden = false></#if>
                     </#list>
                     <#if !(ec.getResource().condition(fieldNode["@hide"]!, "") || allHidden ||
-                            ((!fieldNode["@hide"]?has_content) && fieldNode?children?size == 1 &&
-                            (headerFieldNode["hidden"]?has_content || headerFieldNode["ignored"]?has_content)))>
+                    ((!fieldNode["@hide"]?has_content) && fieldNode?children?size == 1 &&
+                    (headerFieldNode["hidden"]?has_content || headerFieldNode["ignored"]?has_content)))>
                         <#t>${sri.pushContext()}
                         <#list headerFieldNode?children as widgetNode><#if widgetNode?node_name == "set">${sri.setInContext(widgetNode)}</#if></#list>
                         <#list headerFieldNode?children as widgetNode><#if widgetNode?node_name != "set">
@@ -1292,13 +1292,13 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                     </#if>
                 </#if></#list>
             </th></tr>
-            </#if>
+        </#if>
     </#if>
 </#macro>
 
 <#macro "form-list">
-    <#if sri.doBoundaryComments()><!-- BEGIN form-list[@name=${.node["@name"]}] --></#if>
-    <#-- Use the formNode assembled based on other settings instead of the straight one from the file: -->
+        <#if sri.doBoundaryComments()><!-- BEGIN form-list[@name=${.node["@name"]}] --></#if>
+<#-- Use the formNode assembled based on other settings instead of the straight one from the file: -->
     <#assign formInstance = sri.getFormInstance(.node["@name"])>
     <#assign formListInfo = formInstance.makeFormListRenderInfo()>
     <#assign formNode = formListInfo.getFormNode()>
@@ -1324,14 +1324,14 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#assign hiddenParameterMap = sri.getFormHiddenParameters(formNode)>
     <#assign hiddenParameterKeys = hiddenParameterMap.keySet()>
 
-    <#-- all form elements outside table element and referred to with input/etc.@form attribute for proper HTML -->
+<#-- all form elements outside table element and referred to with input/etc.@form attribute for proper HTML -->
     <#if !(isMulti || skipForm) && listHasContent><#list listObject as listEntry>
         ${sri.startFormListRow(formListInfo, listEntry, listEntry_index, listEntry_has_next)}
         <form name="${formId}_${listEntry_index}" id="${formId}_${listEntry_index}" method="post" action="${formListUrlInfo.url}">
             <#assign listEntryIndex = listEntry_index>
             <input type="hidden" name="moquiSessionToken" value="${(ec.getWeb().sessionToken)!}">
             <#list hiddenParameterKeys as hiddenParameterKey><input type="hidden" name="${hiddenParameterKey}" value="${hiddenParameterMap.get(hiddenParameterKey)!""}"></#list>
-            <#-- hidden fields -->
+        <#-- hidden fields -->
             <#assign hiddenFieldList = formListInfo.getListHiddenFieldList()>
             <#list hiddenFieldList as hiddenField><@formListSubField hiddenField true false isMulti false/></#list>
             <#assign listEntryIndex = "">
@@ -1364,9 +1364,9 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <#t>${sri.popContext()}<#-- context was pushed for the form so pop here at the end -->
         </#if>
         <#if formListInfo.isSecondRowForm()>
-          <#t>${sri.pushSingleFormMapContext(formNode["@map-second-row"]!"")}
-          <#assign listEntryIndex = "last">
-          <#assign lastUrlInstance = sri.makeUrlByType(formNode["@transition-second-row"], "transition", null, "false")>
+            <#t>${sri.pushSingleFormMapContext(formNode["@map-second-row"]!"")}
+            <#assign listEntryIndex = "last">
+            <#assign lastUrlInstance = sri.makeUrlByType(formNode["@transition-second-row"], "transition", null, "false")>
           <form name="${formId}_last" id="${formId}_last" method="post" action="${lastUrlInstance.url}">
               <input type="hidden" name="moquiSessionToken" value="${(ec.getWeb().sessionToken)!}">
               <#if orderByField?has_content><input type="hidden" name="orderByField" value="${orderByField}"></#if>
@@ -1374,8 +1374,8 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
               <#assign hiddenFieldList = formListInfo.getListSecondRowHiddenFieldList()>
               <#list hiddenFieldList as hiddenField><#recurse hiddenField["second-row-field"][0]/></#list>
           </form>
-          <#assign listEntryIndex = "">
-          <#t>${sri.popContext()}<#-- context was pushed for the form so pop here at the end -->
+            <#assign listEntryIndex = "">
+            <#t>${sri.popContext()}<#-- context was pushed for the form so pop here at the end -->
         </#if>
         <#if formListInfo.isLastRowForm()>
             <#t>${sri.pushSingleFormMapContext(formNode["@map-last-row"]!"")}
@@ -1400,7 +1400,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <#if listHasContent><#list listObject as listEntry>
                 <#assign listEntryIndex = listEntry_index>
                 ${sri.startFormListRow(formListInfo, listEntry, listEntry_index, listEntry_has_next)}
-                <#-- hidden fields -->
+            <#-- hidden fields -->
                 <#assign hiddenFieldList = formListInfo.getListHiddenFieldList()>
                 <#list hiddenFieldList as hiddenField><@formListSubField hiddenField true false isMulti false/></#list>
                 ${sri.endFormListRow()}
@@ -1416,19 +1416,19 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                 <@paginationHeader formListInfo formId isHeaderDialog/>
 
                 <#assign ownerForm = headerFormId>
-                <tr>
+            <tr>
                 <#list mainColInfoList as columnFieldList>
-                    <#-- TODO: how to handle column style? <th<#if fieldListColumn["@style"]?has_content> class="${fieldListColumn["@style"]}"</#if>> -->
+                <#-- TODO: how to handle column style? <th<#if fieldListColumn["@style"]?has_content> class="${fieldListColumn["@style"]}"</#if>> -->
                     <th>
                     <#list columnFieldList as fieldNode>
-                        <#-- <#if !(ec.getResource().condition(fieldNode["@hide"]!, "") ||
-                                ((!fieldNode["@hide"]?has_content) && fieldNode?children?size == 1 &&
-                                (fieldNode?children[0]["hidden"]?has_content || fieldNode?children[0]["ignored"]?has_content)))> -->
+                    <#-- <#if !(ec.getResource().condition(fieldNode["@hide"]!, "") ||
+																												((!fieldNode["@hide"]?has_content) && fieldNode?children?size == 1 &&
+																												(fieldNode?children[0]["hidden"]?has_content || fieldNode?children[0]["ignored"]?has_content)))> -->
                         <div><@formListHeaderField fieldNode isHeaderDialog/></div>
                     </#list>
                     </th>
                 </#list>
-                </tr>
+            </tr>
                 <#if hasSubColumns>
                     <tr><td colspan="${numColumns}" class="form-list-sub-row-cell"><div class="form-list-sub-rows"><table class="table table-striped table-hover table-condensed${tableStyle}"><thead>
                         <#list subColInfoList as subColFieldList><th>
@@ -1440,7 +1440,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                 </#if>
                 <#if needHeaderForm>
                     <#if _dynamic_container_id?has_content>
-                        <#-- if we have an _dynamic_container_id this was loaded in a dynamic-container so init ajaxForm; for examples see http://www.malsup.com/jquery/form/#ajaxForm -->
+                    <#-- if we have an _dynamic_container_id this was loaded in a dynamic-container so init ajaxForm; for examples see http://www.malsup.com/jquery/form/#ajaxForm -->
                         <script>$("#${headerFormId}").ajaxForm({ target: '#${_dynamic_container_id}', <#-- success: activateAllButtons, --> resetForm: false });</script>
                     </#if>
                 </#if>
@@ -1448,9 +1448,9 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             </thead>
         </#if>
             <tbody>
-            <#assign ownerForm = formId>
+        <#assign ownerForm = formId>
     </#if>
-    <#-- first-row fields -->
+<#-- first-row fields -->
     <#if formListInfo.hasFirstRow()>
         <#t>${sri.pushSingleFormMapContext(formNode["@map-first-row"]!"")}
         <#assign ownerForm = formId + "_first">
@@ -1468,7 +1468,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         <#assign listEntryIndex = "">
         <#t>${sri.popContext()}<#-- context was pushed for the form so pop here at the end -->
     </#if>
-    <#-- second-row fields -->
+<#-- second-row fields -->
     <#if formListInfo.hasSecondRow()>
         <#t>${sri.pushSingleFormMapContext(formNode["@map-second-row"]!"")}
         <#assign ownerForm = formId + "_second">
@@ -1488,11 +1488,11 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     </#if>
     <#if listHasContent><#list listObject as listEntry>
         <#assign listEntryIndex = listEntry_index>
-        <#-- NOTE: the form-list.@list-entry attribute is handled in the ScreenForm class through this call: -->
+    <#-- NOTE: the form-list.@list-entry attribute is handled in the ScreenForm class through this call: -->
         ${sri.startFormListRow(formListInfo, listEntry, listEntry_index, listEntry_has_next)}
         <tr>
         <#if !(isMulti || skipForm)><#assign ownerForm = formId + "_" + listEntry_index></#if>
-        <#-- actual columns -->
+    <#-- actual columns -->
         <#list mainColInfoList as columnFieldList>
             <td>
             <#list columnFieldList as fieldNode>
@@ -1528,7 +1528,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     </#list></#if>
     <#assign listEntryIndex = "">
     ${sri.safeCloseList(listObject)}<#-- if listObject is an EntityListIterator, close it -->
-    <#-- last-row fields -->
+<#-- last-row fields -->
     <#if formListInfo.hasLastRow()>
         <#t>${sri.pushSingleFormMapContext(formNode["@map-last-row"]!"")}
         <#assign ownerForm = formId + "_last">
@@ -1553,7 +1553,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             </td></tr>
         </#if>
             </tbody>
-            <#assign ownerForm = "">
+        <#assign ownerForm = "">
         </table>
     </#if>
     <#if isMulti && !skipStart>
@@ -1569,7 +1569,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         <script>$("#${formId}_table").find('[name="${formNode["@focus-field"]}<#if isMulti && !formListInfo.hasFirstRow()>_0</#if>"][form="${formId}<#if formListInfo.hasFirstRow()>_first<#elseif !isMulti>_0</#if>"]').addClass('default-focus').focus();</script>
     </#if>
     <#if hasSubColumns><script>moqui.makeColumnsConsistent('${formId}_table');</script></#if>
-    <#if sri.doBoundaryComments()><!-- END   form-list[@name=${.node["@name"]}] --></#if>
+        <#if sri.doBoundaryComments()><!-- END   form-list[@name=${.node["@name"]}] --></#if>
     <#assign skipForm = false>
 </#macro>
 <#macro formListHeaderField fieldNode isHeaderDialog>
@@ -1578,7 +1578,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#elseif fieldNode["default-field"]?has_content>
         <#assign fieldSubNode = fieldNode["default-field"][0]>
     <#else>
-        <#-- this only makes sense for fields with a single conditional -->
+    <#-- this only makes sense for fields with a single conditional -->
         <#assign fieldSubNode = fieldNode["conditional-field"][0]>
     </#if>
     <#assign headerFieldNode = fieldNode["header-field"][0]!>
@@ -1612,7 +1612,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#if !isHeaderDialog && fieldNode["header-field"]?has_content && fieldNode["header-field"][0]?children?has_content>
         <div class="form-header-field<#if containerStyle?has_content> ${containerStyle}</#if><#if headerAlign == "center"> text-center<#elseif headerAlign == "right"> text-right</#if>">
             <@formListWidget fieldNode["header-field"][0] true true false false/>
-            <#-- <#recurse fieldNode["header-field"][0]/> -->
+        <#-- <#recurse fieldNode["header-field"][0]/> -->
         </div>
     </#if>
 </#macro>
@@ -1657,7 +1657,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
     <#if fieldSubNode["ignored"]?has_content><#return></#if>
     <#assign fieldSubParent = fieldSubNode?parent>
     <#if ec.getResource().condition(fieldSubParent["@hide"]!, "")><#return></#if>
-    <#-- don't do a column for submit fields, they'll go in their own row at the bottom -->
+<#-- don't do a column for submit fields, they'll go in their own row at the bottom -->
     <#t><#if !isHeaderField && isMulti && !isMultiFinalRow && fieldSubNode["submit"]?has_content><#return></#if>
     <#t><#if !isHeaderField && isMulti && isMultiFinalRow && !fieldSubNode["submit"]?has_content><#return></#if>
     <#if fieldSubNode["hidden"]?has_content><#recurse fieldSubNode/><#return></#if>
@@ -1677,7 +1677,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                     <#assign textMap = "">
                     <#if linkNode["@text-map"]?has_content><#assign textMap = ec.getResource().expression(linkNode["@text-map"], "")!></#if>
                     <#if textMap?has_content><#assign linkText = ec.getResource().expand(linkNode["@text"], "", textMap)>
-                        <#else><#assign linkText = ec.getResource().expand(linkNode["@text"]!"", "")></#if>
+                    <#else><#assign linkText = ec.getResource().expand(linkNode["@text"]!"", "")></#if>
                 </#if>
                 <#if linkText == "null"><#assign linkText = ""></#if>
                 <#if linkText?has_content || linkNode["image"]?has_content || linkNode["@icon"]?has_content>
@@ -1709,11 +1709,11 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 <#macro fieldId widgetNode><#assign fieldNode=widgetNode?parent?parent/><#if fieldFormId?has_content>${fieldFormId}<#else>${ec.getResource().expandNoL10n(fieldNode?parent["@name"], "")}</#if>_${fieldNode["@name"]}<#if listEntryIndex?has_content>_${listEntryIndex}</#if><#if sectionEntryIndex?has_content>_${sectionEntryIndex}</#if></#macro>
 <#macro fieldTitle fieldSubNode><#t>
     <#t><#if (fieldSubNode?node_name == 'header-field')>
-        <#local fieldNode = fieldSubNode?parent>
-        <#local headerFieldNode = fieldNode["header-field"][0]!>
-        <#local defaultFieldNode = fieldNode["default-field"][0]!>
-        <#t><#if headerFieldNode["@title"]?has_content><#local fieldSubNode = headerFieldNode><#elseif defaultFieldNode["@title"]?has_content><#local fieldSubNode = defaultFieldNode></#if>
-    </#if>
+    <#local fieldNode = fieldSubNode?parent>
+    <#local headerFieldNode = fieldNode["header-field"][0]!>
+    <#local defaultFieldNode = fieldNode["default-field"][0]!>
+    <#t><#if headerFieldNode["@title"]?has_content><#local fieldSubNode = headerFieldNode><#elseif defaultFieldNode["@title"]?has_content><#local fieldSubNode = defaultFieldNode></#if>
+</#if>
     <#t><#assign titleValue><#if fieldSubNode["@title"]?has_content>${ec.getResource().expand(fieldSubNode["@title"], "")}<#else><#list fieldSubNode?parent["@name"]?split("(?=[A-Z])", "r") as nameWord>${nameWord?cap_first?replace("Id", "ID")}<#if nameWord_has_next> </#if></#list></#if></#assign>${ec.getL10n().localize(titleValue)}
 </#macro>
 <#macro fieldIdByName fieldName><#if fieldFormId?has_content>${fieldFormId}<#else>${ec.getResource().expandNoL10n(formNode["@name"], "")}</#if>_${fieldName}<#if listEntryIndex?has_content>_${listEntryIndex}</#if><#if sectionEntryIndex?has_content>_${sectionEntryIndex}</#if></#macro>
@@ -1870,8 +1870,8 @@ a => A, d => D, y => Y
     <#assign id><@fieldId .node/></#assign>
 
     <#if .node["@type"]! == "time"><#assign size=9><#assign maxlength=13><#assign extraFormatsVal = "['LT', 'LTS', 'HH:mm']">
-        <#elseif .node["@type"]! == "date"><#assign size=10><#assign maxlength=10><#assign extraFormatsVal = "['l', 'L', 'YYYY-MM-DD']">
-        <#else><#assign size=16><#assign maxlength=23><#assign extraFormatsVal = "['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm', 'DD.MM.YYYY']"></#if>
+    <#elseif .node["@type"]! == "date"><#assign size=10><#assign maxlength=10><#assign extraFormatsVal = "['l', 'L', 'YYYY-MM-DD']">
+    <#else><#assign size=16><#assign maxlength=23><#assign extraFormatsVal = "['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm']"></#if>
     <#assign size = .node["@size"]!size>
     <#assign maxlength = .node["@max-length"]!maxlength>
 
@@ -1888,7 +1888,7 @@ a => A, d => D, y => Y
             $('#${id}').on("dp.change", function() { var jqEl = $('#${id}'); jqEl.val(jqEl.find("input").first().val()); jqEl.trigger("change"); });
         </script>
     <#else>
-        <#-- datetimepicker does not support time only, even with plain HH:mm format; use a regex to validate time format -->
+    <#-- datetimepicker does not support time only, even with plain HH:mm format; use a regex to validate time format -->
         <input type="text" class="form-control" pattern="^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$" name="<@fieldName .node/>" value="${fieldValue?html}" size="${size}" maxlength="${maxlength}"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
     </#if>
 </#macro>
@@ -1899,8 +1899,6 @@ a => A, d => D, y => Y
     <#assign dispAlign = dispFieldNode["@align"]!"left">
     <#assign dispHidden = (!.node["@also-hidden"]?has_content || .node["@also-hidden"] == "true") && !(skipForm!false)>
     <#assign fieldValue = "">
-    <#assign fieldClass = sri.getFieldValueClass(dispFieldNode)>
-				<#if .node["@hide-current-year"]?has_content><#assign hideCurrYear = .node["@hide-current-year"]?boolean><#else><#assign hideCurrYear = false></#if>
     <#if .node["@text"]?has_content>
         <#assign textMap = "">
         <#if .node["@text-map"]?has_content><#assign textMap = ec.getResource().expression(.node["@text-map"], "")!></#if>
@@ -1917,19 +1915,14 @@ a => A, d => D, y => Y
     <#else>
         <#assign fieldValue = sri.getFieldValueString(.node)>
     </#if>
-    <#if fieldClass== "Timestamp" && fieldValue?has_content && hideCurrYear>
-		<#if fieldValue?date["dd.MM.yyyy"]?string.yyyy == .now?date?string.yyyy>
-						<#assign fieldValue = fieldValue?date["dd.MM.yyyy"]?string["dd.MM."]>
-		</#if>
-	</#if>
     <#t><span class="text-inline ${sri.getFieldValueClass(dispFieldNode)}<#if .node["@currency-unit-field"]?has_content> currency</#if><#if dispAlign == "center"> text-center<#elseif dispAlign == "right"> text-right</#if><#if .node["@style"]?has_content> ${ec.getResource().expand(.node["@style"], "")}</#if>"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if .node["@dynamic-transition"]?has_content> id="${dispFieldId}_display"</#if>>
     <#t><#if fieldValue?has_content><#if .node["@encode"]! == "false">${fieldValue}<#else>${fieldValue?html?replace("\n", "<br>")}</#if><#else>&nbsp;</#if>
     <#t></span>
     <#t><#if dispHidden>
-        <#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
-        <#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
+<#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
+<#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
         <input type="hidden" id="${dispFieldId}" name="<@fieldName .node/>" value="${sri.getFieldValuePlainString(dispFieldNode, "")?html}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
-    </#if>
+</#if>
     <#if .node["@dynamic-transition"]?has_content>
         <#assign defUrlInfo = sri.makeUrlByType(.node["@dynamic-transition"], "transition", .node, "false")>
         <#assign defUrlParameterMap = defUrlInfo.getParameterMap()>
@@ -1938,7 +1931,7 @@ a => A, d => D, y => Y
             function populate_${dispFieldId}() {
                 <#if .node["@depends-optional"]! != "true">
                     var hasAllParms = true;
-                    <#list depNodeList as depNode>if (!$('#<@fieldIdByName depNode["@field"]/>').val()) { hasAllParms = false; } </#list>
+                        <#list depNodeList as depNode>if (!$('#<@fieldIdByName depNode["@field"]/>').val()) { hasAllParms = false; } </#list>
                     if (!hasAllParms) { <#-- alert("not has all parms"); --> return; }
                 </#if>
                 $.ajax({ type:"POST", url:"${defUrlInfo.url}", data:{ moquiSessionToken: "${(ec.getWeb().sessionToken)!}"<#rt>
@@ -1957,7 +1950,7 @@ a => A, d => D, y => Y
     <#assign fieldValue = sri.getFieldEntityValue(.node)!/>
     <#assign dispHidden = (!.node["@also-hidden"]?has_content || .node["@also-hidden"] == "true") && !(skipForm!false)>
     <#t><span class="text-inline<#if .node["@style"]?has_content> ${ec.getResource().expand(.node["@style"], "")}</#if>"><#if fieldValue?has_content><#if .node["@encode"]! == "false">${fieldValue!"&nbsp;"}<#else>${(fieldValue!" ")?html?replace("\n", "<br>")}</#if><#else>&nbsp;</#if></span>
-    <#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
+<#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
     <#t><#if dispHidden><input type="hidden" id="<@fieldId .node/>" name="<@fieldName .node/>" value="${sri.getFieldValuePlainString(.node?parent?parent, "")?html}"<#if ownerForm?has_content> form="${ownerForm}"</#if>></#if>
 </#macro>
 
@@ -1983,7 +1976,7 @@ a => A, d => D, y => Y
         <#assign currentDescription = ec.getResource().expand(.node["@current-description"], "")></#if>
     <select name="${name}" class="<#if isDynamicOptions> dynamic-options</#if><#if .node["@style"]?has_content> ${ec.getResource().expand(.node["@style"], "")}</#if><#if validationClasses?has_content> ${validationClasses}</#if><#if isServerSearch || allowMultiple> noResetSelect2</#if>"<#if isServerSearch> style="min-width:200px;"</#if> id="${id}"<#if allowMultiple> multiple="multiple"</#if><#if .node["@size"]?has_content> size="${.node["@size"]}"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
     <#if !allowMultiple>
-        <#-- don't add first-in-list or empty option if allowMultiple (can deselect all to be empty, including empty option allows selection of empty which isn't the point) -->
+    <#-- don't add first-in-list or empty option if allowMultiple (can deselect all to be empty, including empty option allows selection of empty which isn't the point) -->
         <#if currentValue?has_content>
             <#if .node["@current"]! == "first-in-list">
                 <option selected="selected" value="${currentValue}"><#if currentDescription?has_content>${currentDescription}<#else>${currentValue}</#if></option><#rt/>
@@ -2000,13 +1993,13 @@ a => A, d => D, y => Y
     <#if options?has_content>
         <#list (options.keySet())! as key>
             <#if allowMultiple && currentValueList?has_content><#assign isSelected = currentValueList?seq_contains(key)>
-                <#else><#assign isSelected = currentValue?has_content && currentValue == key></#if>
+            <#else><#assign isSelected = currentValue?has_content && currentValue == key></#if>
             <option<#if isSelected> selected="selected"</#if> value="${key}">${options.get(key)}</option>
         </#list>
     </#if>
     </select>
     <#if ec.getResource().expand(.node["@show-not"]!, "") == "true"><span><input type="checkbox" class="form-control" name="${name}_not" value="Y"<#if ec.getWeb().parameters.get(name + "_not")! == "Y"> checked="checked"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>&nbsp;${ec.getL10n().localize("Not")}</span></#if>
-    <#-- <span>[${currentValue}]; <#list currentValueList as curValue>[${curValue!''}], </#list></span> -->
+<#-- <span>[${currentValue}]; <#list currentValueList as curValue>[${curValue!''}], </#list></span> -->
     <#if allowMultiple><input type="hidden" id="${id}_op" name="${name}_op" value="in"></#if>
     <#if isDynamicOptions>
         <#assign depNodeList = doNode["depends-on"]>
@@ -2048,26 +2041,26 @@ a => A, d => D, y => Y
             function populate_${id}(params) {
                 <#if doNode["@depends-optional"]! != "true">
                     var hasAllParms = true;
-                    <#list depNodeList as depNode>if (!$('#<@fieldIdByName depNode["@field"]/>').val()) { hasAllParms = false; } </#list>
+                        <#list depNodeList as depNode>if (!$('#<@fieldIdByName depNode["@field"]/>').val()) { hasAllParms = false; } </#list>
                     if (!hasAllParms) { $("#${id}").select2("destroy"); $('#${id}').html(""); $("#${id}").select2({ }); <#-- alert("not has all parms"); --> return; }
                 </#if>
                 $.ajax({ type:"POST", url:"${doUrlInfo.url}", data:{ moquiSessionToken: "${(ec.getWeb().sessionToken)!}"<#rt>
                         <#t><#list depNodeList as depNode><#local depNodeField = depNode["@field"]><#local _void = doUrlParameterMap.remove(depNodeField)!>, "${depNode["@parameter"]!depNodeField}": $("#<@fieldIdByName depNodeField/>").val()</#list>
                         <#t><#list doUrlParameterMap.keySet() as parameterKey><#if doUrlParameterMap.get(parameterKey)?has_content>, "${parameterKey}":"${doUrlParameterMap.get(parameterKey)}"</#if></#list>
                         <#t>, term:((params && params.term) || '')}, dataType:"json"}).done(
-                    function(data) {
-                        var list = moqui.isArray(data) ? data : data.options;
-                        if (list) {
-                            var jqEl = $("#${id}");
-                            var bWasFocused = jqEl.next().hasClass('select2-container--focus');
-                            jqEl.select2("destroy");
-                            jqEl.html("");<#-- clear out the drop-down -->
+                        function(data) {
+                            var list = moqui.isArray(data) ? data : data.options;
+                            if (list) {
+                                var jqEl = $("#${id}");
+                                var bWasFocused = jqEl.next().hasClass('select2-container--focus');
+                                jqEl.select2("destroy");
+                                jqEl.html("");<#-- clear out the drop-down -->
                             <#if allowEmpty! == "true">
                             jqEl.append('<option value="">&nbsp;</option>');
                             </#if>
                             <#if allowMultiple && currentValueList?has_content>var currentValues = [<#list currentValueList as curVal>"${curVal}"<#sep>, </#list>];</#if>
-                            $.each(list, function(key, value) {
-                                var optionValue = value["${doNode["@value-field"]!"value"}"];
+                                $.each(list, function(key, value) {
+                                    var optionValue = value["${doNode["@value-field"]!"value"}"];
                                 <#if allowMultiple && currentValueList?has_content>
                                 if (currentValues.indexOf(optionValue) >= 0) {
                                 <#else>
@@ -2077,31 +2070,31 @@ a => A, d => D, y => Y
                                 } else {
                                     jqEl.append("<option value='" + optionValue + "'>" + value["${doNode["@label-field"]!"label"}"] + "</option>");
                                 }
-                            });
-                            $("#${id}").select2(${id}S2Opts);
-                            if( bWasFocused ) jqEl.focus();
-                            setTimeout(function() { jqEl.trigger('change'); }, 50);
+                                });
+                                $("#${id}").select2(${id}S2Opts);
+                                if( bWasFocused ) jqEl.focus();
+                                setTimeout(function() { jqEl.trigger('change'); }, 50);
+                            }
                         }
-                    }
                 );
             }
             <#list depNodeList as depNode>
             $("#<@fieldIdByName depNode["@field"]/>").on('change', function() { populate_${id}(<#if currentValue?has_content>{term:"${currentValue}"}</#if>); });
             </#list>
             <#if isServerSearch><#if currentValue?has_content>populate_${id}({term:"${currentValue}"});</#if>
-                <#else>populate_${id}();</#if>
+            <#else>populate_${id}();</#if>
 
         </script>
     <#else>
         <script>$("#${id}").select2({ <#if allowMultiple>closeOnSelect:false, width:"100%", </#if><#if .node["@combo-box"]! == "true">tags:true, tokenSeparators:[',',' ']</#if> });</script>
-        <#-- is this really needed any more? $("#${id}").on("select2:select", function () { $("#${id}").select2("open").select2("close"); }); -->
+    <#-- is this really needed any more? $("#${id}").on("select2:select", function () { $("#${id}").select2("open").select2("close"); }); -->
     </#if>
 </#macro>
 
 <#macro file><input type="file" class="form-control" name="<@fieldName .node/>" value="${sri.getFieldValueString(.node)?html}" size="${.node.@size!"30"}"<#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>></#macro>
 
 <#macro hidden>
-    <#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
+<#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
     <#assign id><@fieldId .node/></#assign>
     <input type="hidden" name="<@fieldName .node/>" value="${sri.getFieldValuePlainString(.node?parent?parent, .node["@default-value"]!"")?html}" id="${id}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
 </#macro>
@@ -2175,19 +2168,17 @@ a => A, d => D, y => Y
     <#assign tlFieldNode = tlSubFieldNode?parent>
     <#assign id><@fieldId .node/></#assign>
     <#assign name><@fieldName .node/></#assign>
-    <#-- <#assign fieldValue = sri.getFieldValueString(.node)> -->
-    <#assign fieldValue = sri.getFieldValueStringUS(.node)>
-    <#assign validationClasses = formInstance.getFieldValidationClasses(tlFieldNode["@name"])>
-    <#assign regexpInfo = formInstance.getFieldValidationRegexpInfo(tlFieldNode["@name"])!>
-    <#assign forceNumberClass = .node["@force-number-class"]! == "true">
-    <#if validationClasses?contains("number") || forceNumberClass><#assign fieldValue = fieldValue?replace(",", "")></#if>
+    <#assign fieldValue = sri.getFieldValueString(.node)>
+    <#assign validationClasses = formInstance.getFieldValidationClasses(tlSubFieldNode)>
+    <#assign regexpInfo = formInstance.getFieldValidationRegexpInfo(tlSubFieldNode)!>
+<#-- NOTE: removed number type (<#elseif validationClasses?contains("number")>number) because on Safari, maybe others, ignores size and behaves funny for decimal values -->
     <#if .node["@ac-transition"]?has_content>
         <#assign acUrlInfo = sri.makeUrlByType(.node["@ac-transition"], "transition", .node, "false")>
         <#assign acUrlParameterMap = acUrlInfo.getParameterMap()>
         <#assign acShowValue = .node["@ac-show-value"]! == "true">
         <#assign acUseActual = .node["@ac-use-actual"]! == "true">
         <#if .node["@ac-initial-text"]?has_content><#assign valueText = ec.getResource().expand(.node["@ac-initial-text"]!, "")>
-            <#else><#assign valueText = fieldValue></#if>
+        <#else><#assign valueText = fieldValue></#if>
         <#t><input id="${id}_ac" type="<#if validationClasses?contains("email")>email<#elseif validationClasses?contains("url")>url<#else>text</#if>"
             <#t> name="${name}_ac" value="${valueText?html}" size="${.node.@size!"30"}"<#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if>
             <#t><#if ec.getResource().condition(.node.@disabled!"false", "")> disabled="disabled"</#if>
@@ -2223,7 +2214,7 @@ a => A, d => D, y => Y
                         var list = moqui.isArray(data) ? data : data.options;
                         var curValue = $("#${id}").val();
                         for (var i = 0; i < list.length; i++) { if (list[i].value == curValue) { $("#${id}_ac").val(list[i].label); <#if acShowValue>$("#${id}_value").html(list[i].label);</#if> break; } }
-                        <#-- don't do this by default if we haven't found a valid one: if (list && list[0].label) { $("#${id}_ac").val(list[0].label); <#if acShowValue>$("#${id}_value").html(list[0].label);</#if> } -->
+                    <#-- don't do this by default if we haven't found a valid one: if (list && list[0].label) { $("#${id}_ac").val(list[0].label); <#if acShowValue>$("#${id}_value").html(list[0].label);</#if> } -->
                     }
                 });
             }
@@ -2231,8 +2222,7 @@ a => A, d => D, y => Y
         </script>
     <#else>
         <#assign tlAlign = tlFieldNode["@align"]!"left">
-        <#t><input id="${id}" type="<#if validationClasses?contains("email")>email<#elseif validationClasses?contains("url")>url<#elseif validationClasses?contains("number") || forceNumberClass>number<#else>text</#if>"
-        <#t><#if validationClasses?contains("number") || forceNumberClass> pattern="[0-9]+([\,|\.][0-9]+)?" step="any"</#if>
+        <#t><input id="${id}" type="<#if validationClasses?contains("email")>email<#elseif validationClasses?contains("url")>url<#else>text</#if>"
         <#t> name="${name}" value="${fieldValue?html}" <#if .node.@size?has_content>size="${.node.@size}"<#else>style="width:100%;"</#if><#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if>
         <#t><#if ec.getResource().condition(.node.@disabled!"false", "")> disabled="disabled"</#if>
         <#t> class="form-control<#if validationClasses?has_content> ${validationClasses}</#if><#if tlAlign == "center"> text-center<#elseif tlAlign == "right"> text-right</#if>"
@@ -2266,29 +2256,28 @@ a => A, d => D, y => Y
 
 <#macro "text-find">
 <span class="form-text-find">
-								<#assign defaultOperator = .node["@default-operator"]!"contains">
-								<#assign placeholderText = .node["@placeholder"]!"">
-								<#assign curFieldName><@fieldName .node/></#assign>
-								<#if .node["@hide-options"]! == "true" || .node["@hide-options"]! == "operator">
-												<input type="hidden" name="${curFieldName}_op" value="${defaultOperator}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
-								<#else>
-												<span><input type="checkbox" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}_not" value="Y"<#if ec.getWeb().parameters.get(curFieldName + "_not")! == "Y"> checked="checked"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>&nbsp;${ec.getL10n().localize("Not")}</span>
-												<select name="${curFieldName}_op" class="form-control"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
-																<option value="equals"<#if defaultOperator == "equals"> selected="selected"</#if>>${ec.getL10n().localize("Equals")}</option>
-																<option value="like"<#if defaultOperator == "like"> selected="selected"</#if>>${ec.getL10n().localize("Like")}</option>
-																<option value="contains"<#if defaultOperator == "contains"> selected="selected"</#if>>${ec.getL10n().localize("Contains")}</option>
-																<option value="begins"<#if defaultOperator == "begins"> selected="selected"</#if>>${ec.getL10n().localize("Begins With")}</option>
-																<option value="empty"<#rt/><#if defaultOperator == "empty"> selected="selected"</#if>>${ec.getL10n().localize("Empty")}</option>
-												</select>
-								</#if>
-								<input type="text" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}" value="${sri.getFieldValueString(.node)?html}" size="${.node.@size!"30"}"<#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if> id="<@fieldId .node/>"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
-								<#assign ignoreCase = (ec.getWeb().parameters.get(curFieldName + "_ic")! == "Y") || !(.node["@ignore-case"]?has_content) || (.node["ignore-case"] == "true")>
-								<#if .node["@hide-options"]! == "true" || .node["@hide-options"]! == "ignore-case">
-												<input type="hidden" name="${curFieldName}_ic" value="Y"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
-								<#else>
-												<span><input type="checkbox" class="form-control" placeholder="${placeholderText?html}" name="${curFieldName}_ic" value="Y"<#if ignoreCase> checked="checked"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>&nbsp;${ec.getL10n().localize("Ignore Case")}</span>
-								</#if>
-				</span>
+    <#assign defaultOperator = .node["@default-operator"]!"contains">
+    <#assign curFieldName><@fieldName .node/></#assign>
+    <#if .node["@hide-options"]! == "true" || .node["@hide-options"]! == "operator">
+        <input type="hidden" name="${curFieldName}_op" value="${defaultOperator}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
+    <#else>
+        <span><input type="checkbox" class="form-control" name="${curFieldName}_not" value="Y"<#if ec.getWeb().parameters.get(curFieldName + "_not")! == "Y"> checked="checked"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>&nbsp;${ec.getL10n().localize("Not")}</span>
+        <select name="${curFieldName}_op" class="form-control"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
+            <option value="equals"<#if defaultOperator == "equals"> selected="selected"</#if>>${ec.getL10n().localize("Equals")}</option>
+            <option value="like"<#if defaultOperator == "like"> selected="selected"</#if>>${ec.getL10n().localize("Like")}</option>
+            <option value="contains"<#if defaultOperator == "contains"> selected="selected"</#if>>${ec.getL10n().localize("Contains")}</option>
+            <option value="begins"<#if defaultOperator == "begins"> selected="selected"</#if>>${ec.getL10n().localize("Begins With")}</option>
+            <option value="empty"<#rt/><#if defaultOperator == "empty"> selected="selected"</#if>>${ec.getL10n().localize("Empty")}</option>
+        </select>
+    </#if>
+    <input type="text" class="form-control" name="${curFieldName}" value="${sri.getFieldValueString(.node)?html}" size="${.node.@size!"30"}"<#if .node.@maxlength?has_content> maxlength="${.node.@maxlength}"</#if> id="<@fieldId .node/>"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
+    <#assign ignoreCase = (ec.getWeb().parameters.get(curFieldName + "_ic")! == "Y") || !(.node["@ignore-case"]?has_content) || (.node["ignore-case"] == "true")>
+    <#if .node["@hide-options"]! == "true" || .node["@hide-options"]! == "ignore-case">
+        <input type="hidden" name="${curFieldName}_ic" value="Y"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
+    <#else>
+        <span><input type="checkbox" class="form-control" name="${curFieldName}_ic" value="Y"<#if ignoreCase> checked="checked"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>&nbsp;${ec.getL10n().localize("Ignore Case")}</span>
+    </#if>
+</span>
 </#macro>
 
 <#macro widgetTextValue widgetNode alwaysGet=false>
@@ -2297,81 +2286,80 @@ a => A, d => D, y => Y
     <#assign noDisplay = ["display", "display-entity", "hidden", "ignored", "password", "reset", "submit", "text-area", "link", "label"]>
     <#t><#if noDisplay?seq_contains(widgetType)><#return></#if>
     <#t><#if widgetType == "drop-down">
-        <#assign ddFieldNode = widgetNode?parent?parent>
-        <#assign allowMultiple = ec.getResource().expand(widgetNode["@allow-multiple"]!, "") == "true">
-        <#assign isDynamicOptions = widgetNode["dynamic-options"]?has_content>
-        <#assign options = sri.getFieldOptions(widgetNode)>
-        <#assign currentValue = sri.getFieldValuePlainString(ddFieldNode, "")>
-        <#if !currentValue?has_content><#assign currentValue = ec.getResource().expandNoL10n(widgetNode["@no-current-selected-key"]!, "")></#if>
-        <#if currentValue?starts_with("[")><#assign currentValue = currentValue?substring(1, currentValue?length - 1)?replace(" ", "")></#if>
-        <#assign currentValueList = (currentValue?split(","))!>
-        <#if currentValueList?has_content><#if allowMultiple><#assign currentValue=""><#else><#assign currentValue = currentValueList[0]></#if></#if>
-        <#assign currentDescription = (options.get(currentValue))!>
-        <#assign optionsHasCurrent = currentDescription?has_content>
-        <#if !optionsHasCurrent && widgetNode["@current-description"]?has_content><#assign currentDescription = ec.getResource().expand(widgetNode["@current-description"], "")></#if>
-        <#t><#if allowMultiple>
-            <#list currentValueList as listValue>
-                <#t><#if isDynamicOptions>
-                    <#assign doNode = widgetNode["dynamic-options"][0]>
-                    <#assign transValue = sri.getFieldTransitionValue(doNode["@transition"], doNode, listValue, doNode["@label-field"]!"label", alwaysGet)!>
-                    <#t><#if transValue?has_content>${transValue}<#elseif listValue?has_content>${listValue}</#if><#if listValue_has_next>, </#if>
-                <#else>
-                    <#assign currentDescription = (options.get(listValue))!>
-                    <#t><#if currentDescription?has_content>${currentDescription}<#elseif listValue?has_content>${listValue}</#if><#if listValue_has_next>, </#if>
-                </#if><#t>
-            </#list>
-        <#else>
+    <#assign ddFieldNode = widgetNode?parent?parent>
+    <#assign allowMultiple = ec.getResource().expand(widgetNode["@allow-multiple"]!, "") == "true">
+    <#assign isDynamicOptions = widgetNode["dynamic-options"]?has_content>
+    <#assign options = sri.getFieldOptions(widgetNode)>
+    <#assign currentValue = sri.getFieldValuePlainString(ddFieldNode, "")>
+    <#if !currentValue?has_content><#assign currentValue = ec.getResource().expandNoL10n(widgetNode["@no-current-selected-key"]!, "")></#if>
+    <#if currentValue?starts_with("[")><#assign currentValue = currentValue?substring(1, currentValue?length - 1)?replace(" ", "")></#if>
+    <#assign currentValueList = (currentValue?split(","))!>
+    <#if currentValueList?has_content><#if allowMultiple><#assign currentValue=""><#else><#assign currentValue = currentValueList[0]></#if></#if>
+    <#assign currentDescription = (options.get(currentValue))!>
+    <#assign optionsHasCurrent = currentDescription?has_content>
+    <#if !optionsHasCurrent && widgetNode["@current-description"]?has_content><#assign currentDescription = ec.getResource().expand(widgetNode["@current-description"], "")></#if>
+    <#t><#if allowMultiple>
+        <#list currentValueList as listValue>
             <#t><#if isDynamicOptions>
-                <#assign doNode = widgetNode["dynamic-options"][0]>
-                <#assign transValue = sri.getFieldTransitionValue(doNode["@transition"], doNode, currentValue, doNode["@label-field"]!"label", alwaysGet)!>
-                <#t><#if transValue?has_content>${transValue}<#elseif currentValue?has_content>${currentValue}</#if>
-            <#else>
-                <#t><#if currentDescription?has_content>${currentDescription}<#elseif currentValue?has_content>${currentValue}</#if>
-            </#if><#t>
-        </#if><#t>
-        <#t><#if ec.getWeb().parameters.get(curFieldName + "_not")! == "Y"> (${ec.getL10n().localize("Not")})</#if>
-    <#elseif widgetType == "check" || widgetType == "radio">
-        <#assign currentValue = sri.getFieldValueString(widgetNode)/>
-        <#if !currentValue?has_content><#return></#if>
-        <#assign options = sri.getFieldOptions(widgetNode)/>
-        <#assign currentLabel = "">
-        <#list (options.keySet())! as key><#if currentValue?has_content && currentValue==key><#assign currentLabel = options.get(key)></#if></#list>
-        <#t><#if currentLabel?has_content>${currentLabel}<#else>${currentValue}</#if>
-    <#elseif widgetType == "text-line">
-        <#assign fieldValue = sri.getFieldValueString(widgetNode)>
-        <#t><#if widgetNode["@ac-transition"]?has_content>
-            <#assign transValue = sri.getFieldTransitionValue(widgetNode["@ac-transition"], widgetNode, fieldValue, "label", alwaysGet)!>
-            <#t><#if transValue?has_content>${transValue}</#if>
+            <#assign doNode = widgetNode["dynamic-options"][0]>
+            <#assign transValue = sri.getFieldTransitionValue(doNode["@transition"], doNode, listValue, doNode["@label-field"]!"label", alwaysGet)!>
+            <#t><#if transValue?has_content>${transValue}<#elseif listValue?has_content>${listValue}</#if><#if listValue_has_next>, </#if>
         <#else>
-            <#t><#if fieldValue?has_content>${fieldValue}</#if>
+            <#assign currentDescription = (options.get(listValue))!>
+            <#t><#if currentDescription?has_content>${currentDescription}<#elseif listValue?has_content>${listValue}</#if><#if listValue_has_next>, </#if>
         </#if><#t>
-    <#elseif widgetType == "date-period">
-        <#assign fvPeriod = ec.getContext().get(curFieldName + "_period")!?lower_case>
-        <#if fvPeriod?has_content>
-            <#assign fvOffset = ec.getContext().get(curFieldName + "_poffset")!"0">
-            <#assign fvDate = ec.getContext().get(curFieldName + "_pdate")!"">
-            <#t>${ec.getUser().getPeriodDescription(fvPeriod, fvOffset, fvDate)}
-        </#if>
-    <#elseif widgetType == "date-time">
-        <#assign dtFieldNode = widgetNode?parent?parent>
-        <#assign javaFormat = widgetNode["@format"]!>
-        <#t><#if !javaFormat?has_content><#if widgetNode["@type"]! == "time"><#assign javaFormat="HH:mm"><#elseif widgetNode["@type"]! == "date"><#assign javaFormat="yyyy-MM-dd"><#else><#assign javaFormat="yyyy-MM-dd HH:mm"></#if></#if>
-        <#assign fieldValue = sri.getFieldValueString(dtFieldNode, widgetNode["@default-value"]!"", javaFormat)>
-        <#t><#if fieldValue?has_content>${fieldValue?html}</#if>
-    <#elseif widgetType == "date-find">
-        <#t><#if widgetNode["@type"]! == "time"><#assign defaultFormat="HH:mm"><#elseif widgetNode["@type"]! == "date"><#assign defaultFormat="yyyy-MM-dd"><#else><#assign defaultFormat="yyyy-MM-dd HH:mm"></#if>
-        <#assign fieldValueFrom = ec.getL10n().format(ec.getContext().get(curFieldName + "_from")!?default(widgetNode["@default-value-from"]!""), defaultFormat)>
-        <#assign fieldValueThru = ec.getL10n().format(ec.getContext().get(curFieldName + "_thru")!?default(widgetNode["@default-value-thru"]!""), defaultFormat)>
-        <#t><#if fieldValueFrom?has_content>${ec.getL10n().localize("From")} ${fieldValueFrom?html}</#if>
-        <#t><#if fieldValueThru?has_content>${ec.getL10n().localize("Thru")} ${fieldValueThru?html}</#if>
-    <#elseif widgetType == "range-find">
-        <#assign fieldValueFrom = ec.getContext().get(curFieldName + "_from")!?default(widgetNode["@default-value-from"]!"")>
-        <#assign fieldValueThru = ec.getContext().get(curFieldName + "_thru")!?default(widgetNode["@default-value-thru"]!"")>
-        <#t><#if fieldValueFrom?has_content>${ec.getL10n().localize("From")} ${fieldValueFrom?html}</#if>
-        <#t><#if fieldValueThru?has_content>${ec.getL10n().localize("Thru")} ${fieldValueThru?html}</#if>
+        </#list>
     <#else>
-        <#-- handles text-find, ... -->
-        <#t>${sri.getFieldValueString(widgetNode)}
+        <#t><#if isDynamicOptions>
+        <#assign doNode = widgetNode["dynamic-options"][0]>
+        <#assign transValue = sri.getFieldTransitionValue(doNode["@transition"], doNode, currentValue, doNode["@label-field"]!"label", alwaysGet)!>
+        <#t><#if transValue?has_content>${transValue}<#elseif currentValue?has_content>${currentValue}</#if>
+    <#else>
+        <#t><#if currentDescription?has_content>${currentDescription}<#elseif currentValue?has_content>${currentValue}</#if>
     </#if><#t>
+    </#if><#t>
+    <#t><#if ec.getWeb().parameters.get(curFieldName + "_not")! == "Y"> (${ec.getL10n().localize("Not")})</#if>
+<#elseif widgetType == "check" || widgetType == "radio">
+    <#assign currentValue = sri.getFieldValueString(widgetNode)/>
+    <#if !currentValue?has_content><#return></#if>
+    <#assign options = sri.getFieldOptions(widgetNode)/>
+    <#assign currentLabel = "">
+    <#list (options.keySet())! as key><#if currentValue?has_content && currentValue==key><#assign currentLabel = options.get(key)></#if></#list>
+    <#t><#if currentLabel?has_content>${currentLabel}<#else>${currentValue}</#if>
+<#elseif widgetType == "text-line">
+    <#assign fieldValue = sri.getFieldValueString(widgetNode)>
+    <#t><#if widgetNode["@ac-transition"]?has_content>
+    <#assign transValue = sri.getFieldTransitionValue(widgetNode["@ac-transition"], widgetNode, fieldValue, "label", alwaysGet)!>
+    <#t><#if transValue?has_content>${transValue}</#if>
+<#else>
+    <#t><#if fieldValue?has_content>${fieldValue}</#if>
+</#if><#t>
+<#elseif widgetType == "date-period">
+    <#assign fvPeriod = ec.getContext().get(curFieldName + "_period")!?lower_case>
+    <#if fvPeriod?has_content>
+        <#assign fvOffset = ec.getContext().get(curFieldName + "_poffset")!"0">
+        <#assign fvDate = ec.getContext().get(curFieldName + "_pdate")!"">
+        <#t>${ec.getUser().getPeriodDescription(fvPeriod, fvOffset, fvDate)}
+    </#if>
+<#elseif widgetType == "date-time">
+    <#assign dtFieldNode = widgetNode?parent?parent>
+    <#assign javaFormat = widgetNode["@format"]!>
+    <#t><#if !javaFormat?has_content><#if widgetNode["@type"]! == "time"><#assign javaFormat="HH:mm"><#elseif widgetNode["@type"]! == "date"><#assign javaFormat="yyyy-MM-dd"><#else><#assign javaFormat="yyyy-MM-dd HH:mm"></#if></#if>
+    <#assign fieldValue = sri.getFieldValueString(dtFieldNode, widgetNode["@default-value"]!"", javaFormat)>
+    <#t><#if fieldValue?has_content>${fieldValue?html}</#if>
+<#elseif widgetType == "date-find">
+    <#t><#if widgetNode["@type"]! == "time"><#assign defaultFormat="HH:mm"><#elseif widgetNode["@type"]! == "date"><#assign defaultFormat="yyyy-MM-dd"><#else><#assign defaultFormat="yyyy-MM-dd HH:mm"></#if>
+    <#assign fieldValueFrom = ec.getL10n().format(ec.getContext().get(curFieldName + "_from")!?default(widgetNode["@default-value-from"]!""), defaultFormat)>
+    <#assign fieldValueThru = ec.getL10n().format(ec.getContext().get(curFieldName + "_thru")!?default(widgetNode["@default-value-thru"]!""), defaultFormat)>
+    <#t><#if fieldValueFrom?has_content>${ec.getL10n().localize("From")} ${fieldValueFrom?html}</#if>
+    <#t><#if fieldValueThru?has_content>${ec.getL10n().localize("Thru")} ${fieldValueThru?html}</#if>
+<#elseif widgetType == "range-find">
+    <#assign fieldValueFrom = ec.getContext().get(curFieldName + "_from")!?default(widgetNode["@default-value-from"]!"")>
+    <#assign fieldValueThru = ec.getContext().get(curFieldName + "_thru")!?default(widgetNode["@default-value-thru"]!"")>
+    <#t><#if fieldValueFrom?has_content>${ec.getL10n().localize("From")} ${fieldValueFrom?html}</#if>
+    <#t><#if fieldValueThru?has_content>${ec.getL10n().localize("Thru")} ${fieldValueThru?html}</#if>
+<#else>
+<#-- handles text-find, ... -->
+    <#t>${sri.getFieldValueString(widgetNode)}
+</#if><#t>
 </#macro>
-
