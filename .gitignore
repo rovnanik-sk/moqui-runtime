@@ -9,7 +9,7 @@
 /db/h2/
 /db/orientdb/databases/
 /db/snapshot/
-/elasticsearch/data/
+/elasticsearch/
 /elasticsearch/log/
 /elasticsearch/work/
 /jackrabbit/jackrabbit/
@@ -17,6 +17,9 @@
 /sessions/
 /tmp/
 /txlog/
+
+# temporary configs
+/conf/bc*
 
 # common runtime added files
 /lib/*.jar
