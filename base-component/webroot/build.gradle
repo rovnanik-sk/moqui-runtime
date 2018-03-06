@@ -186,7 +186,11 @@ task minifyCombinedBase(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 task minifyWebrootVue(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     source = file("${webrootPath}/js/WebrootVue.js")
     dest = file("${webrootPath}/js/WebrootVue.min.js")
-    closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }
+    closure {
+        compilerOptions.languageIn="ECMASCRIPT6"
+        compilerOptions.languageOut="ECMASCRIPT5"
+        compilerOptions.setOutputCharset(StandardCharsets.UTF_8)
+    }
 }
 task combineVuetJs(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
     dependsOn downloadFiles

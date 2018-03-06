@@ -233,6 +233,34 @@ moqui.handleAjaxError = function(jqXHR, textStatus, errorThrown) {
     }
 };
 
+/* ========== localization ========== */
+moqui.i18localization = new VueI18n();
+
+function loadLocaleMessage(locale, location, cb) {
+    var languagePackPath = location + '/ssstatic/lang/wie.localization.' + locale + '.json';
+
+    return fetch(languagePackPath, {
+        method: 'get',
+        headers: {
+            'Accept': 'application/json',
+        }
+    }).then((res) => {
+        //console.log("1. response is OK " + res.ok);
+        return res.json();
+    }).then((json) => {
+        if (Object.keys(json).length === 0) {
+            return Promise.reject(new Error('locale empty!'))
+        } else {
+            return Promise.resolve(json)
+        }
+    }).then((message) => {
+        cb(null, message)
+    }).catch((error) => {
+        cb(error)
+    })
+}
+
+
 /* ========== component loading methods ========== */
 moqui.componentCache = new moqui.LruMap(50);
 
@@ -1308,6 +1336,9 @@ moqui.webrootVue = new Vue({
             if (this.appRootPath && this.appRootPath.length && path.indexOf(this.appRootPath) !== 0) path = this.appRootPath + path;
             if (path.indexOf(this.basePath) === 0) path = path.replace(this.basePath, this.linkBasePath);
             return path;
+        },
+        getLocalizedMessage(text) {
+            return moqui.i18localization.t(text, this.localeLang)
         }
     },
     watch: {
@@ -1391,6 +1422,9 @@ moqui.webrootVue = new Vue({
         currentParentUrl: function() {
             var curPath = this.currentPathList.slice(0,-1);
             return this.linkBasePath + (curPath && curPath.length > 0 ? '/' + curPath.join('/') : '')
+        },
+        localeLang() {
+            return this.locale.split('-')[0]
         }
     },
     created: function() {
@@ -1401,6 +1435,20 @@ moqui.webrootVue = new Vue({
         this.locale = $("#confLocale").val(); if (moqui.localeMap[this.locale]) this.locale = moqui.localeMap[this.locale];
         var vm = this; $('.confNavPluginUrl').each(function(idx, el) { vm.addNavPlugin($(el).val()); });
         this.notificationClient = new moqui.NotificationClient((location.protocol === 'https:' ? 'wss://' : 'ws://') + this.appHost + this.appRootPath + "/notws");
+
+        let localeToUse = this.locale.split('-')[0];
+        let locationToUse = location.protocol + '//' + this.appHost + this.appRootPath;
+
+        /*attempt to load localization*/
+        loadLocaleMessage(localeToUse, locationToUse, (err, message) => {
+            if (err) {
+                console.error(err);
+                return
+            }
+
+            //console.log("Setting locale to: " + JSON.stringify(message));
+            moqui.i18localization.setLocaleMessage(localeToUse, message);
+        });
     },
     mounted: function() {
         var jqEl = $(this.$el);
