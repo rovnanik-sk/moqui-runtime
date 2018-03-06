@@ -71,6 +71,21 @@
 </#macro>
 
 <#--custom macros-->
+<#macro "add-product">
+				<#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
+				<#assign trxGetStoreList = .node["@transition-get-store-list"]!"getStoreList">
+				<#assign trxCheckUnique = .node["@transition-check-unique"]!"checkUnique">
+				<#assign trxCreateProduct = .node["@transition-create-product"]!"createNewItem">
+    <#assign trxGetVendors = .node["@transition-get-vendors"]!"getSuppliersListPaged">
+				<div>
+        <add-product
+																trx-get-store-list="${targetUrl}/${trxGetStoreList}"
+																trx-check-unique="${targetUrl}/${trxCheckUnique}"
+																trx-create-product="${targetUrl}/${trxCreateProduct}"
+                api-url-vendor-search="${targetUrl}/${trxGetVendors}"
+								/>
+    </div>
+</#macro>
 <#macro "edit-invoice">
 				<#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
 				<#assign invoiceId = sri.getScreenUrlInstance().getParameterMap().get('invoiceId')!?html>
@@ -145,6 +160,7 @@
     <#assign trxGetProductDetails = .node["@transition-get-product-details"]!"getProductData">
     <#assign trxGetProductDimension = .node["@transition-get-product-dimensions"]!"getProductDimensions">
     <#assign trxGetVendors = .node["@transition-get-vendors"]!"getSuppliersListPaged">
+    <#assign trxGetCheckReportOptions = .node["@transition-get-check-report-options"]!"getCheckReportOptions">
     <#assign trxGetStores = .node["@transition-get-stores"]!"getStoreList">
     <#assign trxGetShipmentType = .node["@transition-get-shipment-type"]!"getShipmentBoxList">
     <#assign trxGetDimensionTypes = .node["@transition-get-dimension-types"]!"getDimensionTypes">
@@ -159,6 +175,8 @@
     <#assign trxDeleteProductVendor = .node["@transition-delete-product-vendor"]!"deleteProductVendor">
     <#assign trxDeleteProductDimension = .node["@transition-delete-product-dimension"]!"deleteProductDimension">
     <#assign trxUpdateProductDimension = .node["@transition-update-product-dimension"]!"updateProductDimension">
+    <#assign trxUpdateProductCheckReportId = .node["@transition-update-product-check-report-id"]!"updateProductCheckReport">
+    <#assign trxUpdateProductName = .node["@transition-update-product-name"]!"updateProductName">
 				<edit-product
             api-url-get-stores="${targetUrl}/${trxGetProductStores}"
             api-url-get-vendors="${targetUrl}/${trxGetProductVendors}"
@@ -171,6 +189,7 @@
             api-url-get-dimension-types="${targetUrl}/${trxGetDimensionTypes}"
             api-url-get-units="${targetUrl}/${trxGetUnits}"
             api-url-check-dimension="${targetUrl}/${trxCheckDimension}"
+            api-url-get-check-report-options="${targetUrl}/${trxGetCheckReportOptions}"
             trx-create-product-vendor="${targetUrl}/${trxCreateProductVendor}"
             trx-create-product-dimension="${targetUrl}/${trxCreateProductDimension}"
             trx-create-product-store-relation="${targetUrl}/${trxCreateProductStoreRelation}"
@@ -180,6 +199,8 @@
             trx-delete-product-package="${targetUrl}/${trxDeleteProductPackage}"
             trx-delete-product-dimension="${targetUrl}/${trxDeleteProductDimension}"
             trx-update-product-dimension="${targetUrl}/${trxUpdateProductDimension}"
+            trx-update-product-check-report="${targetUrl}/${trxUpdateProductCheckReportId}"
+            trx-update-product-name="${targetUrl}/${trxUpdateProductName}"
             :append-params="{productId: '${productId}'}"
             :fields-stores="[
                 {
@@ -235,7 +256,7 @@
                 },
                 {
                     name: '__slot:editQuantityOnPalette',
-                    title: 'Quantity On Pallete'
+                    title: 'Quantity On Palette'
                 },
                 '__slot:saveEdit',
                 '__slot:delete']"
