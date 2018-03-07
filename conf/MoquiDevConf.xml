@@ -76,12 +76,6 @@
 
     <entity-facade query-stats="true">
         <!-- add datasource elements here to configure databases -->
-        <datasource group-name="transactional" database-conf-name="postgres" schema-name="public" startup-add-missing="true" runtime-add-missing="false">
-            <inline-jdbc pool-minsize="5" pool-maxsize="50">
-                <xa-properties user="postgres" password="QzzVqbGp2L97G8Q2" serverName="localhost" portNumber="5432"
-                               databaseName="superciselnik_new"/>
-            </inline-jdbc>
-        </datasource>
     </entity-facade>
 
     <repository-list>
