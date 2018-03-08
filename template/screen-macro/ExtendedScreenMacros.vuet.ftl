@@ -456,7 +456,8 @@
 				<#assign trxAddTag = .node["@trx-add-tag"]!"createTag">
 				<#assign trxCreateInvoice = .node["@trx-create-invoice"]!"createInvoice">
 				<#assign trxCreateSupplier = .node["@trx-create-invoice"]!"createSupplier">
-				<#assign trxPrepareInvoice = .node["@trx-prepare-invoice"]!"prepareInvoice">
+				<#assign trxPrepareInvoice = .node["@trx-prepare-invoice"]!"prepareInvoiceToDraft">
+				<#assign trxProcessInvoiceToDraft = .node["@trx-process-invoice"]!"processInvoiceToDraft">
 				<#assign attachmentUploadContentUrl = .node["@trx-upload-attachment"]!"uploadContent">
 				<#assign getInvoiceAttachmentsTransition = .node["@trx-load-attachments"]!"getInvoiceAttachments">
 				<#assign perPage = .node["@per-page"]!"20">
@@ -479,6 +480,7 @@
 								trx-create-invoice="${targetUrl}/${trxCreateInvoice}"
 								trx-create-supplier="${targetUrl}/${trxCreateSupplier}"
 								trx-prepare-invoice="${targetUrl}/${trxPrepareInvoice}"
+								trx-process-invoice-to-draft="${targetUrl}/${trxProcessInvoiceToDraft}"
         attachment-upload-content-url="${targetUrl}/${attachmentUploadContentUrl}"
         data-load-attachments-url="${targetUrl}/${getInvoiceAttachmentsTransition}"
 								:fields="${vueCols}"
