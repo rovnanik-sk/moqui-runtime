@@ -452,9 +452,12 @@
 				<#assign loadTagsTransition = .node["@load-tags-transition"]!"loadTags">
 				<#assign apiUrlCategorySearch = .node["@url-category-search"]!"loadTags">
 				<#assign apiUrlCurrencySearch = .node["@url-currency-search"]!"getCurrencyList">
-				<#assign apiUrlSupplierSearch = .node["@url-supplier-search"]!"findParty">
+				<#assign apiUrlSupplierSearch = .node["@url-supplier-search"]!"getPartyList">
 				<#assign trxAddTag = .node["@trx-add-tag"]!"createTag">
 				<#assign trxCreateInvoice = .node["@trx-create-invoice"]!"createInvoice">
+				<#assign trxCreateSupplier = .node["@trx-create-invoice"]!"createSupplier">
+				<#assign trxPrepareInvoice = .node["@trx-prepare-invoice"]!"prepareInvoice">
+				<#assign attachmentUploadContentUrl = .node["@trx-upload-attachment"]!"uploadContent">
 				<#assign perPage = .node["@per-page"]!"20">
 				<#assign dataLoaded = .node["@data-path"]!"dataLoaded">
 				<#assign paginationPath = .node["@pagination-path"]!"pagination">
@@ -473,6 +476,9 @@
 								api-url-supplier-search="${targetUrl}/${apiUrlSupplierSearch}"
 								trx-add-tag="${targetUrl}/${trxAddTag}"
 								trx-create-invoice="${targetUrl}/${trxCreateInvoice}"
+								trx-create-supplier="${targetUrl}/${trxCreateSupplier}"
+								trx-prepare-invoice="${targetUrl}/${trxPrepareInvoice}"
+        attachment-upload-content-url="${targetUrl}/${attachmentUploadContentUrl}"
 								:fields="${vueCols}"
 								:per-page="${perPage}"
 								data-path="${dataLoaded}"
