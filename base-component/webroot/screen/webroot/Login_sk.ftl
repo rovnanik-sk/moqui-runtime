@@ -1,7 +1,7 @@
 <div class="tab-content">
-    <a href="https://www.rovnanik.sk" target="_blank">
-	    <img src="rsk_red.png" alt="Logo" class="center-block" style="box-shadow: 0px 2px 25px rgba(0, 0, 0, .25);background-color:black;">
-	</a>
+    <a href="${ec.user.getPreference('moqui.login.href.target')!'https://www.rovnanik.sk'}" target="_blank">
+	       <img src="${sri.buildUrl(ec.user.getPreference('moqui.login.logo')!'/rsk_red.png').url}" alt="Logo" class="center-block">
+	   </a>
 </div>
 <div class="tab-content">
     <div id="login" class="tab-pane active">
