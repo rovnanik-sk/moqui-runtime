@@ -1451,7 +1451,8 @@ moqui.webrootVue = new Vue({
         });
     },
     mounted: function() {
-        var jqEl = $(this.$el);
+        let tii = this;
+        let jqEl = $(this.$el);
         jqEl.find('.navbar [data-toggle="tooltip"]').tooltip({ placement:'bottom', trigger:'hover' });
         jqEl.find('#history-menu-link').tooltip({ placement:'bottom', trigger:'hover' });
         jqEl.find('#notify-history-menu-link').tooltip({ placement:'bottom', trigger:'hover' });
@@ -1464,9 +1465,16 @@ moqui.webrootVue = new Vue({
         $("#screen-document-dialog").on("hidden.bs.modal", function () { var jqEl = $("#screen-document-dialog-body");
                 jqEl.empty(); jqEl.append('<div class="spinner"><div>Loading…</div></div>'); });
 
+        let redirUrl = '/Login/logout';
+
+        if (tii.appRootPath !== '') {
+            redirUrl = `/${tii.appRootPath}${redirUrl}`;
+            console.log(`Redirecting to URL: ${redirUrl}`)
+        }
+
         $.sessionTimeout({
             keepAlive: false,
-            redirUrl: '/Login/logout',
+            redirUrl: redirUrl,
             warnAfter: 600000,
             redirAfter: 900000,
             onWarn: function () {
