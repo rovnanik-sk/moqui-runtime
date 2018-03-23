@@ -447,14 +447,34 @@
 <#macro "find-invoice-enhanced-homepage">
 				<#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
 				<#assign transition = .node["@transition-used"]!"forgot-to-set-transition">
+				<#assign transitionMailedMessages = .node["@mailed-messages-list"]!"getMailedMessagesList">
+				<#assign transitionMailedMessageAttachments = .node["@mailed-message-attachmens"]!"getMessageAttachments">
+				<#assign transitionDownloadMessageAttachment = .node["@download-message-attachment"]!"downloadAttachment">
+				<#assign apiUrlGetMessageBody = .node["@get-message-body"]!"getMessageBody">
 				<#assign searchPartiesTransition = .node["@search-parties"]!"findParty">
 				<#assign updateManualCategoryTransition = .node["@manual-category-transition"]!"updateCategory">
 				<#assign loadTagsTransition = .node["@load-tags-transition"]!"loadTags">
 				<#assign apiUrlCategorySearch = .node["@url-category-search"]!"loadTags">
 				<#assign apiUrlCurrencySearch = .node["@url-currency-search"]!"getCurrencyList">
-				<#assign apiUrlSupplierSearch = .node["@url-supplier-search"]!"findParty">
+				<#assign apiUrlSupplierSearch = .node["@url-supplier-search"]!"getPartyList">
 				<#assign trxAddTag = .node["@trx-add-tag"]!"createTag">
 				<#assign trxCreateInvoice = .node["@trx-create-invoice"]!"createInvoice">
+				<#assign trxCreateSupplier = .node["@trx-create-invoice"]!"createSupplier">
+				<#assign trxPrepareInvoice = .node["@trx-prepare-invoice"]!"prepareInvoiceToDraft">
+				<#assign trxProcessInvoiceToDraft = .node["@trx-process-invoice"]!"processInvoiceToDraft">
+				<#assign trxCopyAttachments = .node["@trx-copy-attachments"]!"copyAttachments">
+				<#assign trxGetInvoicesList = .node["@trx-get-invoices-list"]!"getInvoicesList">
+				<#assign trxGetMessageAttachmentsList = .node["@trx-get-message-attachmens-list"]!"getMessageAttachments">
+				<#assign trxMarkProcessed = .node["@trx-mark-processed"]!"markProcessed">
+				<#assign trxMarkUnprocessed = .node["@trx-mark-unprocessed"]!"markUnprocessed">
+				<#assign trxChangeStatus = .node["@trx-change-status"]!"changeStatus">
+				<#assign attachmentUploadContentUrl = .node["@trx-upload-attachment"]!"uploadContent">
+				<#assign getInvoiceAttachmentsTransition = .node["@trx-load-attachments"]!"getInvoiceAttachments">
+				<#assign trxUpdateNote = .node["@update-note"]!"createNote">
+				<#assign trxUploadNoteContent = .node["@upload-note-content"]!"addAttachment">
+				<#assign trxPrepareNote = .node["@prepare-note"]!"prepareNote">
+				<#assign trxSearchTags = .node["@search-tags"]!"searchNotesTags">
+				<#assign trxLoadTags = .node["@load-tags"]!"loadNotesTags">
 				<#assign perPage = .node["@per-page"]!"20">
 				<#assign dataLoaded = .node["@data-path"]!"dataLoaded">
 				<#assign paginationPath = .node["@pagination-path"]!"pagination">
@@ -468,11 +488,31 @@
 				<#assign dtpDefaultValue = "20.03.1981">
 				<find-invoice-homepage
 								api-url="${targetUrl}/${transition}"
+								api-url-mailed-messages="${targetUrl}/${transitionMailedMessages}"
+								api-url-mailed-message-attachments="${targetUrl}/${transitionMailedMessageAttachments}"
+        api-url-download-mailed-message-attachment="${targetUrl}/${transitionDownloadMessageAttachment}"
+        api-url-get-message-body="${targetUrl}/${apiUrlGetMessageBody}"
 								api-url-category-search="${targetUrl}/${apiUrlCategorySearch}"
 								api-url-currency-search="${targetUrl}/${apiUrlCurrencySearch}"
 								api-url-supplier-search="${targetUrl}/${apiUrlSupplierSearch}"
 								trx-add-tag="${targetUrl}/${trxAddTag}"
 								trx-create-invoice="${targetUrl}/${trxCreateInvoice}"
+								trx-create-supplier="${targetUrl}/${trxCreateSupplier}"
+								trx-prepare-invoice="${targetUrl}/${trxPrepareInvoice}"
+								trx-process-invoice-to-draft="${targetUrl}/${trxProcessInvoiceToDraft}"
+        trx-copy-attachments="${targetUrl}/${trxCopyAttachments}"
+        trx-get-invoices-list="${targetUrl}/${trxGetInvoicesList}"
+        trx-get-message-attachments-list="${targetUrl}/${trxGetMessageAttachmentsList}"
+        trx-mark-processed="${targetUrl}/${trxMarkProcessed}"
+        trx-mark-unprocessed="${targetUrl}/${trxMarkUnprocessed}"
+        trx-change-status="${targetUrl}/${trxChangeStatus}"
+        trx-prepare-note="${targetUrl}/${trxPrepareNote}"
+        trx-update-note="${targetUrl}/${trxUpdateNote}"
+        trx-upload-note-content="${targetUrl}/${trxUploadNoteContent}"
+        trx-search-tags="${targetUrl}/${trxSearchTags}"
+        trx-load-tags="${targetUrl}/${trxLoadTags}"
+        attachment-upload-content-url="${targetUrl}/${attachmentUploadContentUrl}"
+        data-load-attachments-url="${targetUrl}/${getInvoiceAttachmentsTransition}"
 								:fields="${vueCols}"
 								:per-page="${perPage}"
 								data-path="${dataLoaded}"
@@ -512,6 +552,62 @@
 								:internal-companies="${internalCompanies}"
 								:multi-sort="${multiSort}">
 				</find-invoice-homepage>
+</#macro>
+
+<#macro "tagged-notes-viewer">
+				<#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
+				<#assign transition = .node["@load-tagged-notes"]!"loadTaggedNotesEnh">
+				<#assign trxOpenContent = .node["@open-content"]!"openContent">
+				<#assign trxCreateNote = .node["@create-note"]!"createNote">
+				<#assign trxUpdateNote = .node["@update-note"]!"updateNote">
+				<#assign trxUploadNoteContent = .node["@upload-note-content"]!"addAttachment">
+				<#assign trxPrepareNote = .node["@prepare-note"]!"prepareNote">
+				<#assign trxSearchTags = .node["@search-tags"]!"searchNotesTags">
+				<#assign trxLoadTags = .node["@load-tags"]!"loadNotesTags">
+				<#assign trxEditNoteText = .node["@edit-note-text"]!"editNoteText">
+				<#assign vueCols = sri.getVueColumns(.node)>
+				<#assign perPage = .node["@per-page"]!"20">
+				<#assign dataLoaded = .node["@data-path"]!"dataLoaded">
+				<#assign paginationPath = .node["@pagination-path"]!"pagination">
+				<tagged-notes
+								api-url="${targetUrl}/${transition}"
+								:per-page="${perPage}"
+								data-path="${dataLoaded}"
+        pagination-path="${paginationPath}"
+								:fields="${vueCols}"
+        trx-open-content="${targetUrl}/${trxOpenContent}"
+        trx-create-note="${targetUrl}/${trxCreateNote}"
+        trx-prepare-note="${targetUrl}/${trxPrepareNote}"
+        trx-update-note="${targetUrl}/${trxUpdateNote}"
+        trx-upload-note-content="${targetUrl}/${trxUploadNoteContent}"
+        trx-search-tags="${targetUrl}/${trxSearchTags}"
+        trx-load-tags="${targetUrl}/${trxLoadTags}"
+        trx-edit-note-text="${targetUrl}/${trxEditNoteText}"
+        :query-params="{sort: 'orderByField', page: 'pageIndex', perPage: 'pageSize'}"
+								:css="{
+								table: {
+												tableClass : 'table table-striped table-hover table-condensed',
+												loadingClass: 'loading',
+												ascendingIcon: 'glyphicon glyphicon-chevron-up',
+												descendingIcon: 'glyphicon glyphicon-chevron-down',
+												handleIcon: 'glyphicon glyphicon-menu-hamburger'
+								},
+								pagination: {
+												infoClass: 'pull-left',
+												wrapperClass: 'vuetable-pagination pull-right form-list-nav',
+												activeClass: 'btn-primary',
+												disabledClass: 'disabled',
+												pageClass: 'btn btn-border',
+												linkClass: 'btn btn-border',
+												icons: {
+																first: '',
+																prev: '',
+																next: '',
+																last: ''
+												}
+								}
+				}">
+				</tagged-notes>
 </#macro>
 
 <#macro "econ-docs-tags-display">
