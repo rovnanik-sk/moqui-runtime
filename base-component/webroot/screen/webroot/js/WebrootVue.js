@@ -242,24 +242,24 @@ function loadLocaleMessage(locale, location, cb) {
     return fetch(languagePackPath, {
         method: 'get',
         headers: {
-            'Accept': 'application/json',
+            'Accept': 'application/json'
         }
     }).then((res) => {
-        //console.log("1. response is OK " + res.ok);
-        return res.json();
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res
+        }
     }).then((json) => {
         if (Object.keys(json).length === 0) {
-            return Promise.reject(new Error('locale empty!'))
+            return Promise.reject(new Error('Problem loading locale - file empty or nonexisting!'))
         } else {
             return Promise.resolve(json)
         }
-    }).then((message) => {
-        cb(null, message)
     }).catch((error) => {
         cb(error)
     })
 }
-
 
 /* ========== component loading methods ========== */
 moqui.componentCache = new moqui.LruMap(50);
