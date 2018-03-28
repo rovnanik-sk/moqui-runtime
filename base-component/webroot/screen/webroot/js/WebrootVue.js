@@ -1466,9 +1466,10 @@ moqui.webrootVue = new Vue({
                 jqEl.empty(); jqEl.append('<div class="spinner"><div>Loading…</div></div>'); });
 
         let redirUrl = '/Login/logout';
+        let redirUrlRootPath = $("#confAppRootPath").val();
 
-        if (tii.appRootPath !== '') {
-            redirUrl = `/${tii.appRootPath}${redirUrl}`;
+        if (redirUrlRootPath !== '') {
+            redirUrl = `${redirUrlRootPath}${redirUrl}`;
             console.log(`Redirecting to URL: ${redirUrl}`)
         }
 
