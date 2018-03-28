@@ -234,7 +234,28 @@ moqui.handleAjaxError = function(jqXHR, textStatus, errorThrown) {
 };
 
 /* ========== localization ========== */
-moqui.i18localization = new VueI18n();
+const dateTimeFormats = {
+    'en-US': {
+        short: {
+            year: 'numeric', month: 'short', day: 'numeric'
+        },
+        long: {
+            year: 'numeric', month: 'short', day: 'numeric',
+            weekday: 'short', hour: 'numeric', minute: 'numeric'
+        }
+    },
+    'sk': {
+        short: {
+            year: 'numeric', month: 'numeric', day: 'numeric'
+        },
+        long: {
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', hour12: false
+        }
+    }
+};
+
+moqui.i18localization = new VueI18n({dateTimeFormats});
 
 function loadLocaleMessage(locale, location, cb) {
     var languagePackPath = location + '/ssstatic/lang/wie.localization.' + locale + '.json';
@@ -1339,6 +1360,9 @@ moqui.webrootVue = new Vue({
         },
         getLocalizedMessage(text) {
             return moqui.i18localization.t(text, this.localeLang)
+        },
+        getFormattedDate(date) {
+            return moqui.i18localization.d(date, 'long', this.localeLang)
         }
     },
     watch: {
