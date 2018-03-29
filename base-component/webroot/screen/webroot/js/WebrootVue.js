@@ -277,6 +277,8 @@ function loadLocaleMessage(locale, location, cb) {
         } else {
             return Promise.resolve(json)
         }
+    }).then((message) => {
+        cb(null, message)
     }).catch((error) => {
         cb(error)
     })
@@ -1470,7 +1472,7 @@ moqui.webrootVue = new Vue({
                 return
             }
 
-            //console.log("Setting locale to: " + JSON.stringify(message));
+            console.log(`Setting locale to: ${JSON.stringify(message)}`);
             moqui.i18localization.setLocaleMessage(localeToUse, message);
         });
     },
