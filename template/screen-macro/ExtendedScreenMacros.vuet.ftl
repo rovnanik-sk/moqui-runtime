@@ -338,6 +338,15 @@
     ></edit-product>
 </#macro>
 
+<#macro "chart-one">
+				<#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
+				<#assign trxLoadAggRevs = .node["@trx-load-agg-revs"]!"loadAggregatedRevenues">
+				<chart-one
+								trx-load-agg-revs="${targetUrl}/${trxLoadAggRevs}"
+				>
+				</chart-one>
+</#macro>
+
 <#macro "search">
 				<#assign vueCols = sri.getVueColumns(.node)>
 				<#assign targetUrl = sri.buildUrl(sri.getScreenUrlInstance().path)>
