@@ -491,6 +491,7 @@
 				<#assign trackBy = .node["@track-by"]!"id">
 				<#assign internalCompanies = sri.listToJson(context['orgList']!"[]")>
 				<#assign statesAvailable = sri.listToJson(context['statesAllowed']!"[]")>
+				<#assign accountingStatesAvailable = sri.listToJson(context['accountingStatesAllowed']!"[]")>
 				<#assign multiSort = .node["@multi-sort"]!"true">
 				<#assign vueCols = sri.getVueColumns(.node)>
 				<#assign dtpFormat = "DD.MM.YYYY">
@@ -528,6 +529,7 @@
         dtp-format="${dtpFormat}"
         dtp-default-value="${dtpDefaultValue}"
 								:states-available="${statesAvailable}"
+								:accounting-states-available="${accountingStatesAvailable}"
 								pagination-path="${paginationPath}"
 								search-parties-api-url="${targetUrl}/${searchPartiesTransition}"
 								update-manual-category-url="${targetUrl}/${updateManualCategoryTransition}"
