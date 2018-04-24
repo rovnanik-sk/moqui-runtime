@@ -480,6 +480,7 @@
 				<#assign attachmentUploadContentUrl = .node["@trx-upload-attachment"]!"uploadContent">
 				<#assign getInvoiceAttachmentsTransition = .node["@trx-load-attachments"]!"getInvoiceAttachments">
 				<#assign trxUpdateNote = .node["@update-note"]!"createNote">
+				<#assign trxUpdateDocumentNumber = .node["@update-document-number"]!"updateDocumentNumber">
 				<#assign trxUploadNoteContent = .node["@upload-note-content"]!"addAttachment">
 				<#assign trxPrepareNote = .node["@prepare-note"]!"prepareNote">
 				<#assign trxSearchTags = .node["@search-tags"]!"searchNotesTags">
@@ -518,6 +519,7 @@
         trx-change-status="${targetUrl}/${trxChangeStatus}"
         trx-prepare-note="${targetUrl}/${trxPrepareNote}"
         trx-update-note="${targetUrl}/${trxUpdateNote}"
+        trx-update-document-number="${targetUrl}/${trxUpdateDocumentNumber}"
         trx-upload-note-content="${targetUrl}/${trxUploadNoteContent}"
         trx-search-tags="${targetUrl}/${trxSearchTags}"
         trx-load-tags="${targetUrl}/${trxLoadTags}"
