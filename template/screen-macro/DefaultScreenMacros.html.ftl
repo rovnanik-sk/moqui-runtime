@@ -202,7 +202,9 @@ ${sri.renderSection(.node["@name"])}
 <#macro "container-box">
     <#assign contBoxDivId><@nodeId .node/></#assign>
     <#assign boxHeader = .node["box-header"][0]>
-    <div class="panel panel-${.node["@type"]!"default"}"<#if contBoxDivId?has_content> id="${contBoxDivId}"</#if>>
+    <#assign boxType = ec.resource.expand(.node["@type"], "")!>
+    <#if !boxType?has_content><#assign boxType = "default"></#if>
+    <div class="panel panel-${boxType}"<#if contBoxDivId?has_content> id="${contBoxDivId}"</#if>>
         <div class="panel-heading">
             <#if boxHeader["@title"]?has_content><h5>${ec.getResource().expand(boxHeader["@title"]!"", "")}</h5></#if>
             <#recurse boxHeader>
@@ -758,7 +760,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         </#if>
         <#if fieldSubNode["submit"]?has_content>
         <div class="form-group">
-            <div class="${labelClass}">&nbsp;</div>
+            <div class="${labelClass} hidden-xs">&nbsp;</div>
             <div class="${widgetClass}<#if containerStyle?has_content> ${containerStyle}</#if>">
         <#elseif !(inFieldRow! && !curFieldTitle?has_content)>
         <div class="form-group">
@@ -1271,6 +1273,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 
         <#if isHeaderDialog>
             <tr><th colspan="${numColumns}" style="font-weight: normal">
+                <#assign haveFilters = false>
                 <#list formNode["field"] as fieldNode><#if fieldNode["header-field"]?has_content && fieldNode["header-field"][0]?children?has_content>
                     <#assign headerFieldNode = fieldNode["header-field"][0]>
                     <#assign allHidden = true>
@@ -1286,11 +1289,21 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                             <#assign fieldValue><@widgetTextValue widgetNode/></#assign>
                             <#if fieldValue?has_content>
                                 <span style="white-space:nowrap;"><strong><@fieldTitle headerFieldNode/>:</strong> <span class="text-success">${fieldValue}</span></span>
+                                <#assign haveFilters = true>
                             </#if>
                         </#if></#list>
                         <#t>${sri.popContext()}
                     </#if>
                 </#if></#list>
+                <#if haveFilters>
+                    <#assign hiddenParameterMap = sri.getFormHiddenParameters(formNode)>
+                    <#assign hiddenParameterKeys = hiddenParameterMap.keySet()>
+                    <#assign curUrlInstance = sri.getCurrentScreenUrl()>
+                    <form name="${headerFormId}" id="${headerFormId}" method="post" action="${curUrlInstance.url}">
+                        <#list hiddenParameterKeys as hiddenParameterKey><input type="hidden" name="${hiddenParameterKey}" value="${hiddenParameterMap.get(hiddenParameterKey)!""}"></#list>
+                        <button id="quickClear_button" type="submit" name="clearParameters" style="float:left; padding: 0px 5px 0px 4px; margin-top: 1px;" class="btn btn-primary btn-sm"><i class="fa fa-remove"></i></button>
+                    </form>
+                </#if>
             </th></tr>
             </#if>
     </#if>
@@ -1734,7 +1747,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         <#assign allChecked = ec.getResource().expandNoL10n(.node["@all-checked"]!, "")>
         <#assign fullId = id>
         <#if (key_index > 0)><#assign fullId = id + "_" + key_index></#if>
-        <span id="${fullId}"<#if containerStyle?has_content> class="${containerStyle}"</#if>><input type="checkbox" name="${curName}" value="${key?html}"<#if allChecked! == "true"> checked="checked"<#elseif currentValue?has_content && currentValue==key> checked="checked"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>><#if options.get(key)! != ""><span class="checkbox-label" onclick="$('#${fullId}').children('input[type=checkbox]').click()" style="cursor: default">${options.get(key)}</span></#if></span>
+        <span id="${fullId}"<#if containerStyle?has_content> class="${containerStyle}"</#if>><input type="checkbox" name="${curName}" value="${key?html}"<#if allChecked! == "true"> checked="checked"<#elseif currentValue?has_content && (currentValue==key || currentValue.contains(key))> checked="checked"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>><#if options.get(key)! != ""><span class="checkbox-label" onclick="$('#${fullId}').children('input[type=checkbox]').click()" style="cursor: default">${options.get(key)}</span></#if></span>
     </#list>
 </#macro>
 
@@ -1755,7 +1768,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <input type="text" class="form-control" name="${curFieldName}_from" value="${fieldValueFrom?html}" size="${size}" maxlength="${maxlength}"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
         </div>
-        <script>$('#${id}_from').datetimepicker({toolbarPlacement:'top', showClose:true, showClear:true, useStrict:true, showTodayButton:true, defaultDate:'${fieldValueFrom?html}' && moment('${fieldValueFrom?html}','${datepickerFormat}'), format:'${datepickerFormat}', extraFormats:${extraFormatsVal}, stepping:5, locale:"${ec.getUser().locale.toLanguageTag()}", keyBinds: {t: function() {this.date(moment());}}});</script>
+        <script>$('#${id}_from').datetimepicker({toolbarPlacement:'top', showClose:true, showClear:true, useStrict:true, showTodayButton:true, defaultDate:'${fieldValueFrom?html}' && moment('${fieldValueFrom?html}','${datepickerFormat}'), format:'${datepickerFormat}', extraFormats:${extraFormatsVal}, stepping:5, locale:"${ec.getUser().locale.toLanguageTag()}", keyBinds: {t: function() {this.date(moment());}, up: function () { this.date(this.date().clone().add(1, 'd')); }, down: function () { this.date(this.date().clone().subtract(1, 'd')); }, 'control up': function () { this.date(this.date().clone().add(1, 'd')); }, 'control down': function () { this.date(this.date().clone().subtract(1, 'd')); }}});</script>
     <#else>
         <input type="text" class="form-control" pattern="^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$"
                name="${curFieldName}_from" value="${fieldValueFrom?html}" size="${size}" maxlength="${maxlength}"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
@@ -1768,7 +1781,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <input type="text" class="form-control" name="${curFieldName}_thru" value="${fieldValueThru?html}" size="${size}" maxlength="${maxlength}"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
             <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
         </div>
-        <script>$('#${id}_thru').datetimepicker({toolbarPlacement:'top', showClose:true, showClear:true, useStrict:true, showTodayButton:true, defaultDate:'${fieldValueThru?html}' && moment('${fieldValueThru?html}','${datepickerFormat}'), format:'${datepickerFormat}', extraFormats:${extraFormatsVal}, stepping:5, locale:"${ec.getUser().locale.toLanguageTag()}", keyBinds: {t: function() {this.date(moment());}}});</script>
+        <script>$('#${id}_thru').datetimepicker({toolbarPlacement:'top', showClose:true, showClear:true, useStrict:true, showTodayButton:true, defaultDate:'${fieldValueThru?html}' && moment('${fieldValueThru?html}','${datepickerFormat}'), format:'${datepickerFormat}', extraFormats:${extraFormatsVal}, stepping:5, locale:"${ec.getUser().locale.toLanguageTag()}", keyBinds: {t: function() {this.date(moment());}, up: function () { this.date(this.date().clone().add(1, 'd')); }, down: function () { this.date(this.date().clone().subtract(1, 'd')); }, 'control up': function () { this.date(this.date().clone().add(1, 'd')); }, 'control down': function () { this.date(this.date().clone().subtract(1, 'd')); }}});</script>
     <#else>
         <input type="text" class="form-control" pattern="^(?:(?:([01]?\d|2[0-3]):)?([0-5]?\d):)?([0-5]?\d)$"
                name="${curFieldName}_thru" value="${fieldValueThru?html}" size="${size}" maxlength="${maxlength}"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
@@ -1820,7 +1833,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         </div>
         <script>
             $("#${id}_poffset").select2({ }); $("#${id}_period").select2({ });
-            $('#${id}_pdate').datetimepicker({toolbarPlacement:'top', showClose:true, showClear:true, showTodayButton:true, useStrict:true, defaultDate: '${fvDate?html}' && moment('${fvDate?html}','YYYY-MM-DD'), format:'YYYY-MM-DD', extraFormats:['l', 'L', 'YYYY-MM-DD'], locale:"${ec.getUser().locale.toLanguageTag()}", keyBinds: {t: function() {this.date(moment());}}});
+            $('#${id}_pdate').datetimepicker({toolbarPlacement:'top', showClose:true, showClear:true, showTodayButton:true, useStrict:true, defaultDate: '${fvDate?html}' && moment('${fvDate?html}','YYYY-MM-DD'), format:'YYYY-MM-DD', extraFormats:['l', 'L', 'YYYY-MM-DD'], locale:"${ec.getUser().locale.toLanguageTag()}", keyBinds: {t: function() {this.date(moment());}, up: function () { this.date(this.date().clone().add(1, 'd')); }, down: function () { this.date(this.date().clone().subtract(1, 'd')); }, 'control up': function () { this.date(this.date().clone().add(1, 'd')); }, 'control down': function () { this.date(this.date().clone().subtract(1, 'd')); }}});
         </script>
     </div>
 </#macro>
@@ -1884,7 +1897,7 @@ a => A, d => D, y => Y
             $('#${id}').datetimepicker({toolbarPlacement:'top', showClose:true, showClear:true, showTodayButton:true,
                 useStrict:true, defaultDate: '${fieldValue?html}' && moment('${fieldValue?html}','${datepickerFormat}'),
                 format:'${datepickerFormat}', extraFormats:${extraFormatsVal}, stepping:5, locale:"${ec.getUser().locale.toLanguageTag()}",
-                keyBinds: {t: function() {this.date(moment());}}});
+                keyBinds: {t: function() {this.date(moment());}, up: function () { this.date(this.date().clone().add(1, 'd')); }, down: function () { this.date(this.date().clone().subtract(1, 'd')); }, 'control up': function () { this.date(this.date().clone().add(1, 'd')); }, 'control down': function () { this.date(this.date().clone().subtract(1, 'd')); }}});
             $('#${id}').on("dp.change", function() { var jqEl = $('#${id}'); jqEl.val(jqEl.find("input").first().val()); jqEl.trigger("change"); });
         </script>
     <#else>
@@ -1898,6 +1911,7 @@ a => A, d => D, y => Y
     <#assign dispFieldNode = .node?parent?parent>
     <#assign dispAlign = dispFieldNode["@align"]!"left">
     <#assign dispHidden = (!.node["@also-hidden"]?has_content || .node["@also-hidden"] == "true") && !(skipForm!false)>
+    <#assign dispDynamic = .node["@dynamic-transition"]?has_content>
     <#assign fieldValue = "">
     <#if .node["@text"]?has_content>
         <#assign textMap = "">
@@ -1915,15 +1929,21 @@ a => A, d => D, y => Y
     <#else>
         <#assign fieldValue = sri.getFieldValueString(.node)>
     </#if>
+    <#if dispDynamic && !fieldValue?has_content><#assign fieldValue><@widgetTextValue .node true/></#assign></#if>
     <#t><span class="text-inline ${sri.getFieldValueClass(dispFieldNode)}<#if .node["@currency-unit-field"]?has_content> currency</#if><#if dispAlign == "center"> text-center<#elseif dispAlign == "right"> text-right</#if><#if .node["@style"]?has_content> ${ec.getResource().expand(.node["@style"], "")}</#if>"<#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if .node["@dynamic-transition"]?has_content> id="${dispFieldId}_display"</#if>>
     <#t><#if fieldValue?has_content><#if .node["@encode"]! == "false">${fieldValue}<#else>${fieldValue?html?replace("\n", "<br>")}</#if><#else>&nbsp;</#if>
     <#t></span>
     <#t><#if dispHidden>
-        <#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
-        <#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
-        <input type="hidden" id="${dispFieldId}" name="<@fieldName .node/>" value="${sri.getFieldValuePlainString(dispFieldNode, "")?html}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
+        <#if dispDynamic>
+            <#assign hiddenValue><@widgetTextValue .node true "value"/></#assign>
+            <input type="hidden" id="${dispFieldId}" name="<@fieldName .node/>" value="${hiddenValue}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
+        <#else>
+            <#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
+            <#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
+            <input type="hidden" id="${dispFieldId}" name="<@fieldName .node/>" value="${sri.getFieldValuePlainString(dispFieldNode, "")?html}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
+        </#if>
     </#if>
-    <#if .node["@dynamic-transition"]?has_content>
+    <#if dispDynamic>
         <#assign defUrlInfo = sri.makeUrlByType(.node["@dynamic-transition"], "transition", .node, "false")>
         <#assign defUrlParameterMap = defUrlInfo.getParameterMap()>
         <#assign depNodeList = .node["depends-on"]>
@@ -1937,7 +1957,20 @@ a => A, d => D, y => Y
                 $.ajax({ type:"POST", url:"${defUrlInfo.url}", data:{ moquiSessionToken: "${(ec.getWeb().sessionToken)!}"<#rt>
                     <#t><#list depNodeList as depNode><#local depNodeField = depNode["@field"]><#local depNodeParm = depNode["@parameter"]!depNodeField><#local _void = defUrlParameterMap.remove(depNodeParm)!>, "${depNodeParm}": $("#<@fieldIdByName depNodeField/>").val()</#list>
                     <#t><#list defUrlParameterMap.keySet() as parameterKey><#if defUrlParameterMap.get(parameterKey)?has_content>, "${parameterKey}":"${defUrlParameterMap.get(parameterKey)}"</#if></#list>
-                    <#t>}, dataType:"text" }).done( function(defaultText) { $('#${dispFieldId}_display').html(defaultText); <#if dispHidden>$('#${dispFieldId}').val(defaultText);</#if>  } );
+                    <#t>}, dataType:"text" }).done( function(defaultText) { if (defaultText && defaultText.length) {
+                        var label = '', value = '';
+                        try {
+                            var response = JSON.parse(defaultText);
+                            if ($.isArray(response) && response.length) { response = response[0]; }
+                            else if ($.isPlainObject(response) && response.hasOwnProperty('options') && response.options.length) { response = response.options[0]; }
+                            if (response.hasOwnProperty('label')) { label = response.label; }
+                            if (response.hasOwnProperty('value')) { value = response.value; }
+                        } catch(e) { }
+                        if (!label || !label.length) label = defaultText;
+                        if (!value || !value.length) value = defaultText;
+                        $('#${dispFieldId}_display').html(label);
+                        <#if dispHidden>$('#${dispFieldId}').val(value);</#if>
+                    }});
             }
             <#list depNodeList as depNode>
             $("#<@fieldIdByName depNode["@field"]/>").on('change', function() { populate_${dispFieldId}(); });
@@ -2280,11 +2313,11 @@ a => A, d => D, y => Y
 </span>
 </#macro>
 
-<#macro widgetTextValue widgetNode alwaysGet=false>
+<#macro widgetTextValue widgetNode alwaysGet=false valueField="label">
     <#assign widgetType = widgetNode?node_name>
     <#assign curFieldName><@fieldName widgetNode/></#assign>
     <#assign noDisplay = ["display", "display-entity", "hidden", "ignored", "password", "reset", "submit", "text-area", "link", "label"]>
-    <#t><#if noDisplay?seq_contains(widgetType)><#return></#if>
+    <#t><#if !alwaysGet && noDisplay?seq_contains(widgetType)><#return></#if>
     <#t><#if widgetType == "drop-down">
         <#assign ddFieldNode = widgetNode?parent?parent>
         <#assign allowMultiple = ec.getResource().expand(widgetNode["@allow-multiple"]!, "") == "true">
@@ -2340,6 +2373,11 @@ a => A, d => D, y => Y
             <#assign fvOffset = ec.getContext().get(curFieldName + "_poffset")!"0">
             <#assign fvDate = ec.getContext().get(curFieldName + "_pdate")!"">
             <#t>${ec.getUser().getPeriodDescription(fvPeriod, fvOffset, fvDate)}
+        <#else>
+            <#assign fieldValueFrom = ec.getL10n().format(ec.getContext().get(curFieldName + "_from")!, "yyyy-MM-dd")>
+            <#assign fieldValueThru = ec.getL10n().format(ec.getContext().get(curFieldName + "_thru")!, "yyyy-MM-dd")>
+            <#t><#if fieldValueFrom?has_content>${ec.getL10n().localize("From")} ${fieldValueFrom?html}</#if>
+            <#t><#if fieldValueThru?has_content> ${ec.getL10n().localize("to")} ${fieldValueThru?html}</#if>
         </#if>
     <#elseif widgetType == "date-time">
         <#assign dtFieldNode = widgetNode?parent?parent>
@@ -2352,12 +2390,20 @@ a => A, d => D, y => Y
         <#assign fieldValueFrom = ec.getL10n().format(ec.getContext().get(curFieldName + "_from")!?default(widgetNode["@default-value-from"]!""), defaultFormat)>
         <#assign fieldValueThru = ec.getL10n().format(ec.getContext().get(curFieldName + "_thru")!?default(widgetNode["@default-value-thru"]!""), defaultFormat)>
         <#t><#if fieldValueFrom?has_content>${ec.getL10n().localize("From")} ${fieldValueFrom?html}</#if>
-        <#t><#if fieldValueThru?has_content>${ec.getL10n().localize("Thru")} ${fieldValueThru?html}</#if>
+        <#t><#if fieldValueThru?has_content> ${ec.getL10n().localize("to")} ${fieldValueThru?html}</#if>
     <#elseif widgetType == "range-find">
         <#assign fieldValueFrom = ec.getContext().get(curFieldName + "_from")!?default(widgetNode["@default-value-from"]!"")>
         <#assign fieldValueThru = ec.getContext().get(curFieldName + "_thru")!?default(widgetNode["@default-value-thru"]!"")>
         <#t><#if fieldValueFrom?has_content>${ec.getL10n().localize("From")} ${fieldValueFrom?html}</#if>
-        <#t><#if fieldValueThru?has_content>${ec.getL10n().localize("Thru")} ${fieldValueThru?html}</#if>
+        <#t><#if fieldValueThru?has_content> ${ec.getL10n().localize("to")} ${fieldValueThru?html}</#if>
+    <#elseif widgetType == "display">
+        <#assign fieldValue = sri.getFieldValueString(widgetNode)>
+        <#t><#if widgetNode["@dynamic-transition"]?has_content>
+            <#assign transValue = sri.getFieldTransitionValue(widgetNode["@dynamic-transition"], widgetNode, fieldValue, valueField, alwaysGet)!>
+            <#t><#if transValue?has_content>${transValue}</#if>
+        <#else>
+            <#t><#if fieldValue?has_content>${fieldValue}</#if>
+        </#if><#t>
     <#else>
         <#-- handles text-find, ... -->
         <#t>${sri.getFieldValueString(widgetNode)}

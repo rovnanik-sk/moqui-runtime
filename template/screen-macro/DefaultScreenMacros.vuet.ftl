@@ -76,7 +76,9 @@ ${sri.renderSection(.node["@name"])}
 <#macro "container-box">
     <#assign contBoxDivId><@nodeId .node/></#assign>
     <#assign boxHeader = .node["box-header"][0]!>
-    <container-box<#if contBoxDivId?has_content> id="${contBoxDivId}"</#if> type="${.node["@type"]!"default"}"<#if boxHeader??> title="${ec.getResource().expand(boxHeader["@title"]!"", "")}"</#if> :initial-open="<#if ec.getResource().expand(.node["@initial"]!, "") == "closed">false<#else>true</#if>">
+    <#assign boxType = ec.resource.expand(.node["@type"], "")!>
+    <#if !boxType?has_content><#assign boxType = "default"></#if>
+    <container-box<#if contBoxDivId?has_content> id="${contBoxDivId}"</#if> type="${boxType}"<#if boxHeader??> title="${ec.getResource().expand(boxHeader["@title"]!"", "")}"</#if> :initial-open="<#if ec.getResource().expand(.node["@initial"]!, "") == "closed">false<#else>true</#if>">
         <#-- NOTE: direct use of the container-box component would not use template elements but rather use the 'slot' attribute directly on the child elements which we can't do here -->
         <#if boxHeader??><template slot="header"><#recurse boxHeader></template></#if>
         <#if .node["box-toolbar"]?has_content><template slot="toolbar"><#recurse .node["box-toolbar"][0]></template></#if>
@@ -249,7 +251,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
             <${linkElement} href="${urlText}"<#if linkFormId?has_content> id="${linkFormId}"</#if><#rt>
                 <#t><#if linkNode["@target-window"]?has_content> target="${linkNode["@target-window"]}"</#if>
                 <#t><#if linkNode["@dynamic-load-id"]?has_content> load-id="${linkNode["@dynamic-load-id"]}"</#if>
-                <#t><#if confirmationMessage?has_content> onclick="return confirm('${confirmationMessage?js_string}')"</#if>
+                <#t><#if confirmationMessage?has_content><#if linkElement == "m-link"> :confirmation="'${confirmationMessage?js_string}'"<#else> onclick="return confirm('${confirmationMessage?js_string}')"</#if></#if>
                 <#t> class="<#if linkNode["@link-type"]! != "anchor">btn btn-${linkNode["@btn-type"]!"primary"} btn-sm</#if><#if linkNode["@style"]?has_content> ${ec.getResource().expandNoL10n(linkNode["@style"], "")}</#if>"
                 <#t><#if linkNode["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(linkNode["@tooltip"], "")}"</#if>>
                 <#t><#if iconClass?has_content><i class="${iconClass}"></i> </#if><#rt>
@@ -525,7 +527,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         </#if>
         <#if fieldSubNode["submit"]?has_content>
         <div class="form-group">
-            <div class="${labelClass}">&nbsp;</div>
+            <div class="${labelClass} hidden-xs">&nbsp;</div>
             <div class="${widgetClass}<#if containerStyle?has_content> ${containerStyle}</#if>">
         <#elseif !(inFieldRow! && !curFieldTitle?has_content)>
         <div class="form-group">
@@ -725,10 +727,10 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         <#assign selectColumnsDialogId = formId + "_SelColsDialog">
         <#assign selectColumnsSortableId = formId + "_SelColsSortable">
         <#assign fieldsNotInColumns = formListInfo.getFieldsNotReferencedInFormListColumn()>
-        <container-dialog id="${selectColumnsDialogId}" title="${ec.getL10n().localize("Column Fields")}">
-            <p>Drag fields to the desired column or do not display</p>
+        <container-dialog id="${selectColumnsDialogId}" title="${ec.l10n.localize("Column Fields")}">
+            <p>${ec.getL10n().localize("Drag fields to the desired column or do not display")}</p>
             <ul id="${selectColumnsSortableId}">
-                <li id="hidden"><div>Do Not Display</div>
+                <li id="hidden"><div>${ec.l10n.localize("Do Not Display")}</div>
                     <#if fieldsNotInColumns?has_content>
                         <ul>
                             <#list fieldsNotInColumns as fieldNode>
@@ -739,7 +741,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                     </#if>
                 </li>
                 <#list allColInfoList as columnFieldList>
-                    <li id="column_${columnFieldList_index}"><div>Column ${columnFieldList_index + 1}</div><ul>
+                    <li id="column_${columnFieldList_index}"><div>${ec.l10n.localize("Column")} ${columnFieldList_index + 1}</div><ul>
                         <#list columnFieldList as fieldNode>
                             <#assign fieldSubNode = (fieldNode["header-field"][0])!(fieldNode["default-field"][0])!>
                             <li id="${fieldNode["@name"]}"><div><@fieldTitle fieldSubNode/></div></li>
@@ -883,7 +885,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                     <#assign quickSavedFindId = formId + "_QuickSavedFind">
                     <select id="${quickSavedFindId}" name="${quickSavedFindId}">
                         <option></option><#-- empty option for placeholder -->
-                        <option value="_clear" data-action="${sri.getScreenUrlInstance().path}">${ec.getL10n().localize("Clear Current Find")}</option>
+                        <option value="_clear" data-action="${sri.buildUrl(sri.getScreenUrlInstance().path).pathWithParams}">${ec.getL10n().localize("Clear Current Find")}</option>
                         <#list userFindInfoList as userFindInfo>
                             <#assign formListFind = userFindInfo.formListFind>
                             <#assign findParameters = userFindInfo.findParameters>
@@ -938,6 +940,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
 
         <#if isHeaderDialog>
         <tr><th colspan="${numColumns}" style="font-weight: normal">
+            <#assign haveFilters = false>
             <#list formNode["field"] as fieldNode><#if fieldNode["header-field"]?has_content && fieldNode["header-field"][0]?children?has_content>
                 <#assign headerFieldNode = fieldNode["header-field"][0]>
                 <#assign allHidden = true>
@@ -953,11 +956,21 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
                         <#assign fieldValue><@widgetTextValue widgetNode/></#assign>
                         <#if fieldValue?has_content>
                             <span style="white-space:nowrap;"><strong><@fieldTitle headerFieldNode/>:</strong> <span class="text-success">${fieldValue}</span></span>
+                            <#assign haveFilters = true>
                         </#if>
                     </#if></#list>
                     <#t>${sri.popContext()}
                 </#if>
             </#if></#list>
+            <#if haveFilters>
+                <#assign hiddenParameterMap = sri.getFormHiddenParameters(formNode)>
+                <#assign hiddenParameterKeys = hiddenParameterMap.keySet()>
+                <#assign curUrlInstance = sri.getCurrentScreenUrl()>
+                <form-link name="${headerFormId}" id="${headerFormId}" action="${curUrlInstance.path}">
+                    <#list hiddenParameterKeys as hiddenParameterKey><input type="hidden" name="${hiddenParameterKey}" value="${hiddenParameterMap.get(hiddenParameterKey)!""}"></#list>
+                    <button id="quickClear_button" type="submit" name="clearParameters" style="float:left; padding: 0px 5px 0px 4px; margin-top: 1px;" class="btn btn-primary btn-sm"><i class="fa fa-remove"></i></button>
+                </form-link>
+            </#if>
         </th></tr>
         </#if>
     </#if>
@@ -1428,7 +1441,7 @@ ${sri.renderIncludeScreen(.node["@location"], .node["@share-scope"]!)}
         <#assign allChecked = ec.getResource().expandNoL10n(.node["@all-checked"]!, "")>
         <#assign fullId = tlId>
         <#if (key_index > 0)><#assign fullId = tlId + "_" + key_index></#if>
-        <span id="${fullId}"<#if containerStyle?has_content> class="${containerStyle}"</#if>><input type="checkbox" name="${curName}" value="${key?html}"<#if allChecked! == "true"> checked="checked"<#elseif currentValue?has_content && currentValue==key> checked="checked"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>><#if options.get(key)! != ""><span class="checkbox-label" onclick="$('#${fullId}').children('input[type=checkbox]').click()" style="cursor: default">${options.get(key)}</span></#if></span>
+        <span id="${fullId}"<#if containerStyle?has_content> class="${containerStyle}"</#if>><input type="checkbox" name="${curName}" value="${key?html}"<#if allChecked! == "true"> checked="checked"<#elseif currentValue?has_content && (currentValue==key || currentValue.contains(key))> checked="checked"</#if><#if .node?parent["@tooltip"]?has_content> data-toggle="tooltip" title="${ec.getResource().expand(.node?parent["@tooltip"], "")}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>><#if options.get(key)! != ""><span class="checkbox-label" onclick="$('#${fullId}').children('input[type=checkbox]').click()" style="cursor: default">${options.get(key)}</span></#if></span>
     </#list>
 </#macro>
 
@@ -1542,9 +1555,14 @@ a => A, d => D, y => Y
     <#t><#if fieldValue?has_content><#if .node["@encode"]! == "false">${fieldValue}<#else>${fieldValue?html?replace("\n", "<br>")}</#if><#else>&nbsp;</#if>
     <#t></span>
     <#t><#if dispHidden>
-        <#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
-        <#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
-        <input type="hidden" id="${dispFieldId}" name="${dispFieldName}" <#if fieldsJsName?has_content>:value="${fieldsJsName}.${dispFieldName}"<#else>value="${sri.getFieldValuePlainString(dispFieldNode, "")?html}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
+        <#if dispDynamic>
+            <#assign hiddenValue><@widgetTextValue .node true "value"/></#assign>
+            <input type="hidden" id="${dispFieldId}" name="${dispFieldName}" value="${hiddenValue}"<#if ownerForm?has_content> form="${ownerForm}"</#if>>
+        <#else>
+            <#-- use getFieldValuePlainString() and not getFieldValueString() so we don't do timezone conversions, etc -->
+            <#-- don't default to fieldValue for the hidden input value, will only be different from the entry value if @text is used, and we don't want that in the hidden value -->
+            <input type="hidden" id="${dispFieldId}" name="${dispFieldName}" <#if fieldsJsName?has_content>:value="${fieldsJsName}.${dispFieldName}"<#else>value="${sri.getFieldValuePlainString(dispFieldNode, "")?html}"</#if><#if ownerForm?has_content> form="${ownerForm}"</#if>>
+        </#if>
     </#if>
     <#if dispDynamic>
         <#assign defUrlInfo = sri.makeUrlByType(.node["@dynamic-transition"], "transition", .node, "false")>
@@ -1560,7 +1578,20 @@ a => A, d => D, y => Y
                 $.ajax({ type:"POST", url:"${defUrlInfo.url}", data:{ moquiSessionToken: "${(ec.getWeb().sessionToken)!}"<#rt>
                     <#t><#list depNodeList as depNode><#local depNodeField = depNode["@field"]><#local depNodeParm = depNode["@parameter"]!depNodeField><#local _void = defUrlParameterMap.remove(depNodeParm)!>, "${depNodeParm}": $("#<@fieldIdByName depNodeField/>").val()</#list>
                     <#t><#list defUrlParameterMap.keySet() as parameterKey><#if defUrlParameterMap.get(parameterKey)?has_content>, "${parameterKey}":"${defUrlParameterMap.get(parameterKey)}"</#if></#list>
-                    <#t>}, dataType:"text" }).done(function(defaultText) { $('#${dispFieldId}_display').html(defaultText); <#if dispHidden>$('#${dispFieldId}').val(defaultText);</#if> });
+                    <#t>}, dataType:"text" }).done(function(defaultText) { if (defaultText && defaultText.length) {
+                        var label = '', value = '';
+                        try {
+                            var response = JSON.parse(defaultText);
+                            if ($.isArray(response) && response.length) { response = response[0]; }
+                            else if ($.isPlainObject(response) && response.hasOwnProperty('options') && response.options.length) { response = response.options[0]; }
+                            if (response.hasOwnProperty('label')) { label = response.label; }
+                            if (response.hasOwnProperty('value')) { value = response.value; }
+                        } catch(e) { }
+                        if (!label || !label.length) label = defaultText;
+                        if (!value || !value.length) value = defaultText;
+                        $('#${dispFieldId}_display').html(label);
+                        <#if dispHidden>$('#${dispFieldId}').val(value);</#if>
+                    }});
             }
             <#list depNodeList as depNode>
             $("#<@fieldIdByName depNode["@field"]/>").on('change', function() { populate_${dispFieldId}(); });
@@ -1779,7 +1810,7 @@ a => A, d => D, y => Y
 </span>
 </#macro>
 
-<#macro widgetTextValue widgetNode alwaysGet=false>
+<#macro widgetTextValue widgetNode alwaysGet=false valueField="label">
     <#assign widgetType = widgetNode?node_name>
     <#assign curFieldName><@fieldName widgetNode/></#assign>
     <#assign noDisplay = ["display", "display-entity", "hidden", "ignored", "password", "reset", "submit", "text-area", "link", "label"]>
@@ -1865,7 +1896,7 @@ a => A, d => D, y => Y
     <#elseif widgetType == "display">
         <#assign fieldValue = sri.getFieldValueString(widgetNode)>
         <#t><#if widgetNode["@dynamic-transition"]?has_content>
-            <#assign transValue = sri.getFieldTransitionValue(widgetNode["@dynamic-transition"], widgetNode, fieldValue, "label", alwaysGet)!>
+            <#assign transValue = sri.getFieldTransitionValue(widgetNode["@dynamic-transition"], widgetNode, fieldValue, valueField, alwaysGet)!>
             <#t><#if transValue?has_content>${transValue}</#if>
         <#else>
             <#t><#if fieldValue?has_content>${fieldValue}</#if>
