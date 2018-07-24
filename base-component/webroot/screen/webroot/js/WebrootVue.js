@@ -1472,7 +1472,7 @@ moqui.webrootVue = new Vue({
                 return
             }
 
-            console.log(`Setting locale to: ${JSON.stringify(message)}`);
+            /*console.log(`Setting locale to: ${JSON.stringify(message)}`);*/
             moqui.i18localization.setLocaleMessage(localeToUse, message);
         });
     },
