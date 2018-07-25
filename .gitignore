@@ -1,7 +1,7 @@
 
 # configuration files
-/conf/MoquiProductionConf.xml
-/conf/MoquiDevConf.xml
+/conf/MoquiProductionConf_*.xml
+/conf/MoquiDevConf_*.xml
 
 # downloaded lib files
 /base-component/webroot/screen/webroot/libs
@@ -18,6 +18,7 @@
 /elasticsearch/work/
 /jackrabbit/jackrabbit/
 /log/
+/def_log/
 /sessions/
 /tmp/
 /txlog/
