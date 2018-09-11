@@ -18,6 +18,7 @@
 /elasticsearch/work/
 /jackrabbit/jackrabbit/
 /log/
+/def_log/
 /sessions/
 /tmp/
 /txlog/
@@ -76,3 +77,6 @@ Desktop.ini
 
 # Linux auto files
 *~
+
+# Disabled screen macros
+template/screen-macro/disabled
