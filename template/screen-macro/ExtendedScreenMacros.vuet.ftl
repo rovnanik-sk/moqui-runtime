@@ -114,6 +114,9 @@
 				<#assign updateDescriptionTransition = .node["@invoice-update-description-url"]!"updateDescription">
 				<#assign updateExternalReferenceTransition = .node["@invoice-update-external-reference-url"]!"updateExternalReference">
 				<#assign updateStatusTransition = .node["@invoice-update-status-url"]!"updateStatus">
+				<#assign createInvoiceItemUrl = .node["@create-invoice-item-url"]!"createInvoiceItem">
+				<#assign recalculateVatUrl = .node["@recalculate-vat-url"]!"calculateVat">
+				<#assign recalculateTotalUrl = .node["@recalculate-total-url"]!"calculateTotal">
 				<#assign updateInvoiceItemTransition = .node["@invoice-item-update-url"]!"updateInvoiceItem">
 				<#assign deleteInvoiceItemTransition = .node["@invoice-item-delete-url"]!"deleteInvoiceItem">
 				<#assign getInvoiceHistoryTransition = .node["@invoice-load-history-url"]!"getInvoiceHistory">
@@ -132,6 +135,9 @@
                 update-description-url="${targetUrl}/${updateDescriptionTransition}"
                 update-external-reference-url="${targetUrl}/${updateExternalReferenceTransition}"
                 update-status-url="${targetUrl}/${updateStatusTransition}"
+                create-invoice-item-url="${targetUrl}/${createInvoiceItemUrl}"
+                recalculate-vat-url="${targetUrl}/${recalculateVatUrl}"
+                recalculate-total-url="${targetUrl}/${recalculateTotalUrl}"
                 update-invoice-item-url="${targetUrl}/${updateInvoiceItemTransition}"
                 delete-invoice-item-url="${targetUrl}/${deleteInvoiceItemTransition}"
                 data-load-attachments-url="${targetUrl}/${getInvoiceAttachmentsTransition}"
