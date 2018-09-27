@@ -1,7 +1,7 @@
 
 # configuration files
-/conf/MoquiProductionConf_*.xml
-/conf/MoquiDevConf_*.xml
+/conf/MoquiProductionConf*.xml
+/conf/MoquiDevConf*.xml
 
 # downloaded lib files
 /base-component/webroot/screen/webroot/libs
