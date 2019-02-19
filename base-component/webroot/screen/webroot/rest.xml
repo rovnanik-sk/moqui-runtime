@@ -12,8 +12,7 @@ You should have received a copy of the CC0 Public Domain Dedication
 along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
-<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.1.xsd"
+<screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.1.xsd"
         require-authentication="false" track-artifact-hit="false" default-menu-include="false">
     <!-- NOTE: require-authentication=false is required to allow transitions to decide. -->
 
@@ -41,8 +40,26 @@ along with this software (see the LICENSE.md file). If not, see
 
     curl -X GET -H "api_key: {apiKey}" http://localhost:8080/rest/s1/example/examples/TEST2
     -->
-    <transition name="api_key"><actions><script>ec.web.sendTextResponse(ec.user.getLoginKey())</script></actions>
-        <default-response type="none"/></transition>
+    <transition name="api_key" begin-transaction="false">
+        <actions><script>
+            try { ec.web.sendTextResponse(ec.user.getLoginKey()) }
+            catch (org.moqui.context.AuthenticationRequiredException are) { ec.web.sendError(401, are.message, are) }
+        </script></actions>
+        <default-response type="none"/>
+    </transition>
+    <!-- Get a session token for clients that are not authenticated (no api_key) to use for all request methods other than GET -->
+    <transition name="moquiSessionToken" begin-transaction="false">
+        <actions><script>ec.web.sendTextResponse(ec.web.sessionToken)</script></actions>
+        <default-response type="none"/>
+    </transition>
+    <!-- REST API calls from a browser or session aware client will have an active session, use this for explicit logout and terminate session -->
+    <transition name="logout" begin-transaction="false">
+        <actions><script>
+            if (ec.user.username) { ec.user.logoutUser(); ec.web.sendTextResponse("successful") }
+            else { ec.web.sendTextResponse("no_user") }
+        </script></actions>
+        <default-response type="none"/>
+    </transition>
 
     <!--
     EXAMPLES
@@ -163,8 +180,10 @@ along with this software (see the LICENSE.md file). If not, see
         <default-response type="none"/>
     </transition>
     <!-- DEPRECATED: v1 is the same as e1, was the original Entity REST API; e1 is preferred to distinguish from m1, s1; v1 should be considered deprecated -->
-    <transition name="v1" read-only="true"><actions><script>ec.web.handleEntityRestCall(sri.screenUrlInfo.extraPathNameList, false)</script></actions>
-        <default-response type="none"/></transition>
+    <transition name="v1" read-only="true">
+        <actions><script>ec.web.handleEntityRestCall(sri.screenUrlInfo.extraPathNameList, false)</script></actions>
+        <default-response type="none"/>
+    </transition>
 
     <!--
     To get the json-schema (see http://json-schema.org) for an entity use a request like:
@@ -298,6 +317,21 @@ along with this software (see the LICENSE.md file). If not, see
     </transition>
     <transition name="service.raml" read-only="true" method="get">
         <actions><script>org.moqui.impl.util.RestSchemaUtil.handleServiceRestRaml(ec, sri.screenUrlInfo.extraPathNameList, sri.buildUrl("s1").getUrl())</script></actions>
+        <default-response type="none"/>
+    </transition>
+
+    <!--
+    Specialized request handler for SystemMessage receipt and recording.
+    Calls service: org.moqui.impl.SystemMessageServices.receive#IncomingSystemMessage
+
+    Use a path like: /rest/sm/{systemMessageTypeId}/{systemMessageRemoteId}/{remoteMessageId}
+    Note that systemMessageTypeId (so we know how to process the message) and systemMessageRemoteId (for security, etc) are required, remoteMessageId is optional.
+    Note that a Content-Type header is required and must be one of the various supported text content types
+
+    curl -X POST -u john.doe:moqui -H "Content-Type: application/json" -d '{ "test1":"foo", "test2":"bar" }' http://localhost:8080/rest/sm/ExampleMessage/Example1Local/12345
+    -->
+    <transition name="sm" read-only="true" require-session-token="false" begin-transaction="false">
+        <actions><script>ec.web.handleSystemMessage(sri.screenUrlInfo.extraPathNameList)</script></actions>
         <default-response type="none"/>
     </transition>
 

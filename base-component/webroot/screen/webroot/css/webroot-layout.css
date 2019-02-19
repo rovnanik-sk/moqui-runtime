@@ -1,17 +1,4 @@
-/*
- * This software is in the public domain under CC0 1.0 Universal plus a
- * Grant of Patent License.
- *
- * To the extent possible under law, the author(s) have dedicated all
- * copyright and related and neighboring rights to this software to the
- * public domain worldwide. This software is distributed without any
- * warranty.
- *
- * You should have received a copy of the CC0 Public Domain Dedication
- * along with this software (see the LICENSE.md file). If not, see
- * <http://creativecommons.org/publicdomain/zero/1.0/>.
- */
-
+/* This software is in the public domain under CC0 1.0 Universal plus a Grant of Patent License. */
 
 /* ========================== body, etc ========================== */
 
@@ -82,12 +69,16 @@ div.container-panel-footer { width: 100%; }
 
 td span.form-display { display: inline-block; width: 100%; }
 
-.form-date-find, .form-range-find { display: block; padding-bottom: 4px; }
+.form-date-find, .form-range-find { display: inline-block; padding-bottom: 4px; }
 .form-text-find input, .form-range-find input { display: inline-block; }
 
 td .Long, td .Double, td .Float, td .Integer { text-align: center; }
 td .BigDecimal, td .currency { text-align: right; }
 
+/* by CSS spec either x or y not visible changes the visible to auto, this breaks bootstrap-datetimepicker, select2 still works:
+.table-scroll-wrapper { overflow-x: auto; overflow-y: visible; } */
+/* this fixes bootstrap-datetimepicker but causes horizontal scroll bar to overlap elements below, and for some reason breaks find screens like FindOrder
+.table-scroll-wrapper { overflow-x: auto; overflow-y: visible; padding-bottom: 300px; margin-bottom: -300px; padding-top: 300px; margin-top: -300px; } */
 .table-condensed .form-group { margin-bottom: 0; }
 td.form-list-sub-row-cell { padding: 0 !important; }
 .form-list-sub-rows { margin-left: 23px; padding-left: 8px; border-left: 1px dashed #8c8c8c; }
@@ -123,6 +114,7 @@ span.shaded-area { display: inline-block; white-space: normal; }
 /* Similar styles to Bootstrap .form-control-static, applied more specifically and without explicit class */
 .form-group > div > p, .form-group > div > span.text-inline, .form-group > div > a:not(.btn) {
     display: inline-block; min-height: 34px; padding-top: 7px; padding-bottom: 7px; margin-bottom: 0; }
+table .form-group > div > a:not(.btn), table .form-group > div > span.text-inline { min-height: 10px; padding-top: 0; padding-bottom: 0; }
 .form-header-field > button.btn, .form-group > div > a.btn { margin-top: 2px !important; }
 
 .nav.nav-tabs { margin-bottom: 8px; }
@@ -138,7 +130,7 @@ span.shaded-area { display: inline-block; white-space: normal; }
 
 nav.form-list-nav .pagination { margin: 6px 0 0 0; }
 nav.form-list-nav>form.form-inline { display: inline-block; margin: 2px 6px 0 0; float: left; }
-nav.form-list-nav>.btn { display: inline-block; margin: 6px 6px 0 6px; float: left; }
+nav.form-list-nav>.btn { display: inline-block; margin: 6px 8px 0 0; float: left; }
 nav.form-list-nav>span.select2-container { float: left; margin: 6px 0 6px 0; min-width: 100px; max-width: 160px; }
 
 /* Extend the Bootstrap panel, add support for a panel-toolbar, treat h5 and span just like bootstrap panel-title */
@@ -239,6 +231,11 @@ body.hide-nav { padding-top: 0; } /* don't do body padding-top for nav bar */
     #footer, .nav, .form-order-by, .form-list-nav-row { display: none; }
     body { padding-top: 0; } /* don't do body padding-top for nav bar */
     #content { min-height: 100%; } /* make body content full height, no -50px for footer */
+
+    .modal { background: white !important; }
+    body.modal-open { visibility: hidden; }
+    body.modal-open .modal.in { visibility: visible; }
+    .chart-container canvas { min-height: 100%; max-width: 100%; max-height: 100%; height: auto!important; width: auto!important; }
 
     .table-striped>tbody>tr:nth-child(even)>td { background-color: #EEEEEE !important; }
     .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12 { float: left; }
