@@ -1525,7 +1525,7 @@ moqui.webrootVue = new Vue({
         },
         localeLang() {
             return this.locale.split('-')[0]
-        }
+        },
         basePathSize: function() { return this.basePath.split('/').length - this.appRootPath.split('/').length; },
         ScreenTitle: function() { return this.navMenuList.length > 0 ? this.navMenuList[this.navMenuList.length - 1].title : ""; }
     },

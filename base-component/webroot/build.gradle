@@ -83,11 +83,11 @@ def fileMap = [
 
     "typeahead.js/0.11.1/typeahead.jquery.min.js":"",
 
-    "vue/2.4.4/vue.js":"",
-    "vue/2.4.4/vue.min.js":"",
+    "vue/2.6.7/vue.js":"",
+    "vue/2.6.7/vue.min.js":"",
 
     //vue-localization
-    "vue-i18n/7.3.2/vue-i18n.min.js":"",
+    "vue-i18n/8.8.2/vue-i18n.min.js":"",
     "corejs-typeahead/1.2.1/bloodhound.js":""
 ]
 
