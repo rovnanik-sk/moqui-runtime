@@ -82,3 +82,6 @@ Desktop.ini
 
 # Disabled screen macros
 template/screen-macro/disabled
+
+# Working files
+__*
