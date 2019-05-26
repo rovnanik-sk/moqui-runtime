@@ -109,6 +109,15 @@ moqui.format = function(value, format, type) {
 Vue.filter('format', moqui.format);
 /* ========== Event Bus for Handling events ========== */
 moqui.EventBus = new Vue();
+
+moqui.EventBus.$on('initializeComponent', function() {
+    if (!customComponents instanceof Map) return;
+
+    customComponents.forEach(function(key, value) {
+        Vue.component(key, eval(value));
+    });
+});
+
 /* ========== */
 var hidden, visibilityChange;
 if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and later support
@@ -1594,7 +1603,11 @@ moqui.webrootVue = new Vue({
                 }
             });
         }
+
+        // initialize custom components
+        moqui.EventBus.$emit('initializeComponent');
     }
 
 });
 window.addEventListener('popstate', function() { moqui.webrootVue.setUrl(window.location.pathname + window.location.search); });
+
