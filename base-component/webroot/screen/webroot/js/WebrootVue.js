@@ -111,7 +111,7 @@ Vue.filter('format', moqui.format);
 moqui.EventBus = new Vue();
 
 moqui.EventBus.$on('initializeComponent', function() {
-    if (!customComponents instanceof Map) return;
+    if ((customComponents instanceof Map)===false) return;
 
     customComponents.forEach(function(key, value) {
         Vue.component(key, eval(value));
@@ -1446,6 +1446,9 @@ moqui.webrootVue = new Vue({
         },
         getFormattedDate(date) {
             return moqui.i18localization.d(date, 'long', this.localeLang)
+        },
+        getFormattedShortDate(date) {
+            return moqui.i18localization.d(date, 'short', this.localeLang)
         }
     },
     watch: {
