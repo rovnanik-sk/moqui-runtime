@@ -34,9 +34,8 @@ along with this software (see the LICENSE.md file). If not, see
         if (!instancePurpose || instancePurpose == 'production') {
             /* ========== Production Mode ========== */
             // Vue JS
-            html_scripts.add('/libs/vue/vue.min.js')
-            /*footer_scripts.add('/js/CombinedVuet.min.js') THIS HAS NOT WORKED FOR ME*/
-            footer_scripts.add('/js/WebrootVue.min.js')
+            html_scripts.add('/libs/vue/vue.js')
+            footer_scripts.add('/js/WebrootVue.js')
         } else {
             /* ========== Dev Mode ========== */
             // Vue JS

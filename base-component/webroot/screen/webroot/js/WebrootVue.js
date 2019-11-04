@@ -138,7 +138,7 @@ if (typeof document.addEventListener === "undefined" || typeof document.hidden =
 }
 /* ========== script and stylesheet handling methods ========== */
 moqui.loadScript = function(src) {
-    // make sure the script isn't loaded
+        // make sure the script isn't loaded
     var loaded = false;
     $('head script').each(function(i, hscript) { if (hscript.src.indexOf(src) !== -1) loaded = true; });
     if (loaded) return;
@@ -1441,6 +1441,9 @@ moqui.webrootVue = new Vue({
         },
         getFormattedShortDate(date) {
             return moqui.i18localization.d(date, 'short', this.localeLang)
+        },
+        isEmptyObj(object) {
+            return Object.keys(object).length===0;
         }
     },
     watch: {
