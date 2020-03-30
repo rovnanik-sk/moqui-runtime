@@ -1,5 +1,6 @@
 
 # configuration files
+/conf/MoquiTestConf*.xml
 /conf/MoquiProductionConf*.xml
 /conf/MoquiDevConf*.xml
 
