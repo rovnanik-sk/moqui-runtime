@@ -1,6 +1,12 @@
 
 # downloaded lib, generated, etc files
 /base-component/webroot/build
+# configuration files
+/conf/MoquiTestConf*.xml
+/conf/MoquiProductionConf*.xml
+/conf/MoquiDevConf*.xml
+
+# downloaded lib files
 /base-component/webroot/screen/webroot/libs
 /base-component/webroot/screen/webroot/js/*.min.js
 /base-component/webroot/screen/webroot/qz-tray
@@ -14,9 +20,13 @@
 /elasticsearch*/
 /jackrabbit/jackrabbit/
 /log/
+/def_log/
 /sessions/
 /tmp/
 /txlog/
+
+# temporary configs
+/conf/bc*
 
 # common runtime added files
 /classes/*.pem
@@ -70,3 +80,9 @@ Desktop.ini
 
 # Linux auto files
 *~
+
+# Disabled screen macros
+template/screen-macro/disabled
+
+# Working files
+__*

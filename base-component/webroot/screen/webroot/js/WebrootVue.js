@@ -54,6 +54,8 @@ if (!window.define) window.define = function(name, deps, callback) {
 };
 Vue.filter('decodeHtml', moqui.htmlDecode);
 Vue.filter('format', moqui.format);
+/* ========== Event Bus for Handling events ========== */
+moqui.EventBus = new Vue();
 
 /* ========== notify and error handling ========== */
 moqui.notifyOpts = { delay:1500, timer:500, offset:{x:20,y:60}, placement:{from:'top',align:'right'}, z_index:1100, type:'success',
@@ -146,6 +148,57 @@ moqui.handleAjaxError = function(jqXHR, textStatus, errorThrown) {
         moqui.webrootVue.addNotify(errMsg, 'danger');
     }
 };
+
+/* ========== localization ========== */
+const dateTimeFormats = {
+    'en-US': {
+        short: {
+            year: 'numeric', month: 'short', day: 'numeric'
+        },
+        long: {
+            year: 'numeric', month: 'short', day: 'numeric',
+            weekday: 'short', hour: 'numeric', minute: 'numeric'
+        }
+    },
+    'sk': {
+        short: {
+            year: 'numeric', month: 'numeric', day: 'numeric'
+        },
+        long: {
+            year: 'numeric', month: 'numeric', day: 'numeric',
+            hour: 'numeric', minute: 'numeric', hour12: false
+        }
+    }
+};
+
+moqui.i18localization = new VueI18n({dateTimeFormats});
+
+function loadLocaleMessage(locale, location, cb) {
+    var languagePackPath = location + '/ssstatic/lang/wie.localization.' + locale + '.json';
+
+    return fetch(languagePackPath, {
+        method: 'get',
+        headers: {
+            'Accept': 'application/json'
+        }
+    }).then((res) => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            return res
+        }
+    }).then((json) => {
+        if (Object.keys(json).length === 0) {
+            return Promise.reject(new Error('Problem loading locale - file empty or nonexisting!'))
+        } else {
+            return Promise.resolve(json)
+        }
+    }).then((message) => {
+        cb(null, message)
+    }).catch((error) => {
+        cb(error)
+    })
+}
 
 /* ========== component loading methods ========== */
 moqui.componentCache = new moqui.LruMap(50);
@@ -579,6 +632,10 @@ Vue.component('m-form', {
                 $.notify(new moqui.NotifyOptions("Submit successful", null, 'success', null), moqui.notifyOpts);
             }
         },
+        fireButtonEvent: function(evt){
+            var buttonClicked = evt.delegateTarget;
+            moqui.EventBus.$emit('button-clicked', evt)
+        },
         fieldChange: function (evt) {
             var targetDom = evt.delegateTarget; var targetEl = $(targetDom);
             if (targetEl.hasClass("input-group") && targetEl.children("input").length) {
@@ -874,13 +931,35 @@ Vue.component('date-time', {
             // default time to noon, or minutes to 00
             if (curVal.indexOf('hh:mm') > 0) { inputEl.val(curVal.replace('hh:mm', '12:00')); inputEl.trigger("change"); return; }
             if (curVal.indexOf(':mm') > 0) { inputEl.val(curVal.replace(':mm', ':00')); inputEl.trigger("change"); return; }
+        },
+        valueChanged: function() {
+            var inputEl = $(this.$refs.dateInput); var curVal = inputEl.val();
+            var myRe = /(0[1-9]|[1-2][0-9]|3[0-1])(0[1-9]|1[0-2])((19|20)\d{2})/g
+            var myArrayExec = myRe.exec(curVal);
+
+            //leave if regex not matched
+            if (myArrayExec === null) return;
+
+            var testDate = moment(myArrayExec[3] + '-' + myArrayExec[2] + '-' + myArrayExec[1]);
+            var reYear = Number(myArrayExec[3]);
+            var reMonth = Number(myArrayExec[2]);
+            var reDay = Number(myArrayExec[1]);
+            var tdYear = Number(testDate.format('YYYY'));
+            var tdMonth = Number(testDate.format('MM'));
+            var tdDay = Number(testDate.format('DD'));
+
+            if (reYear === tdYear && reMonth === tdMonth && reDay === tdDay) {
+                //console.log("MATCH");
+
+                inputEl.val(testDate.format('DD.MM.YYYY'));
+            }
         }
     },
     computed: {
         formatVal: function() { var format = this.format; if (format && format.length > 0) { return format; }
             return this.type === 'time' ? 'HH:mm' : (this.type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'); },
         extraFormatsVal: function() { return this.type === 'time' ? ['LT', 'LTS', 'HH:mm'] :
-            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm']); },
+            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm', 'DD.MM.YYYY']); },
         sizeVal: function() { var size = this.size; if (size && size.length > 0) { return size; }
             return this.type === 'time' ? '9' : (this.type === 'date' ? '10' : '16'); },
         timePattern: function() { return '^(?:(?:([01]?\\d|2[0-3]):)?([0-5]?\\d):)?([0-5]?\\d)$'; }
@@ -1359,6 +1438,18 @@ moqui.webrootVue = new Vue({
                 path = pathList.join("/");
             }
             return path;
+        },
+        getLocalizedMessage(text) {
+            return moqui.i18localization.t(text, this.localeLang)
+        },
+        getFormattedDate(date) {
+            return moqui.i18localization.d(date, 'long', this.localeLang)
+        },
+        getFormattedShortDate(date) {
+            return moqui.i18localization.d(date, 'short', this.localeLang)
+        },
+        isEmptyObj(object) {
+            return Object.keys(object).length===0;
         }
     },
     watch: {
@@ -1441,6 +1532,13 @@ moqui.webrootVue = new Vue({
             set: function(newSearch) { this.currentParameters = moqui.searchToObj(newSearch); }
         },
         currentLinkUrl: function() { var srch = this.currentSearch; return this.currentLinkPath + (srch.length > 0 ? '?' + srch : ''); },
+        currentParentUrl: function() {
+            var curPath = this.currentPathList.slice(0,-1);
+            return this.linkBasePath + (curPath && curPath.length > 0 ? '/' + curPath.join('/') : '')
+        },
+        localeLang() {
+            return this.locale.split('-')[0]
+        },
         basePathSize: function() { return this.basePath.split('/').length - this.appRootPath.split('/').length; },
         ScreenTitle: function() { return this.navMenuList.length > 0 ? this.navMenuList[this.navMenuList.length - 1].title : ""; },
         documentMenuList: function() {
@@ -1473,7 +1571,8 @@ moqui.webrootVue = new Vue({
         this.addNavPluginsWait(navPluginUrlList, 0);
     },
     mounted: function() {
-        var jqEl = $(this.$el);
+        let tii = this;
+        let jqEl = $(this.$el);
         jqEl.find('.navbar [data-toggle="tooltip"]').tooltip({ placement:'bottom', trigger:'hover' });
         jqEl.find('#history-menu-link').tooltip({ placement:'bottom', trigger:'hover' });
         jqEl.find('#notify-history-menu-link').tooltip({ placement:'bottom', trigger:'hover' });
@@ -1486,6 +1585,23 @@ moqui.webrootVue = new Vue({
         $("#screen-document-dialog").on("hidden.bs.modal", function () { var jqEl = $("#screen-document-dialog-body");
                 jqEl.empty(); jqEl.append('<div class="spinner"><div>Loading…</div></div>'); });
 
+        let redirUrl = '/Login/logout';
+        let redirUrlRootPath = $("#confAppRootPath").val();
+
+        if (redirUrlRootPath !== '') {
+            redirUrl = `${redirUrlRootPath}${redirUrl}`;
+            console.log(`Redirecting to URL: ${redirUrl}`)
+        }
+
+        $.sessionTimeout({
+            keepAlive: false,
+            redirUrl: redirUrl,
+            warnAfter: 600000,
+            redirAfter: 900000,
+            onWarn: function () {
+                /*console.log('warning comes, redirect shall come: /Login/logout');*/
+            }
+        });
         // request Notification permission on load if not already granted or denied
         if (window.Notification && Notification.permission !== "granted" && Notification.permission !== "denied") {
             Notification.requestPermission(function (status) {
@@ -1500,3 +1616,4 @@ moqui.webrootVue = new Vue({
 
 });
 window.addEventListener('popstate', function() { moqui.webrootVue.setUrl(window.location.pathname + window.location.search); });
+
