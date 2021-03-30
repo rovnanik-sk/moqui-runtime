@@ -73,8 +73,12 @@ var moqui = {
         if (urlInfo.protocol && urlInfo.protocol.length) href += urlInfo.protocol + "://";
         if (urlInfo.host && urlInfo.host.length) href += urlInfo.host;
         href += urlInfo.path || "/";
-        if (urlInfo.search && urlInfo.search.length) { href += "?" + urlInfo.search; }
-        else if (urlInfo.query && urlInfo.query.length) { href += "?" + moqui.objToSearch(urlInfo.query); }
+        if (urlInfo.search && urlInfo.search.length) {
+            href += "?" + urlInfo.search;
+        } else if (urlInfo.query) {
+            var queryStr = moqui.objToSearch(urlInfo.query);
+            if (queryStr && queryStr.length) href += "?" + queryStr;
+        }
         if (urlInfo.hash && urlInfo.hash.length) href += "#" + urlInfo.hash;
         return href;
     },
@@ -172,6 +176,10 @@ var moqui = {
             return false;
         }
         return true;
+    },
+    parseNumber: function(value) {
+        var replValue = value.replaceAll(moqui.thousandSeparator, '');
+        return replValue.indexOf(moqui.decimalSeparator) === -1 ? parseInt(replValue) : parseFloat(replValue);
     },
 
     /* ========== general format function ========== */
