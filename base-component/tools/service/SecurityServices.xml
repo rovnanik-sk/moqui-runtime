@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
+
+    <service
+            verb="login"
+            noun="User"
+            authenticate="anonymous-view"
+    >
+        <in-parameters>
+            <parameter name="username" type="String"/>
+            <parameter name="password" type="String"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="result"/>
+        </out-parameters>
+        <actions>
+            <script>
+                <![CDATA[
+                    def outcome = ec.user.loginUser(username, password)
+                    def result = [username: username, authenticated: outcome]
+                    if (outcome) {
+                        // do not send it in the data, we shall read it from the headers
+                        // result['sessionToken'] = ec.web.getSessionToken()
+                    }
+
+                    return result
+                ]]>
+            </script>
+        </actions>
+    </service>
+</services>
