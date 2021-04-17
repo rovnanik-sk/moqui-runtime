@@ -6,6 +6,10 @@
 <moqui-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/moqui-conf-2.1.xsd">
 
     <default-property name="instance_purpose" value="production"/>
+    <default-property name="elasticsearch_url" value=""/>
+    <default-property name="elasticsearch_user" value=""/>
+    <default-property name="elasticsearch_password" value=""/>
+    <default-property name="elasticsearch_index_prefix" value=""/>
 
     <tools empty-db-load="all"/>
 
@@ -43,12 +47,6 @@
             <inline-jdbc pool-minsize="5" pool-maxsize="50">
                 <xa-properties user="$MOQUI_DB_USER" password="$MOQUI_DB_PWD" serverName="$MOQUI_DB_HOST" portNumber="$MOQUI_DB_PORT"
                                databaseName="$MOQUI_DB"/>
-            </inline-jdbc>
-        </datasource>
-
-        <datasource group-name="issk_reporting" database-conf-name="postgres" schema-name="public" startup-add-missing="true" runtime-add-missing="true" runtime-add-fks="false">
-            <inline-jdbc pool-minsize="5" pool-maxsize="50" isolation-level="ReadUncommited">
-                <xa-properties user="$MOQUI_DB_USER" password="$MOQUI_DB_PWD" serverName="$MOQUI_DB_HOST" portNumber="$MOQUI_DB_PORT" databaseName="$MOQUI_DB_ENUM"/>
             </inline-jdbc>
         </datasource>
     </entity-facade>
