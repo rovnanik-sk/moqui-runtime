@@ -10,7 +10,9 @@ You should have received a copy of the CC0 Public Domain Dedication
 along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
+<services
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
     <service
             verb="login"
             noun="User"
@@ -66,8 +68,17 @@ along with this software (see the LICENSE.md file). If not, see
             <parameter name="userId"/>
             <parameter name="username"/>
         </in-parameters>
+        <out-parameters>
+            <parameter name="result"/>
+        </out-parameters>
         <actions>
             <service-call name="org.moqui.impl.UserServices.reset#Password" in-map="context"/>
+
+            <script>
+                <![CDATA[
+                    return [reset: true]
+                ]]>
+            </script>
         </actions>
     </service>
 
