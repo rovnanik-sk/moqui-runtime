@@ -1,7 +1,9 @@
 
 # downloaded lib, generated, etc files
 /base-component/webroot/build
+
 # configuration files
+/conf/generated/*
 /conf/MoquiTestConf*.xml
 /conf/MoquiProductionConf*.xml
 /conf/MoquiDevConf*.xml
