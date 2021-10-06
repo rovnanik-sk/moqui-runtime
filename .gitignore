@@ -29,6 +29,7 @@
 
 # temporary configs
 /conf/bc*
+/conf/generated/
 
 # common runtime added files
 /classes/*.pem

@@ -10,8 +10,9 @@ You should have received a copy of the CC0 Public Domain Dedication
 along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
-<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
-
+<services
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
     <service
             verb="login"
             noun="User"
@@ -29,14 +30,86 @@ along with this software (see the LICENSE.md file). If not, see
                 <![CDATA[
                     def outcome = ec.user.loginUser(username, password)
                     def result = [username: username, authenticated: outcome]
-                    if (outcome) {
-                        // do not send it in the data, we shall read it from the headers
-                        // result['sessionToken'] = ec.web.getSessionToken()
-                    }
 
                     return result
                 ]]>
             </script>
+        </actions>
+    </service>
+
+    <service
+            verb="logout"
+            noun="User"
+            authenticate="anonymous-view"
+    >
+        <in-parameters>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="result"/>
+        </out-parameters>
+        <actions>
+            <script>
+                <![CDATA[
+                    def outcome = ec.user.logoutUser()
+                    def result = [logout: outcome]
+
+                    return result
+                ]]>
+            </script>
+        </actions>
+    </service>
+
+    <service
+            verb="resetPassword"
+            noun="User"
+            authenticate="anonymous-view"
+    >
+        <in-parameters>
+            <parameter name="userId"/>
+            <parameter name="username"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="result"/>
+        </out-parameters>
+        <actions>
+            <service-call name="org.moqui.impl.UserServices.reset#Password" in-map="context"/>
+
+            <script>
+                <![CDATA[
+                    return [reset: true]
+                ]]>
+            </script>
+        </actions>
+    </service>
+
+    <service
+            verb="changePassword"
+            noun="User"
+            authenticate="anonymous-view"
+    >
+        <in-parameters>
+            <parameter name="userId"/>
+            <parameter name="username"/>
+            <parameter name="oldPassword" required="true"/>
+            <parameter name="newPassword" required="true"/>
+            <parameter name="newPasswordVerify" required="true"/>
+        </in-parameters>
+        <actions>
+            <service-call name="org.moqui.impl.UserServices.update#Password" in-map="context" out-map="updateOut"/>
+            <if condition="ec.message.hasError()">
+                <then>
+                    <set field="errDescription" from="ec.message.getErrorsString()"/>
+                    <script>ec.message.clearAll()</script>
+                    <return error="true" message="Exception while updating password: ${errDescription}"/>
+                </then>
+                <else-if condition="!updateOut.updateSuccessful">
+                    <then>
+                        <set field="warnings" from="ec.message.getMessagesString()"/>
+                        <script>ec.message.clearAll()</script>
+                        <return error="true" message="Failed password update: ${warnings}"/>
+                    </then>
+                </else-if>
+            </if>
         </actions>
     </service>
 </services>
