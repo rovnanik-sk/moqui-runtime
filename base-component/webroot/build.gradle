@@ -41,6 +41,7 @@ dependencyUpdates.resolutionStrategy = { componentSelection { rules -> rules.all
 
 def webrootPath = "screen/webroot"
 def libsPath = webrootPath + "/libs"
+def libsJsPath = webrootPath + "/js"
 def downloadBase = "http://cdnjs.cloudflare.com/ajax/libs/"
 def fileMap = [
     "rsvp/4.8.3/rsvp.min.js":"",
@@ -52,6 +53,14 @@ def fileMap = [
     "twitter-bootstrap/3.4.1/fonts/glyphicons-halflings-regular.ttf":"",
     "twitter-bootstrap/3.4.1/fonts/glyphicons-halflings-regular.woff":"",
     "twitter-bootstrap/3.4.1/fonts/glyphicons-halflings-regular.woff2":"",
+
+    "bootswatch/3.3.7/paper/bootstrap.css": "",
+    "bootswatch/3.3.7/paper/bootstrap.min.css": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.eot": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.svg": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.ttf": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.woff": "",
+    "bootswatch/3.3.7/fonts/glyphicons-halflings-regular.woff2": "",
 
     "bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css":"",
     // js/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js 4.17.47 has a small change so that keyBinds are handled properly
@@ -164,10 +173,16 @@ baseJs.add(libsPath + '/Selectivity.js/selectivity-full.min.js')
 baseJs.add(libsPath + '/mouse0270-bootstrap-notify/bootstrap-notify.min.js')
 // Inline Editable
 baseJs.add(libsPath + '/jeditable.js/jeditable.min.js')
+// Vue-i18n
+baseJs.add(libsPath + '/vue-i18n/vue-i18n.min.js')
 // Sortable Hierarchical List
 baseJs.add(webrootPath + '/js/jquery-sortable-lists/jquery-sortable-lists.min.js')
 // Moqui Library (3rd party lib workarounds, NotificationClient, etc)
 baseJs.add(webrootPath + '/js/MoquiLib.min.js')
+//bloodhound
+baseJs.add(libsPath + '/corejs-typeahead/bloodhound.js')
+//bootstrap-timeout
+baseJs.add(libsJsPath + '/bootstrap-timeout/bootstrap-session-timeout.min.js')
 
 // NOTE: not adding qz-tray/qz-tray.js (qz-tray.min.js) or qz-tray/sha-256.min.js to combined base, only included if user preference 'qz.print.enabled' == "true"
 
@@ -233,7 +248,11 @@ task minifyCombinedBase(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 task minifyWebrootVue(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     source = file("${webrootPath}/js/WebrootVue.js")
     dest = file("${webrootPath}/js/WebrootVue.min.js")
-    closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }
+    closure {
+        compilerOptions.languageIn="ECMASCRIPT6"
+        compilerOptions.languageOut="ECMASCRIPT5"
+        compilerOptions.setOutputCharset(StandardCharsets.UTF_8)
+    }
 }
 task combineVuetJs(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
     dependsOn downloadFiles

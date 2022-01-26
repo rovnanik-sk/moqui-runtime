@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+<services xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/service-definition-2.1.xsd">
+    <service
+            verb="fetch"
+            noun="SimpleValue"
+            authenticate="false"
+    >
+        <in-parameters>
+            <parameter name="storeId"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="result" type="Map"/>
+        </out-parameters>
+        <actions>
+            <entity-find-one entity-name="moqui.basic.SimpleStore" value-field="stored">
+                <field-map field-name="storeId" from="storeId"/>
+            </entity-find-one>
+
+            <script>
+                <![CDATA[
+                    import org.moqui.impl.ViDateConversions
+
+                    // nothing found
+                    if (!stored) return [result: false, message: "No value found", storeId: storeId]
+
+                    try {
+                        // format according to expected data type
+                        def returnVal = stored.value
+
+                        switch(stored.expectedDataTypeEnumId) {
+                            case 'EXP_NOT_SET':
+                                break
+                            case 'EXP_UNIX_TIME':
+                                returnVal = ViDateConversions.convertToUnix(returnVal)
+                                if (!returnVal) throw new Exception("Could not convert string into UNIX timestamp")
+                                break
+                            case 'EXP_INTEGER':
+                                returnVal = Integer.parseInt(returnVal)
+                                break
+                            case 'EXP_DOUBLE':
+                                returnVal = Double.parseDouble(returnVal)
+                                break
+                            default:
+                                break
+                        }
+
+                        return [result: true, value: returnVal]
+                    } catch(Exception x) {
+                        return [result: false, message: "Cannot extract stored value: ${x.message}"]
+                    }
+                ]]>
+            </script>
+        </actions>
+    </service>
+
+    <service
+            verb="store"
+            noun="SimpleValue"
+            authenticate="false"
+    >
+        <in-parameters>
+            <parameter name="value" required="true"/>
+            <parameter name="storeId" required="true"/>
+            <parameter name="expectedType"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="result" type="Map"/>
+        </out-parameters>
+        <actions>
+            <script>
+                <![CDATA[
+                    if (!value) return [result: false, message: 'No value set']
+                ]]>
+            </script>
+
+            <entity-find-one for-update="true" entity-name="moqui.basic.SimpleStore" value-field="stored">
+                <field-map field-name="storeId" from="storeId"/>
+            </entity-find-one>
+
+            <!--CREATE NEW-->
+            <if condition="!stored">
+                <then>
+                    <entity-make-value entity-name="moqui.basic.SimpleStore" value-field="newStored"/>
+                    <entity-set value-field="newStored" include="nonpk"/>
+                    <if condition="!expectedType"><then><set field="expectedType" value="EXP_NOT_SET"/></then></if>
+                    <set field="newStored.storeId" from="storeId"/>
+                    <set field="newStored.expectedDataTypeEnumId" from="expectedType"/>
+                    <entity-create value-field="newStored"/>
+                    
+                    <script>
+                        <![CDATA[
+                            return [result: true, value: value, storeId: newStored.storeId]
+                        ]]>
+                    </script>
+                </then>
+            </if>
+
+            <!--CHECK IF OTHER THAN ALREADY STORED-->
+            <if condition="stored.value==value">
+                <then>
+                    <script>
+                        <![CDATA[
+                            return [result: false, message: 'Cannot update with same value as already stored']
+                        ]]>
+                    </script>
+                </then>
+            </if>
+
+            <!--UPDATE EXISTING-->
+            <set field="stored.value" from="value"/>
+            <entity-update value-field="stored"/>
+
+            <script>
+                <![CDATA[
+                    return [result: true, value: value, storeId: stored.storeId]
+                ]]>
+            </script>
+        </actions>
+    </service>
+</services>

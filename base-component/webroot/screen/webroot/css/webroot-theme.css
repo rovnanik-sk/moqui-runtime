@@ -43,7 +43,7 @@ input:focus:valid, textarea:focus:valid { background-color: #EEE; }
 .form-order-by a.active { color: red; }
 .form-order-by a.active:hover { color: darkred; }
 
-nav.form-list-nav, table.table>thead>tr>th { background: #EEE; }
+nav.form-list-nav, table.table>thead>tr>th { background: transparent; }
 .form-list-sub-rows table.table>thead>tr>th { background: #D8D8D8; }
 .bg-dark nav.form-list-nav, .bg-dark table.table>thead>tr>th { background: #222; }
 .bg-dark .form-list-sub-rows table.table>thead>tr>th { background: #383838; }
@@ -79,7 +79,7 @@ ul.float-box li.active { box-shadow: 0 0 0 1px #337ab7 inset, 0 0 0 1px #CCCCCC;
 .bg-dark .nav.nav-tabs .active a { background-color: inherit; color: inherit; border-color: black; border-bottom-color: #3a3a3a; }
 .bg-dark .nav.nav-tabs { border-color: black; }
 
-body.dev #top nav { background: #0c1b29; }
+/*body.dev #top nav { background: #0c1b29; }*/
 body.test #top nav { background: #224422; }
 body.test #content { background: #f0fff0; }
 body.test.bg-dark #content { background: #003300; }
@@ -134,8 +134,8 @@ form.editable-form button { background: white; color: #333; border: 1px solid; b
 
 /* ======================= Screen-specific ======================= */
 
-.bg-light.Login { background: url("../images/pattern/cream_pixels.png") repeat #444; }
-.bg-dark.Login { background: url("../images/pattern/irongrip.png") repeat #444; }
+/*.bg-light.Login { background: url("../images/pattern/cream_pixels.png") repeat #444; }*/
+/*.bg-dark.Login { background: url("../images/pattern/irongrip.png") repeat #444; }*/
 
 /* ================ Flatten, visually simplify bootstrap.min.css =============== */
 /* Comment or delete these for the default backgrounds, etc */
@@ -167,3 +167,5 @@ ul.float-box li, .bg-dark ul.float-box li { background-color: transparent; }
 #navbar-buttons .navbar-btn .label-success { background-color: #449d44; }
 #navbar-buttons .navbar-btn .label-primary { background-color: #2e6da4; }
 #navbar-buttons .navbar-btn .label-warning { background-color: #985f0d; }
+
+ul.float-box li, .bg-dark ul.float-box li { background-color: transparent; }
