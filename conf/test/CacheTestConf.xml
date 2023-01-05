@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- No copyright or license for configuration file, details here are not considered a creative work. -->
+
+<!-- NOTE: for default settings, examples, and comments see the MoquiDefaultConf.xml file at
+    https://github.com/moqui/moqui-framework/blob/master/framework/src/main/resources/MoquiDefaultConf.xml -->
+<moqui-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/moqui-conf-2.1.xsd">
+
+    <!-- Turn off ES by default -->
+    <default-property name="elasticsearch_url" value=""/>
+    <default-property name="elasticsearch_user" value=""/>
+    <default-property name="elasticsearch_password" value=""/>
+    <default-property name="elasticsearch_index_prefix" value=""/>
+
+    <!-- PY-CALC properties -->
+    <default-property name="py.server.host" value="http://localhost:8000"/>
+    <default-property name="py.endpoint.vizualize.list" value="api/v1/utility/vizualize/list"/>
+
+    <!-- setting up `synchronized-cache-entities` -->
+    <default-property name="synced_entities" value="'moqui.test.TestEntity','dtq.projects.Project'"/>
+
+    <tools>
+        <tool-factory class="dtq.synchro.SynchroMasterToolFactory" init-priority="100" disabled="false"/>
+    </tools>
+
+    <server-stats stats-skip-condition="pathInfo?.startsWith('/rpc') || pathInfo?.startsWith('/rest') || pathInfo?.startsWith('/status')"/>
+
+    <transaction-facade use-transaction-cache="false"/>
+</moqui-conf>

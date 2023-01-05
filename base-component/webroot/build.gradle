@@ -12,7 +12,11 @@
  * <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
 
-import java.nio.charset.StandardCharsets
+
+import org.gradlewebtools.minify.JsMinifyTask
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 
 buildscript {
     repositories {
@@ -22,15 +26,13 @@ buildscript {
     dependencies { classpath 'com.github.ben-manes:gradle-versions-plugin:0.28.0' }
 }
 
-/* gradle.js plugin getting warning with Gradle 5+, incompatible with Gradle 6:
+/* PLUGIN: org.gradlewebtools.minify
 
-   Internal API constructor FactoryNamedDomainObjectContainerConstructor AbstractNamedDomainObjectContainer(Class<T>, Instantiator)
-   has been deprecated. This is scheduled to be removed in Gradle 6.0. Don't use internal API
-
-   see https://github.com/eriwen/gradle-js-plugin/issues/168
+    Minifies JS files, unfortunately cannot be called on file, but on directory. Brings dependence as well, hope it will work for some time.
+    https://github.com/gradle-webtools/gradle-minify-plugin
  */
 plugins {
-    id "com.eriwen.gradle.js" version "2.14.1"
+    id "org.gradlewebtools.minify" version "1.3.0"
 }
 
 apply plugin: 'com.github.ben-manes.versions'
@@ -201,15 +203,17 @@ vuetJs.add(webrootPath + '/js/http-vue-loader/httpVueLoader.js')
 vuetJs.add(webrootPath + '/js/WebrootVue.min.js')
 
 
-task minifySelect2(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    source = file("${webrootPath}/js/select2/select2.js")
-    dest = file("${webrootPath}/js/select2.min.js")
-    closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }
+String buildDirectory = "${webrootPath}/js/_build"
+
+task minifySelect2() {
+    def src = file("${webrootPath}/js/select2/select2.js")
+    copyFilesBeforeBuild(src, buildDirectory)
+    /*closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }*/
 }
-task minifyDateTimePicker(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    source = file("${webrootPath}/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js")
-    dest = file("${webrootPath}/js/bootstrap-datetimepicker.min.js")
-    closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }
+task minifyDateTimePicker() {
+    def src = file("${webrootPath}/js/bootstrap-datetimepicker/bootstrap-datetimepicker.js")
+    copyFilesBeforeBuild(src, buildDirectory)
+    /*closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }*/
 }
 /* using pre-minified version
 task minifyQzTray(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
@@ -218,12 +222,12 @@ task minifyQzTray(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
     closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8); warningLevel = 'QUIET' }
 }
 */
-task minifyMoquiLib(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    source = file("${webrootPath}/js/MoquiLib.js")
-    dest = file("${webrootPath}/js/MoquiLib.min.js")
-    closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }
+task minifyMoquiLib() {
+    def src = file("${webrootPath}/js/MoquiLib.js")
+    copyFilesBeforeBuild(src, buildDirectory)
+    /*closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }*/
 }
-task combineBaseJs(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
+task combineBaseJs(type: ConcatFiles) {
     dependsOn downloadFiles
     dependsOn minifySelect2
     dependsOn minifyDateTimePicker
@@ -231,6 +235,7 @@ task combineBaseJs(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
     encoding = "UTF-8"
     source = baseJs
     dest = file("${webrootPath}/js/CombinedBase.min.js")
+    baseDir = buildDir.parent
 }
 // moment.js and many others have lots of comments, etc that make it very large so re-minify
 /* issues have been found in certain browsers on certain operating systems with this, see https://github.com/moqui/moqui-runtime/issues/76
@@ -245,37 +250,101 @@ task minifyCombinedBase(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
 }
 */
 
-task minifyWebrootVue(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    source = file("${webrootPath}/js/WebrootVue.js")
-    dest = file("${webrootPath}/js/WebrootVue.min.js")
-    closure {
+task minifyWebrootVue() {
+    def src = file("${webrootPath}/js/WebrootVue.js")
+    copyFilesBeforeBuild(src, buildDirectory)
+    /*closure {
         compilerOptions.languageIn="ECMASCRIPT6"
         compilerOptions.languageOut="ECMASCRIPT5"
         compilerOptions.setOutputCharset(StandardCharsets.UTF_8)
-    }
+    }*/
 }
-task combineVuetJs(type: com.eriwen.gradle.js.tasks.CombineJsTask) {
+task combineVuetJs(type: ConcatFiles) {
     dependsOn downloadFiles
     dependsOn minifyWebrootVue
     encoding = "UTF-8"
     source = vuetJs
     dest = file("${webrootPath}/js/CombinedVuet.min.js")
+    baseDir = buildDir.parent
 }
 
-task minifyWebrootVueQvt(type: com.eriwen.gradle.js.tasks.MinifyJsTask) {
-    source = file("${webrootPath}/js/WebrootVue.qvt.js")
-    dest = file("${webrootPath}/js/WebrootVue.qvt.min.js")
-    closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }
+task minifyWebrootVueQvt() {
+    def src = file("${webrootPath}/js/WebrootVue.qvt.js")
+    copyFilesBeforeBuild(src, buildDirectory)
+    /*closure { compilerOptions.setOutputCharset(StandardCharsets.UTF_8) }*/
 }
 
-task clean { doLast { delete fileTree(dir: "${webrootPath}/js", include: '*.min.js') }}
+task minifyAll(type: MinifyFiles){
+    source = file(buildDirectory)
+    dest = file("${webrootPath}/js")
+}
+
+task clean { doLast {
+    delete fileTree(dir: "${webrootPath}/js", include: '*.min.js')
+    delete fileTree(dir: "${buildDirectory}", include: '*.js')
+}}
+
 task build {
     dependsOn downloadFiles
     dependsOn combineBaseJs
     // issues seen with this on Windows, disabling for now: dependsOn minifyCombinedBase
     dependsOn combineVuetJs
     dependsOn minifyWebrootVueQvt
+    dependsOn minifyAll
 }
 task cleanAll { doLast {
     delete file(libsPath)
 } }
+
+void copyFilesBeforeBuild(File source, String to) {
+    def copyTo = Paths.get("${buildDir.parent}/${to}/${source.name}")
+    Files.copy(source.toPath(), copyTo, StandardCopyOption.REPLACE_EXISTING)
+}
+
+// mimics minifying JS files
+class MinifyFiles extends JsMinifyTask {
+    void setSource(String source) {
+        super.setSrcDir(new File((String) source))
+    }
+
+    void setDest(String dest) {
+        super.setDstDir(new File((String) dest))
+    }
+}
+
+class ConcatFiles extends DefaultTask {
+    @Input
+    String encoding
+    @Input
+    String baseDir
+    @InputFiles
+    ArrayList<String> source
+    @OutputFile
+    File dest
+    @TaskAction
+    void concat() {
+        logger.lifecycle("Concatenating files: ")
+        source.forEach({
+            it ->
+                logger.lifecycle("  ${it}")
+        })
+        logger.lifecycle("into: ${dest}")
+
+        dest.withWriter { writer ->
+            source.each { filePath ->
+
+                def precisePath = "${baseDir}/${filePath}"
+                File f = new File(precisePath)
+                if (!f.exists())
+                {
+                    logger.lifecycle("MISSING: ${filePath}")
+                    return
+                }
+
+                f.withReader { reader ->
+                    writer << reader << '\n'
+                }
+            }
+        }
+    }
+}

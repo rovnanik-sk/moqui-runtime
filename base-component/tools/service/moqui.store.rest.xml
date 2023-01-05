@@ -18,6 +18,16 @@ along with this software (see the LICENSE.md file). If not, see
 <resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-2.1.xsd"
           name="store" displayName="Handling and retrieving simple values from store" version="${moqui_version}" require-authentication="anonymous-view">
 
+    <resource name="fetchEntity">
+        <method type="get">
+            <service name="dtq.rockycube.EndpointServices.populate#EntityData"/>
+        </method>
+
+        <method type="post">
+            <service name="dtq.rockycube.EndpointServices.populate#EntityData"/>
+        </method>
+    </resource>
+
     <resource name="fetchSimpleValue">
         <method type="get">
             <service name="SimpleStoreServices.fetch#SimpleValue"/>

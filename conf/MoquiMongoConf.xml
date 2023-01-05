@@ -4,6 +4,7 @@
 <!-- NOTE: for default settings, examples, and comments see the MoquiDefaultConf.xml file at
     https://github.com/moqui/moqui-framework/blob/master/framework/src/main/resources/MoquiDefaultConf.xml -->
 <moqui-conf xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/moqui-conf-2.1.xsd">
+
     <!-- Turn off ES by default -->
     <default-property name="elasticsearch_url" value=""/>
     <default-property name="elasticsearch_user" value=""/>
@@ -17,13 +18,17 @@
                    distributed-cache-invalidate="false" dci-topic-factory="HazelcastDciTopic"
                    crypt-iter="10" crypt-algo="PBEWithMD5AndDES" crypt-pass="MoquiDefaultPassword:CHANGEME">
         <!-- add datasource elements here to configure databases -->
-        <datasource group-name="transactional" database-conf-name="postgres" schema-name="public" startup-add-missing="true" runtime-add-missing="false">
-            <inline-jdbc pool-minsize="5" pool-maxsize="50">
-                <xa-properties user="moqui" password="postgres"
-                               serverName="${PG_LOAD_SERVER}"
-                               portNumber="5431"
-                               databaseName="moqui"/>
-            </inline-jdbc>
+
+        <datasource
+                group-name="document_storage"
+                startup-add-missing="true"
+                database-conf-name="mongodb"
+                object-factory="org.moqui.impl.entity.mongodb.MongoDatasourceFactory"
+                allow-extra-fields="true"
+                table-name-format="camelCase"
+        >
+            <inline-other uri="${mongo_db_uri}" database="${mongo_db_name}" username="${mongo_db_username}" password="${mongo_db_password}"/>
         </datasource>
+
     </entity-facade>
 </moqui-conf>

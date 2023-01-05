@@ -29,7 +29,7 @@ along with this software (see the LICENSE.md file). If not, see
 
             <script>
                 <![CDATA[
-                    import org.moqui.impl.ViDateConversions
+                    import org.moqui.impl.ViUtilities
 
                     // nothing found
                     if (!stored) return [result: false, message: "No value found", storeId: storeId]
@@ -42,7 +42,7 @@ along with this software (see the LICENSE.md file). If not, see
                             case 'EXP_NOT_SET':
                                 break
                             case 'EXP_UNIX_TIME':
-                                returnVal = ViDateConversions.convertToUnix(returnVal)
+                                returnVal = ViUtilities.stringToUnix(returnVal)
                                 if (!returnVal) throw new Exception("Could not convert string into UNIX timestamp")
                                 break
                             case 'EXP_INTEGER':
