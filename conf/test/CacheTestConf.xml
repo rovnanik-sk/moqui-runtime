@@ -25,4 +25,8 @@
     <server-stats stats-skip-condition="pathInfo?.startsWith('/rpc') || pathInfo?.startsWith('/rest') || pathInfo?.startsWith('/status')"/>
 
     <transaction-facade use-transaction-cache="false"/>
+
+    <entity-facade>
+        <load-entity location="classpath://entity/ClosureEntities.xml"/>
+    </entity-facade>
 </moqui-conf>
