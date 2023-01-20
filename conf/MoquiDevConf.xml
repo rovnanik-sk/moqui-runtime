@@ -9,6 +9,7 @@
     <default-property name="webapp_allow_origins" value="*"/>
     <default-property name="entity_empty_db_load" value="all"/>
     <default-property name="entity_lock_track" value="true"/>
+    <default-property name="entity_add_missing_startup" value="true"/>
 
     <!-- Turn off ES by default -->
     <default-property name="elasticsearch_url" value=""/>
@@ -93,6 +94,7 @@
 
     <entity-facade query-stats="true">
         <!-- add datasource elements here to configure databases -->
+        <load-entity location="classpath://entity/ClosureEntities.xml"/>
     </entity-facade>
 
     <repository-list>
