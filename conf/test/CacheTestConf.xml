@@ -16,6 +16,7 @@
     <!-- PY-CALC properties -->
     <default-property name="py.server.host" value="http://localhost:8000"/>
     <default-property name="py.endpoint.vizualize.list" value="api/v1/utility/vizualize/list"/>
+    <default-property name="py.endpoint.merge.lists" value="api/v1/utility/merge-lists"/>
 
     <!-- setting up `synchronized-cache-entities` -->
     <default-property name="synced_entities" value="'moqui.test.TestEntity','dtq.projects.Project'"/>
