@@ -20,11 +20,11 @@ along with this software (see the LICENSE.md file). If not, see
 
     <resource name="fetch-entity">
         <method type="get">
-            <service name="dtq.rockycube.EndpointServices.populate#EntityData"/>
+            <service name="dtq.rockycube.EndpointServices.populate#EntityData" allowed-entities="dtq.*"/>
         </method>
 
         <method type="post">
-            <service name="dtq.rockycube.EndpointServices.populate#EntityData"/>
+            <service name="dtq.rockycube.EndpointServices.populate#EntityData" allowed-entities="dtq.*"/>
         </method>
     </resource>
 
