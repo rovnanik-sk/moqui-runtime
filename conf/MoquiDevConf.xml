@@ -96,6 +96,9 @@
         <!-- add datasource elements here to configure databases -->
         <load-entity location="classpath://entity/ClosureEntities.xml"/>
         <load-entity location="classpath://entity/TestEntitiesJson.xml"/>
+
+        <load-data location="classpath://data/DefaultUser.xml"/>
+        <load-data location="classpath://data/TestSecuritySetup.xml"/>
     </entity-facade>
 
     <repository-list>
