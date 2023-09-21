@@ -348,3 +348,7 @@ class ConcatFiles extends DefaultTask {
         }
     }
 }
+
+tasks.each {task -> configure(task) {
+    group = "webroot"
+}}
