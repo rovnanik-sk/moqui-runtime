@@ -112,4 +112,89 @@ along with this software (see the LICENSE.md file). If not, see
             </if>
         </actions>
     </service>
+
+    <!-- role-related -->
+    <service verb="fetch" noun="UserRoles" authenticate="anonymous-view">
+        <out-parameters>
+            <parameter name="result" type="Map"/>
+        </out-parameters>
+
+        <actions>
+            <script>
+                <![CDATA[
+                    def userGroupIdSet = ec.user.userGroupIdSet
+                    return [result: [userGroupIdSet: userGroupIdSet]]
+                ]]>
+            </script>
+        </actions>
+    </service>
+
+    <!-- is the user authorized to access frontend? -->
+    <service verb="authorize" noun="FrontendAccess" authenticate="anonymous-view">
+        <out-parameters>
+            <parameter name="granted" type="boolean"/>
+        </out-parameters>
+
+        <actions>
+            <script>
+                <![CDATA[
+                    def hasFrontendAccess = ec.user.isInGroup('FRONTEND_USERS')
+                    return [granted: hasFrontendAccess]
+                ]]>
+            </script>
+        </actions>
+    </service>
+
+    <!-- Check if the provided landing-page is authorized by the backend -->
+    <!-- If not, modify the landing-page to what is set -->
+    <service verb="authorize" noun="LandingPage" authenticate="anonymous-view">
+        <in-parameters>
+            <parameter name="landingPage"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="granted" type="boolean"/>
+            <parameter name="landingPage"/>
+        </out-parameters>
+
+        <actions>
+            <script>
+                <![CDATA[
+                    // clean up the starting character from landingPage
+                    def cl = landingPage
+                    if (cl.startsWith("/")) cl = cl.substring(1, cl.length())
+
+                    def permToCheck = "LANDING_PAGE_${cl}"
+                    // ec.logger.info("Checking permission: ${permToCheck}")
+
+                    def hasAccessToPage = ec.user.hasPermission(permToCheck)
+                    return [granted: hasAccessToPage, landingPage: landingPage]
+                ]]>
+            </script>
+        </actions>
+    </service>
+
+    <!-- Check if user is granted access to a specific page -->
+    <service verb="authorize" noun="Component" authenticate="anonymous-view">
+        <in-parameters>
+            <parameter name="component"/>
+        </in-parameters>
+        <out-parameters>
+            <parameter name="granted" type="boolean"/>
+        </out-parameters>
+
+        <actions>
+            <script>
+                <![CDATA[
+                    def cl = component
+                    if (cl.startsWith("/")) cl = cl.substring(1, cl.length())
+
+                    def permToCheck = "COMPONENT_ACCESS_${cl}"
+                    //ec.logger.info("Checking permission: ${permToCheck}")
+
+                    def hasAccessToComp = ec.user.hasPermission(permToCheck)
+                    return [granted: hasAccessToComp]
+                ]]>
+            </script>
+        </actions>
+    </service>
 </services>

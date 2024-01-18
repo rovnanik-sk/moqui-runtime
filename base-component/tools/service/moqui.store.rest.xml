@@ -36,13 +36,13 @@ along with this software (see the LICENSE.md file). If not, see
 
     <resource name="fetchSimpleValue">
         <method type="get">
-            <service name="SimpleStoreServices.fetch#SimpleValue"/>
+            <service name="store.SimpleStoreServices.fetch#SimpleValue"/>
         </method>
     </resource>
 
     <resource name="storeSimpleValue">
         <method type="post">
-            <service name="SimpleStoreServices.store#SimpleValue"/>
+            <service name="store.SimpleStoreServices.store#SimpleValue"/>
         </method>
     </resource>
 </resource>
