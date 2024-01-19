@@ -176,7 +176,8 @@ along with this software (see the LICENSE.md file). If not, see
     <!-- Check if user is granted access to a specific page -->
     <service verb="authorize" noun="Component" authenticate="anonymous-view">
         <in-parameters>
-            <parameter name="component"/>
+            <parameter name="artifact"/>
+            <parameter name="companyId"/>
         </in-parameters>
         <out-parameters>
             <parameter name="granted" type="boolean"/>
@@ -185,11 +186,11 @@ along with this software (see the LICENSE.md file). If not, see
         <actions>
             <script>
                 <![CDATA[
-                    def cl = component
+                    def cl = artifact
                     if (cl.startsWith("/")) cl = cl.substring(1, cl.length())
 
                     def permToCheck = "COMPONENT_ACCESS_${cl}"
-                    //ec.logger.info("Checking permission: ${permToCheck}")
+                    ec.logger.info("Checking permission: ${permToCheck}")
 
                     def hasAccessToComp = ec.user.hasPermission(permToCheck)
                     return [granted: hasAccessToComp]

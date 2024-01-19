@@ -32,17 +32,15 @@ along with this software (see the LICENSE.md file). If not, see
         </method>
 
         <id name="component">
-            <method type="get">
+            <method type="post">
                 <service name="security.SecurityServices.authorize#Component"/>
             </method>
         </id>
 
         <resource name="landing-page">
-            <id name="landingPage">
-                <method type="get">
-                    <service name="security.SecurityServices.authorize#LandingPage"/>
-                </method>
-            </id>
+            <method type="post">
+                <service name="security.SecurityServices.authorize#LandingPage"/>
+            </method>
         </resource>
     </resource>
 </resource>
