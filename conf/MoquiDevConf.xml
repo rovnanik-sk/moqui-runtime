@@ -11,6 +11,7 @@
     <default-property name="entity_lock_track" value="true"/>
     <default-property name="entity_add_missing_runtime" value="true"/>
     <default-property name="entity_add_missing_startup" value="true"/>
+    <default-property name="entity_use_schema_for_all" value="true"/>
 
     <!-- Turn off ES by default -->
     <default-property name="elasticsearch_url" value=""/>
