@@ -139,6 +139,7 @@ along with this software (see the LICENSE.md file). If not, see
             <script>
                 <![CDATA[
                     def hasFrontendAccess = ec.user.isInGroup('FRONTEND_USERS')
+                    ec.logger.info("User [${ec.user.username}] has access to frontend: ${hasFrontendAccess}")
                     return [granted: hasFrontendAccess]
                 ]]>
             </script>
