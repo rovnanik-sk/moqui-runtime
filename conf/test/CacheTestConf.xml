@@ -19,10 +19,10 @@
     <default-property name="py.endpoint.merge.lists" value="api/v1/utility/merge-lists"/>
 
     <!-- setting up `synchronized-cache-entities` -->
-    <default-property name="synced_entities" value="'moqui.test.TestEntity','dtq.projects.Project'"/>
+    <default-property name="synced_entities" value="'moqui.test.TestEntity','ars.projects.Project'"/>
 
     <tools>
-        <tool-factory class="dtq.synchro.SynchroMasterToolFactory" init-priority="100" disabled="false"/>
+        <tool-factory class="ars.synchro.SynchroMasterToolFactory" init-priority="100" disabled="false"/>
     </tools>
 
     <server-stats stats-skip-condition="pathInfo?.startsWith('/rpc') || pathInfo?.startsWith('/rest') || pathInfo?.startsWith('/status')"/>

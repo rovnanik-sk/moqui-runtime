@@ -20,17 +20,17 @@ along with this software (see the LICENSE.md file). If not, see
 
     <resource name="import-entity-data">
         <method type="post">
-            <service name="dtq.rockycube.ImportServices.upload#EntityData"/>
+            <service name="ars.rockycube.ImportServices.upload#EntityData"/>
         </method>
     </resource>
 
     <resource name="fetch-entity">
         <method type="get">
-            <service name="dtq.rockycube.EndpointServices.populate#EntityData" allowed-entities="dtq.*"/>
+            <service name="ars.rockycube.EndpointServices.populate#EntityData" allowed-entities="ars.*"/>
         </method>
 
         <method type="post">
-            <service name="dtq.rockycube.EndpointServices.populate#EntityData" allowed-entities="dtq.*"/>
+            <service name="ars.rockycube.EndpointServices.populate#EntityData" allowed-entities="ars.*"/>
         </method>
     </resource>
 
