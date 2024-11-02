@@ -12,14 +12,14 @@ You should have received a copy of the CC0 Public Domain Dedication
 along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
-<entity-facade-xml type="demo">
+<entity-facade-xml type="seed">
     <!-- NOTE 1265184000000 = 2010-02-03 00:00:00 US/Pacific -->
 
     <!-- ========== Test Admin User ========== -->
     <!-- password=moqui -->
     <moqui.security.UserAccount userId="EX_JOHN_DOE" username="john.doe" userFullName="John Doe"
             currentPassword="16ac58bbfa332c1c55bd98b53e60720bfa90d394" passwordHashType="SHA"
-            passwordHint="framework name, lowercase" currencyUomId="USD" locale="en_US" timeZone="US/Central"
+            passwordHint="framework name, lowercase" locale="en_US" timeZone="US/Central"
             emailAddress="john.doe@moqui.org"/>
     <moqui.security.UserGroupMember userGroupId="ADMIN" userId="EX_JOHN_DOE" fromDate="1265184000000"/>
     <moqui.security.UserGroupMember userGroupId="ADMIN_ADV" userId="EX_JOHN_DOE" fromDate="1265184000000"/>

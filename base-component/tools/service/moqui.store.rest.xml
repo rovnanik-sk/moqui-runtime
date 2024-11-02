@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+This software is in the public domain under CC0 1.0 Universal plus a
+Grant of Patent License.
+
+To the extent possible under law, the author(s) have dedicated all
+copyright and related and neighboring rights to this software to the
+public domain worldwide. This software is distributed without any
+warranty.
+
+You should have received a copy of the CC0 Public Domain Dedication
+along with this software (see the LICENSE.md file). If not, see
+<http://creativecommons.org/publicdomain/zero/1.0/>.
+-->
+
+<!-- General Guideline Verbs: GET=find, POST=create/do, PUT=store (create or update), PATCH=update, DELETE=delete  -->
+
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-2.1.xsd"
+          name="store" displayName="Handling and retrieving simple values from store" version="${moqui_version}" require-authentication="anonymous-view">
+
+    <resource name="import-entity-data">
+        <method type="post">
+            <service name="ars.rockycube.ImportServices.upload#EntityData"/>
+        </method>
+    </resource>
+
+    <resource name="fetch-entity">
+        <method type="get">
+            <service name="ars.rockycube.EndpointServices.populate#EntityData" allowed-entities="ars.*"/>
+        </method>
+
+        <method type="post">
+            <service name="ars.rockycube.EndpointServices.populate#EntityData" allowed-entities="ars.*"/>
+        </method>
+    </resource>
+
+    <resource name="fetchSimpleValue">
+        <method type="get">
+            <service name="store.SimpleStoreServices.fetch#SimpleValue"/>
+        </method>
+    </resource>
+
+    <resource name="storeSimpleValue">
+        <method type="post">
+            <service name="store.SimpleStoreServices.store#SimpleValue"/>
+        </method>
+    </resource>
+</resource>

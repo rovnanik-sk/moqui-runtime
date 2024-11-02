@@ -9,7 +9,15 @@
     <default-property name="webapp_allow_origins" value="*"/>
     <default-property name="entity_empty_db_load" value="all"/>
     <default-property name="entity_lock_track" value="true"/>
+    <default-property name="entity_add_missing_runtime" value="true"/>
+    <default-property name="entity_add_missing_startup" value="true"/>
+    <default-property name="entity_use_schema_for_all" value="true"/>
 
+    <!-- Turn off ES by default -->
+    <default-property name="elasticsearch_url" value=""/>
+    <default-property name="elasticsearch_user" value=""/>
+    <default-property name="elasticsearch_password" value=""/>
+    <default-property name="elasticsearch_index_prefix" value=""/>
     <!-- minimal overrides for testing on local mysql8:
     <default-property name="entity_ds_db_conf" value="mysql8"/>
     <default-property name="entity_ds_user" value="root"/>
@@ -67,6 +75,10 @@
                 <!-- <init-param name="webAllowOthers" value=""/><init-param name="trace" value=""/> -->
                 <url-pattern>/h2/*</url-pattern>
             </servlet>
+
+            <filter name="ElasticRequestLogFilter" class="org.moqui.impl.webapp.ElasticRequestLogFilter" enabled="false"/>
+            <filter name="ElasticAuthFilter" class="org.moqui.impl.webapp.MoquiAuthFilter" enabled="false"/>
+            <filter name="KibanaAuthFilter" class="org.moqui.impl.webapp.MoquiAuthFilter" enabled="false"/>
         </webapp>
     </webapp-list>
     <artifact-execution-facade>
@@ -84,6 +96,11 @@
 
     <entity-facade query-stats="true">
         <!-- add datasource elements here to configure databases -->
+        <load-entity location="classpath://entity/ClosureEntities.xml"/>
+        <load-entity location="classpath://entity/TestEntitiesJson.xml"/>
+
+        <load-data location="classpath://data/DefaultUser.xml"/>
+        <load-data location="classpath://data/TestSecuritySetup.xml"/>
     </entity-facade>
 
     <repository-list>

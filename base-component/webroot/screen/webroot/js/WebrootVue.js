@@ -880,7 +880,7 @@ Vue.component('date-time', {
         formatVal: function() { var format = this.format; if (format && format.length > 0) { return format; }
             return this.type === 'time' ? 'HH:mm' : (this.type === 'date' ? 'YYYY-MM-DD' : 'YYYY-MM-DD HH:mm'); },
         extraFormatsVal: function() { return this.type === 'time' ? ['LT', 'LTS', 'HH:mm'] :
-            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm']); },
+            (this.type === 'date' ? ['l', 'L', 'YYYY-MM-DD'] : ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD HH:mm:ss', 'MM/DD/YYYY HH:mm', 'DD.MM.YYYY']); },
         sizeVal: function() { var size = this.size; if (size && size.length > 0) { return size; }
             return this.type === 'time' ? '9' : (this.type === 'date' ? '10' : '16'); },
         timePattern: function() { return '^(?:(?:([01]?\\d|2[0-3]):)?([0-5]?\\d):)?([0-5]?\\d)$'; }
@@ -1465,6 +1465,10 @@ moqui.webrootVue = new Vue({
             set: function(newSearch) { this.currentParameters = moqui.searchToObj(newSearch); }
         },
         currentLinkUrl: function() { var search = this.currentSearch; return this.currentLinkPath + (search.length > 0 ? '?' + search : ''); },
+        currentParentUrl: function() {
+            var curPath = this.currentPathList.slice(0,-1);
+            return this.linkBasePath + (curPath && curPath.length > 0 ? '/' + curPath.join('/') : '')
+        },
         basePathSize: function() { return this.basePath.split('/').length - this.appRootPath.split('/').length; },
         ScreenTitle: function() { return this.navMenuList.length > 0 ? this.navMenuList[this.navMenuList.length - 1].title : ""; },
         documentMenuList: function() {
@@ -1497,7 +1501,8 @@ moqui.webrootVue = new Vue({
         this.addNavPluginsWait(navPluginUrlList, 0);
     },
     mounted: function() {
-        var jqEl = $(this.$el);
+        let tii = this;
+        let jqEl = $(this.$el);
         jqEl.find('.navbar [data-toggle="tooltip"]').tooltip({ placement:'bottom', trigger:'hover' });
         jqEl.find('#history-menu-link').tooltip({ placement:'bottom', trigger:'hover' });
         jqEl.find('#notify-history-menu-link').tooltip({ placement:'bottom', trigger:'hover' });
@@ -1510,6 +1515,23 @@ moqui.webrootVue = new Vue({
         $("#screen-document-dialog").on("hidden.bs.modal", function () { var jqEl = $("#screen-document-dialog-body");
                 jqEl.empty(); jqEl.append('<div class="spinner"><div>Loading…</div></div>'); });
 
+        let redirUrl = '/Login/logout';
+        let redirUrlRootPath = $("#confAppRootPath").val();
+
+        if (redirUrlRootPath !== '') {
+            redirUrl = `${redirUrlRootPath}${redirUrl}`;
+            console.log(`Redirecting to URL: ${redirUrl}`)
+        }
+
+        $.sessionTimeout({
+            keepAlive: false,
+            redirUrl: redirUrl,
+            warnAfter: 600000,
+            redirAfter: 900000,
+            onWarn: function () {
+                /*console.log('warning comes, redirect shall come: /Login/logout');*/
+            }
+        });
         // request Notification permission on load if not already granted or denied
         if (window.Notification && Notification.permission !== "granted" && Notification.permission !== "denied") {
             Notification.requestPermission(function (status) {

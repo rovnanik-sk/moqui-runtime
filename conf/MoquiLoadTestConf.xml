@@ -16,6 +16,11 @@
     <!-- for load test don't store login history -->
     <user-facade><login history-store="false"/></user-facade>
 
+    <elastic-facade>
+        <cluster name="default" url="" user="" password=""
+                 index-prefix="" pool-max="64" queue-size="1024"/>
+    </elastic-facade>
+
     <entity-facade query-stats="true">
         <!-- add datasource elements here to configure databases -->
     </entity-facade>
