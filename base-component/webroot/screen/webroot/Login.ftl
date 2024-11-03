@@ -25,15 +25,6 @@
         <li role="presentation"><a href="#change" aria-controls="change" role="tab" data-toggle="tab">${ec.l10n.localize("Change Password")}</a></li>
     </ul>
 </div>
-<#-- old 'tabs' more like links:
-<div class="text-center">
-    <ul class="list-inline">
-        <li><a class="text-primary" href="#login" data-toggle="tab">${ec.l10n.localize("Login")}</a></li>
-        <li><a class="text-primary" href="#reset" data-toggle="tab">${ec.l10n.localize("Reset Password")}</a></li>
-        <li><a class="text-primary" href="#change" data-toggle="tab">${ec.l10n.localize("Change Password")}</a></li>
-    </ul>
-</div>
--->
 <div class="tab-content">
     <div id="login" class="tab-pane active">
         <form method="post" action="${sri.buildUrl("login").url}" class="form-signin" id="login_form">
