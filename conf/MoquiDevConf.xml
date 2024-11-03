@@ -76,9 +76,9 @@
                 <url-pattern>/h2/*</url-pattern>
             </servlet>
 
-            <filter name="ElasticRequestLogFilter" class="org.moqui.impl.webapp.ElasticRequestLogFilter" enabled="false"/>
-            <filter name="ElasticAuthFilter" class="org.moqui.impl.webapp.MoquiAuthFilter" enabled="false"/>
-            <filter name="KibanaAuthFilter" class="org.moqui.impl.webapp.MoquiAuthFilter" enabled="false"/>
+<!--            <filter name="ElasticRequestLogFilter" class="org.moqui.impl.webapp.ElasticRequestLogFilter" enabled="false"/>-->
+<!--            <filter name="ElasticAuthFilter" class="org.moqui.impl.webapp.MoquiAuthFilter" enabled="false"/>-->
+<!--            <filter name="KibanaAuthFilter" class="org.moqui.impl.webapp.MoquiAuthFilter" enabled="false"/>-->
         </webapp>
     </webapp-list>
     <artifact-execution-facade>
