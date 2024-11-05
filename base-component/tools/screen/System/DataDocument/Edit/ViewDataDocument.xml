@@ -13,7 +13,7 @@ along with this software (see the LICENSE.md file). If not, see
 <http://creativecommons.org/publicdomain/zero/1.0/>.
 -->
 <screen xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-2.1.xsd"
+        xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/xml-screen-3.xsd"
         default-menu-title="View" default-menu-index="3">
 
     <parameter name="dataDocumentId" required="true"/>
@@ -35,8 +35,8 @@ along with this software (see the LICENSE.md file). If not, see
             def response = ec.web.response
             response.setContentType("application/json")
             response.setCharacterEncoding("UTF-8")
-            response.addHeader("Content-Disposition", "attachment; filename=\"${filename}\"; filename*=utf-8''${encodeAsciiFilename(filename)}")
-            response.addHeader("Cache-Control", "no-cache, must-revalidate, private")
+            response.setHeader("Content-Disposition", "attachment; filename=\"${filename}\"; filename*=utf-8''${encodeAsciiFilename(filename)}")
+            response.setHeader("Cache-Control", "no-cache, must-revalidate, private")
             response.getWriter().write("[\n")
             edd.writeDocumentsToWriter(response.getWriter(), [(String) dataDocumentId], null, fromUpdateStamp, thruUpdateStamp, prettyPrint)
             response.getWriter().write("]\n")

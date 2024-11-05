@@ -62,7 +62,7 @@ along with this software (see the LICENSE.md file). If not, see
 </#macro>
 <#macro "section-include">
     <#if sri.doBoundaryComments()><!-- BEGIN section-include[@name=${.node["@name"]}] --></#if>
-    ${sri.renderSection(.node["@name"])}
+    ${sri.renderSectionInclude(.node)}
     <#if sri.doBoundaryComments()><!-- END   section-include[@name=${.node["@name"]}] --></#if>
 </#macro>
 
@@ -385,10 +385,18 @@ along with this software (see the LICENSE.md file). If not, see
     <#if .node["@text"]?has_content>
         <#assign fieldValue = ec.resource.expand(.node["@text"], "")>
         <#if .node["@currency-unit-field"]?has_content>
-            <#assign fieldValue = ec.l10n.formatCurrency(fieldValue, ec.resource.expression(.node["@currency-unit-field"], ""))>
+            <#if .node["@currency-hide-symbol"]! == "true">
+                <#assign fieldValue = ec.l10n.formatCurrencyNoSymbol(fieldValue, ec.resource.expression(.node["@currency-unit-field"], ""))>
+            <#else>
+                <#assign fieldValue = ec.l10n.formatCurrency(fieldValue, ec.resource.expression(.node["@currency-unit-field"], ""))>
+            </#if>
         </#if>
     <#elseif .node["@currency-unit-field"]?has_content>
-        <#assign fieldValue = ec.l10n.formatCurrency(sri.getFieldValue(.node?parent?parent, ""), ec.resource.expression(.node["@currency-unit-field"], ""))>
+        <#if .node["@currency-hide-symbol"]! == "true">
+            <#assign fieldValue = ec.l10n.formatCurrencyNoSymbol(sri.getFieldValue(.node?parent?parent, ""), ec.resource.expression(.node["@currency-unit-field"], ""))>
+        <#else>
+            <#assign fieldValue = ec.l10n.formatCurrency(sri.getFieldValue(.node?parent?parent, ""), ec.resource.expression(.node["@currency-unit-field"], ""))>
+        </#if>
     <#else>
         <#assign fieldValue = sri.getFieldValueString(.node)>
     </#if>

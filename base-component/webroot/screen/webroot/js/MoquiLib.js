@@ -17,6 +17,50 @@ var moqui = {
         for (key in inObject) { value = inObject[key]; outObject[key] = moqui.deepCopy(value); }
         return outObject
     },
+    arraysEqual: function (array1, array2, ignoreOrder) {
+        if (!array1 && !array2) return true;
+        if (!array1 && array2 && !array2.length) { return true; }
+        if (!array2 && array1 && !array1.length) { return true; }
+        if (!this.isArray(array1)) { return array1 === array2; }
+        if (!this.isArray(array2) || array1.length !== array2.length) { return false; }
+        for (var ai = 0; ai < array1.length; ai++) {
+            var array1Val = array1[ai];
+            if (ignoreOrder) {
+                if (array2.indexOf(array1Val) === -1) { return false; }
+            } else {
+                if (array2[ai] !== array1Val) { return false; }
+            }
+        }
+        return true;
+    },
+    fieldValuesDiff: function(fields, fieldsOriginal) {
+        var foundDiff = false;
+        var fieldsKeys = Object.keys(fields);
+        for (var fieldIdx in fieldsKeys) {
+            var name = fieldsKeys[fieldIdx];
+            var curValue = fields[name];
+            var originalValue = fieldsOriginal[name];
+            if (moqui.isArray(curValue)) {
+                if (!moqui.arraysEqual(curValue, originalValue, true)) {
+                    foundDiff = true;
+                    break;
+                }
+            } else {
+                if (!moqui.equalsOrPlaceholder(curValue, originalValue)) {
+                    foundDiff = true;
+                    break;
+                }
+            }
+        }
+        return foundDiff;
+    },
+    equalsOrPlaceholder: function(obj1, obj2) {
+        if (!obj1 && (!obj2 || !obj2.length)) { return true; }
+        if (!obj2 && (!obj1 || !obj1.length)) { return true; }
+        if ((!obj1 || !obj1.length) && obj2 && obj2.length >= 2 && obj2.slice(0,2) === "__") return true;
+        if ((!obj2 || !obj2.length) && obj1 && obj1.length >= 2 && obj1.slice(0,2) === "__") return true;
+        return obj1 === obj2;
+    },
     objToSearch: function(obj) {
         var search = "";
         if (moqui.isPlainObject(obj)) $.each(obj, function (key, value) { search = search + (search.length > 0 ? '&' : '') + key + '=' + value; });
@@ -200,8 +244,10 @@ var moqui = {
                 return moment(value).format(format);
             } else if (type === "bigdecimal" || type === "currency") {
                 // TODO format numbers with format string, localize
-                return value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                if (moqui.isNumber(value)) value = value.toFixed(2);
+                return ("" + value).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
             } else if (type === "long" || type === "integer" || type === "double" || type === "float") {
+                if (!moqui.isString(value)) value = "" + value;
                 // TODO format numbers with format string, localize
                 return value.replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
             } else {
@@ -344,6 +390,15 @@ var moqui = {
     },
 
     /* NotificationClient, note does not connect the WebSocket until notificationClient.registerListener() is called the first time */
+    /* Example Notification Listener Registration (note listener method defaults to displayNotify as in first example;
+         you can register more than one listener method for the same topic):
+     <#if ec.factory.serverContainer?has_content>
+       <script>
+         notificationClient.registerListener("ALL"); // register for all topics
+         notificationClient.registerListener("MantleEvent", notificationClient.displayNotify);
+       </script>
+     </#if>
+    */
     NotificationClient: function(webSocketUrl) {
         this.displayEnable = true;
         this.webSocketUrl = webSocketUrl;
@@ -363,7 +418,7 @@ var moqui = {
                 var callbacks = this.clientObj.topicListeners[jsonObj.topic];
                 if (callbacks) callbacks.forEach(function(callback) { callback(jsonObj, this) }, this);
                 var allCallbacks = this.clientObj.topicListeners["ALL"];
-                if (allCallbacks) allCallbacks.forEach(function(allCallbacks) { allCallbacks(jsonObj, this) }, this);
+                if (allCallbacks) allCallbacks.forEach(function(callback) { callback(jsonObj, this) }, this);
             };
             this.webSocket.onclose = function(event) {
                 console.log(event);
@@ -397,15 +452,36 @@ var moqui = {
             if (listenerArray.indexOf(callback) < 0) { listenerArray.push(callback); }
         };
     },
-    /* Example Notification Listener Registration (note listener method defaults to displayNotify as in first example;
-         you can register more than one listener method for the same topic):
-     <#if ec.factory.serverContainer?has_content>
-     <script>
-     notificationClient.registerListener("ALL"); // register for all topics
-     notificationClient.registerListener("MantleEvent", notificationClient.displayNotify);
-     </script>
-     </#if>
-    */
+
+    BasicWebSocketClient: function(webSocketUrl, onDataFunction) {
+        this.webSocketUrl = webSocketUrl;
+        this.onDataFunction = onDataFunction;
+        this.initWebSocket = function() {
+            this.webSocket = new WebSocket(this.webSocketUrl);
+            this.webSocket.clientObj = this;
+            this.webSocket.onopen = function(event) {
+                this.clientObj.tryReopenCount = 0;
+            };
+            this.webSocket.onmessage = function(event) {
+                this.clientObj.onDataFunction(event.data);
+            };
+            this.webSocket.onclose = function(event) {
+                console.log(event);
+                setTimeout(this.clientObj.tryReopen, 30*1000, this.clientObj);
+            };
+            this.webSocket.onerror = function(event) { console.log(event); };
+        };
+        this.tryReopen = function (clientObj) {
+            if ((!clientObj.webSocket || clientObj.webSocket.readyState === WebSocket.CLOSED || clientObj.webSocket.readyState === WebSocket.CLOSING) &&
+                (!clientObj.tryReopenCount || clientObj.tryReopenCount < 6)) {
+                console.log("Trying WebSocket reopen, count " + clientObj.tryReopenCount);
+                clientObj.tryReopenCount = (clientObj.tryReopenCount || 0) + 1;
+                clientObj.initWebSocket();
+                // no need to call this, onclose gets called when WS connect fails: setTimeout(clientObj.tryReopen, 30*1000, clientObj);
+            }
+        };
+        this.initWebSocket();
+    },
 
     LruMap: function(limit) {
         this.limit = limit; this.valueMap = {}; this.lruList = []; // end of list is least recently used

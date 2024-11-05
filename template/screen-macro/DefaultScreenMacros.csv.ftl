@@ -33,7 +33,7 @@ along with this software (see the LICENSE.md file). If not, see
 <#-- ================ Section ================ -->
 <#macro section>${sri.renderSection(.node["@name"])}</#macro>
 <#macro "section-iterate">${sri.renderSection(.node["@name"])}</#macro>
-<#macro "section-include">${sri.renderSection(.node["@name"])}</#macro>
+<#macro "section-include">${sri.renderSectionInclude(.node)}</#macro>
 
 <#-- ================ Containers ================ -->
 <#macro container><#recurse></#macro>
@@ -192,10 +192,18 @@ on the same screen to increase reusability of those screens -->
             <#assign fieldValue = ec.getResource().expand(.node["@text"], "")>
         </#if>
         <#if .node["@currency-unit-field"]?has_content>
-            <#assign fieldValue = ec.getL10n().formatCurrency(fieldValue, ec.getResource().expression(.node["@currency-unit-field"], ""))>
+            <#if .node["@currency-hide-symbol"]! == "true">
+                <#assign fieldValue = ec.getL10n().formatCurrencyNoSymbol(fieldValue, ec.getResource().expression(.node["@currency-unit-field"], ""))>
+            <#else>
+                <#assign fieldValue = ec.getL10n().formatCurrency(fieldValue, ec.getResource().expression(.node["@currency-unit-field"], ""))>
+            </#if>
         </#if>
     <#elseif .node["@currency-unit-field"]?has_content>
-        <#assign fieldValue = ec.getL10n().formatCurrency(sri.getFieldValue(dispFieldNode, ""), ec.getResource().expression(.node["@currency-unit-field"], ""))>
+        <#if .node["@currency-hide-symbol"]! == "true">
+            <#assign fieldValue = ec.getL10n().formatCurrencyNoSymbol(sri.getFieldValue(dispFieldNode, ""), ec.getResource().expression(.node["@currency-unit-field"], ""))>
+        <#else>
+            <#assign fieldValue = ec.getL10n().formatCurrency(sri.getFieldValue(dispFieldNode, ""), ec.getResource().expression(.node["@currency-unit-field"], ""))>
+        </#if>
     <#else>
         <#assign fieldValue = sri.getFieldValueString(.node)>
     </#if>

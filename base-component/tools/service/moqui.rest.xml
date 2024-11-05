@@ -15,7 +15,7 @@ along with this software (see the LICENSE.md file). If not, see
 
 <!-- General Guideline Verbs: GET=find, POST=create/do, PUT=store (create or update), PATCH=update, DELETE=delete  -->
 
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-2.1.xsd"
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-3.xsd"
         name="moqui" displayName="Moqui Tools REST API" version="${moqui_version}"
         description="Services for various system administration and other tools in Moqui Framework. See more information
             about Moqui Framework at [http://www.moqui.org/framework](http://www.moqui.org/framework/index.html)">
@@ -245,6 +245,22 @@ along with this software (see the LICENSE.md file). If not, see
                     <service name="org.moqui.impl.UserServices.reset#Password"/></method></resource>
             </resource>
         </id>
+    </resource>
+
+    <resource name="wiki">
+        <!-- TODO add more wiki pages and spaces endpoints (see WikiServices.xml) -->
+        <resource name="pages">
+            <id name="wikiSpaceId"><id name="pagePathList" allow-extra-path="true"><method type="get">
+                <service name="org.moqui.impl.WikiServices.get#PublishedWikiPageText"/></method></id></id>
+
+            <resource name="page">
+                <resource name="info">
+                    <method type="get"><service name="org.moqui.impl.WikiServices.get#WikiPageInfo"/></method>
+                    <id name="wikiPageId"><method type="get">
+                        <service name="org.moqui.impl.WikiServices.get#WikiPageInfoById"/></method></id>
+                </resource>
+            </resource>
+        </resource>
     </resource>
 
     <!-- TODO: caches, TODO will need services implemented as uses API directly for most ops -->
