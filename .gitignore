@@ -10,7 +10,7 @@
 
 # downloaded lib files
 /base-component/webroot/screen/webroot/libs
-/base-component/webroot/screen/webroot/js/**/*.min.js
+/base-component/webroot/screen/webroot/js/*.min.js
 /base-component/webroot/screen/webroot/qz-tray
 
 # runtime generated files
