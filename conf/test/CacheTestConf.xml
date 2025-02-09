@@ -30,6 +30,6 @@
     <transaction-facade use-transaction-cache="false"/>
 
     <entity-facade>
-        <load-entity location="classpath://entity/ClosureEntities.xml"/>
+        <load-entity location="classpath://conf/entity/ClosureEntities.xml"/>
     </entity-facade>
 </moqui-conf>
