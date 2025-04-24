@@ -15,7 +15,7 @@ along with this software (see the LICENSE.md file). If not, see
 
 <!-- General Guideline Verbs: GET=find, POST=create/do, PUT=store (create or update), PATCH=update, DELETE=delete  -->
 
-<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-2.1.xsd"
+<resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://moqui.org/xsd/rest-api-3.xsd"
           name="store" displayName="Handling and retrieving simple values from store" version="${moqui_version}" require-authentication="anonymous-view">
 
     <resource name="import-entity-data">
@@ -31,6 +31,12 @@ along with this software (see the LICENSE.md file). If not, see
 
         <method type="post">
             <service name="ars.rockycube.EndpointServices.populate#EntityData" allowed-entities="ars.*"/>
+        </method>
+    </resource>
+
+    <resource name="query-entity">
+        <method type="post">
+            <service name="ars.rockycube.EndpointServices.query#EntityData" allowed-entities="*"/>
         </method>
     </resource>
 
