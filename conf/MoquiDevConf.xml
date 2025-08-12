@@ -94,10 +94,15 @@
         <screen-text-output type="html" mime-type="text/html" macro-template-location="template/screen-macro/ScreenHtmlMacros.ftl"/>
     </screen-facade>
 
+    <service-facade>
+        <service-file location="classpath://src/test/resources/conf/service/FileUploadServices.xml"/>
+    </service-facade>
+
     <entity-facade query-stats="true">
         <!-- add datasource elements here to configure databases -->
         <load-entity location="classpath://conf/entity/ClosureEntities.xml"/>
         <load-entity location="classpath://entity/TestEntitiesJson.xml"/>
+        <load-entity location="classpath://entity/TestEntities.xml"/>
 
         <load-data location="classpath://data/DefaultUser.xml"/>
         <load-data location="classpath://data/TestSecuritySetup.xml"/>
