@@ -27,6 +27,10 @@
         <tool-factory class="ars.synchro.SynchroMasterToolFactory" init-priority="100" disabled="false"/>
     </tools>
 
+    <cache-list>
+        <cache name="i.cache.ars.rockycube.security.Token" max-elements="50" expire-time-live="3600" value-type="Set"/>
+    </cache-list>
+
     <server-stats stats-skip-condition="pathInfo?.startsWith('/rpc') || pathInfo?.startsWith('/rest') || pathInfo?.startsWith('/status')"/>
 
     <transaction-facade use-transaction-cache="false"/>
