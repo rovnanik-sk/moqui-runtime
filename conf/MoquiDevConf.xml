@@ -94,10 +94,6 @@
         <screen-text-output type="html" mime-type="text/html" macro-template-location="template/screen-macro/ScreenHtmlMacros.ftl"/>
     </screen-facade>
 
-    <service-facade>
-        <service-file location="classpath://src/test/resources/conf/service/FileUploadServices.xml"/>
-    </service-facade>
-
     <entity-facade query-stats="true">
         <!-- add datasource elements here to configure databases -->
         <load-entity location="classpath://conf/entity/ClosureEntities.xml"/>
@@ -113,4 +109,9 @@
         <repository name="main" workspace="default" username="admin" password="admin">
             <init-param name="org.apache.jackrabbit.repository.uri" value="http://localhost:8081/rmi"/></repository> -->
     </repository-list>
+
+    <component-list>
+        <!-- test handling of files - upload, read -->
+        <component-dir location="../framework/src/test/resources/test-components"/>
+    </component-list>
 </moqui-conf>
